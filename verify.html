@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>????? ??????? ?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }</style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="text-center p-10 bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl max-w-sm w-full">
+        <div id="loader" class="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-6"></div>
+        <div id="successIcon" class="hidden text-6xl mb-6 text-center text-center text-center">?</div>
+        <h2 id="msg" class="text-2xl font-bold text-center">???? ????? ???????...</h2>
+        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">????? ?????? ???????? ???? ?????? ????? ????.</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
+            authDomain: "soug-62f2f.firebaseapp.com",
+            projectId: "soug-62f2f",
+            storageBucket: "soug-62f2f.firebasestorage.app",
+            messagingSenderId: "672944475308",
+            appId: "1:672944475308:web:c8158bdf2c5613f51c2309",
+            measurementId: "G-YE7431JXSF"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const params = new URLSearchParams(window.location.search);
+        const uid = params.get('uid');
+        const cid = params.get('cid');
+
+        async function activate() {
+            if (uid && cid) {
+                try {
+                    await setDoc(doc(db, "users", uid, "activatedCards", cid), {
+                        active: true,
+                        timestamp: serverTimestamp()
+                    });
+                    document.getElementById('loader').classList.add('hidden');
+                    document.getElementById('successIcon').classList.remove('hidden');
+                    document.getElementById('msg').innerText = "?? ??????? ?????!";
+                    document.getElementById('subMsg').innerText = "????? ?????? ??????? ????.";
+                    setTimeout(() => window.close(), 3000);
+                } catch (e) {
+                    document.getElementById('msg').innerText = "??? ???";
+                }
+            }
+        }
+        activate();
+    </script>
+</body>
+</html>
