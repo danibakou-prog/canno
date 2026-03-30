@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طومبولا - النظام المستقر</title>
+    <title>نظام البطاقات الذكي - رابطين</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script type="module">
@@ -17,8 +17,7 @@
             projectId: "soug-62f2f",
             storageBucket: "soug-62f2f.firebasestorage.app",
             messagingSenderId: "672944475308",
-            appId: "1:672944475308:web:c8158bdf2c5613f51c2309",
-            measurementId: "G-YE7431JXSF"
+            appId: "1:672944475308:web:c8158bdf2c5613f51c2309"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -29,22 +28,22 @@
         body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }
         .page { display: none; }
         .page.active { display: block; }
-        .card-active { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); border: 1px solid #34d399; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); }
+        .card-active { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); border: 1px solid #34d399; }
         .card-waiting { background: #92400e; animation: pulse 2s infinite; border: 2px solid #f59e0b; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
     </style>
 </head>
 <body class="p-4">
     <div id="loginPage" class="page active max-w-md mx-auto mt-20 bg-white text-slate-900 p-8 rounded-3xl shadow-2xl">
-        <h1 class="text-3xl font-black mb-6 text-indigo-600 text-center">طومبولا الحظ 🎰</h1>
+        <h1 class="text-3xl font-black mb-6 text-indigo-600 text-center">طومبولا 🎰</h1>
         <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-4 mb-4 border rounded-2xl outline-none text-left" dir="ltr">
         <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-4 mb-6 border rounded-2xl outline-none text-left" dir="ltr">
-        <button id="authBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition">دخول</button>
+        <button id="authBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl">دخول</button>
     </div>
 
     <div id="dashboardPage" class="page max-w-4xl mx-auto mt-10">
         <div class="flex justify-between items-center bg-slate-900 p-6 rounded-3xl border border-white/10 mb-8 shadow-xl">
-            <h2 class="font-bold text-sm md:text-lg">البطاقات المتاحة (1 دقيقة)</h2>
+            <h2 class="font-bold">تنشيط البطاقات (رابطين فقط)</h2>
             <button onclick="window.auth.signOut()" class="text-red-400 text-xs font-bold bg-red-400/10 px-4 py-2 rounded-xl">خروج</button>
         </div>
         <div id="cardsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
@@ -54,8 +53,8 @@
         import { doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const customLinks = ["https://ouo.io/pYezj25", "https://ouo.io/K73fp6", "https://ouo.io/RVJoxO"];
-        const defaultLink = "https://ouo.io/ofE7Qg";
+        const LINK_1 = "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf";
+        const LINK_2 = "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198";
 
         onAuthStateChanged(window.auth, (user) => {
             if (user) {
@@ -72,24 +71,8 @@
             const e = document.getElementById('emailInput').value;
             const p = document.getElementById('passwordInput').value;
             try { await signInWithEmailAndPassword(window.auth, e, p); }
-            catch { try { await createUserWithEmailAndPassword(window.auth, e, p); } catch(err) { alert("خطأ في البيانات"); } }
+            catch { try { await createUserWithEmailAndPassword(window.auth, e, p); } catch(err) { alert("خطأ!"); } }
         };
-
-        async function requestActivation(uid, cid, link) {
-            // تسجيل الطلب في Firebase (المصافحة الرقمية)
-            const requestRef = doc(window.db, "activation_requests", uid);
-            await setDoc(requestRef, {
-                uid: uid,
-                cid: cid,
-                timestamp: serverTimestamp()
-            });
-
-            // حفظ معرف المستخدم محلياً لصفحة verify
-            localStorage.setItem('active_uid', uid);
-            
-            // فتح رابط الإعلان المباشر
-            window.open(link, '_blank');
-        }
 
         function renderCards(uid) {
             const grid = document.getElementById('cardsGrid');
@@ -98,33 +81,27 @@
                 const cid = `card_${i}`;
                 const div = document.createElement('div');
                 div.id = cid;
-                let link = (i <= customLinks.length) ? customLinks[i-1] : defaultLink;
+                div.className = "bg-slate-800 p-6 rounded-2xl text-center border border-white/5 cursor-pointer shadow-inner";
+                div.innerHTML = `<p class="text-[10px] font-bold text-slate-400 text-center">بطاقة #${i}</p>`;
                 
-                div.className = "bg-slate-800 p-6 rounded-2xl text-center border border-white/5 cursor-pointer hover:border-indigo-500 transition shadow-inner";
-                div.innerHTML = `<span class="text-3xl mb-3 block text-center">🔒</span><p class="text-[10px] font-bold text-slate-400 text-center">بطاقة #${i}</p>`;
-                
-                div.onclick = () => {
-                    requestActivation(uid, cid, link);
-                    div.className = "card-waiting p-6 rounded-2xl text-center shadow-lg border-amber-500/50";
-                    div.innerHTML = `<p class="text-[10px] font-bold text-amber-300 text-center">بانتظار التخطي...</p>`;
+                div.onclick = async () => {
+                    const targetLink = (i <= 5) ? LINK_1 : LINK_2;
+                    await setDoc(doc(window.db, "activation_requests", uid), {
+                        cid: cid,
+                        timestamp: serverTimestamp()
+                    });
+                    localStorage.setItem('active_uid', uid);
+                    window.open(targetLink, '_blank');
                 };
                 grid.appendChild(div);
 
                 onSnapshot(doc(window.db, "users", uid, "activatedCards", cid), (snap) => {
                     if (snap.exists() && snap.data().active === true) {
-                        const data = snap.data();
-                        const now = Date.now();
-                        const startTime = data.timestamp ? data.timestamp.toDate().getTime() : now;
-                        const diff = (now - startTime) / 1000;
-
-                        if (diff < 60) {
-                            const el = document.getElementById(cid);
-                            if(el) {
-                                el.className = "card-active p-6 rounded-2xl text-center shadow-lg";
-                                el.innerHTML = `<span class="text-[10px] font-bold mb-1 block uppercase text-emerald-200 text-center">نشطة ✅</span><span class="text-xl font-black font-mono text-center">#${Math.floor(1000 + Math.random()*8999)}</span>`;
-                                el.onclick = null;
-                                setTimeout(() => renderCards(uid), (60 - diff) * 1000);
-                            }
+                        const el = document.getElementById(cid);
+                        if(el) {
+                            el.className = "card-active p-6 rounded-2xl text-center shadow-lg";
+                            el.innerHTML = `<span class="text-[10px] font-bold text-emerald-200">نشطة ✅</span>`;
+                            el.onclick = null;
                         }
                     }
                 });
