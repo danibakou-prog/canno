@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد التفعيل</title>
+    <title>نظام تأكيد الهوية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }</style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div id="mainBox" class="text-center p-10 bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl max-w-sm w-full">
+    <div id="statusBox" class="text-center p-10 bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl max-w-sm w-full">
         <div id="loader" class="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-6"></div>
         <div id="successIcon" class="hidden text-6xl mb-6 text-center">✅</div>
-        <h2 id="msg" class="text-2xl font-bold text-center">جاري التحقق...</h2>
-        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">لحظة واحدة من فضلك.</p>
+        <h2 id="msg" class="text-2xl font-bold text-center">يتم الآن التحقق...</h2>
+        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">نتحقق من معرف المستخدم ورقم البطاقة.</p>
     </div>
 
     <script type="module">
@@ -33,29 +33,31 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const uid = localStorage.getItem('active_uid');
-        const cid = localStorage.getItem('active_cid');
-        const clickTime = localStorage.getItem('click_time');
+        // جلب المعرفات المخزنة محلياً عند الضغط
+        const targetUID = localStorage.getItem('target_uid');
+        const targetCID = localStorage.getItem('target_cid');
+        const reqTime = localStorage.getItem('request_time');
 
-        async function activate() {
+        async function verifyAndActivate() {
             const now = Date.now();
-            // التحقق: هل تمت الضغطة في آخر 5 دقائق؟
-            const isValidRequest = clickTime && (now - clickTime < 300000); 
+            // الصلاحية: يجب أن يكون قد ضغط على البطاقة في آخر 5 دقائق
+            const isFresh = reqTime && (now - reqTime < 300000);
 
-            if (uid && cid && isValidRequest) {
+            if (targetUID && targetCID && isFresh) {
                 try {
-                    await setDoc(doc(db, "users", uid, "activatedCards", cid), {
+                    // تفعيل البطاقة المحددة للمستخدم المحدد فقط
+                    await setDoc(doc(db, "users", targetUID, "activatedCards", targetCID), {
                         active: true,
                         timestamp: serverTimestamp()
                     });
                     
                     document.getElementById('loader').classList.add('hidden');
                     document.getElementById('successIcon').classList.remove('hidden');
-                    document.getElementById('msg').innerText = "تم التفعيل!";
-                    document.getElementById('subMsg').innerText = "عد للتطبيق الآن، البطاقة مفتوحة لدقيقة.";
+                    document.getElementById('msg').innerText = "تم التوثيق!";
+                    document.getElementById('subMsg').innerText = "تم تفعيل البطاقة " + targetCID + " بنجاح.";
                     
-                    // مسح الوقت لضمان عدم استخدامه مرة ثانية
-                    localStorage.removeItem('click_time');
+                    // تنظيف المعرفات لضمان عدم التكرار
+                    localStorage.removeItem('request_time');
                     
                     setTimeout(() => window.close(), 2500);
                 } catch (e) {
@@ -63,12 +65,12 @@
                 }
             } else {
                 document.getElementById('loader').classList.add('hidden');
-                document.getElementById('msg').innerText = "طلب مرفوض ⚠️";
-                document.getElementById('subMsg').innerText = "يجب تخطي الإعلان من داخل التطبيق أولاً.";
-                document.getElementById('mainBox').classList.add('border-red-500');
+                document.getElementById('msg').innerText = "معرف غير صالح ⚠️";
+                document.getElementById('subMsg').innerText = "لا يمكن تفعيل هذه البطاقة لهذا المستخدم مباشرة.";
+                document.getElementById('statusBox').classList.add('border-red-500');
             }
         }
-        window.onload = activate;
+        window.onload = verifyAndActivate;
     </script>
 </body>
 </html>
