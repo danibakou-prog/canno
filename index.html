@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طومبولا - البطاقات</title>
+    <title>طومبولا - النظام</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }
         .page { display: none; }
         .page.active { display: block; }
-        .card-active { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); border: 1px solid #34d399; }
+        .card-active { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); border: 1px solid #34d399; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
     </style>
 </head>
 <body class="p-4">
 
     <div id="loginPage" class="page active max-w-md mx-auto mt-20 bg-white text-slate-900 p-8 rounded-3xl shadow-2xl">
-        <h1 class="text-3xl font-black mb-6 text-indigo-600 text-center">دخول النظام 🎰</h1>
+        <h1 class="text-3xl font-black mb-6 text-indigo-600 text-center">طومبولا الحظ 🎰</h1>
         <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-4 mb-4 border rounded-2xl outline-none text-left" dir="ltr">
         <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-4 mb-6 border rounded-2xl outline-none text-left" dir="ltr">
-        <button id="authBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition">دخول</button>
+        <button id="authBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition">دخول / تسجيل</button>
     </div>
 
     <div id="dashboardPage" class="page max-w-2xl mx-auto mt-10">
@@ -76,25 +77,45 @@
                 const cid = `card_${i}`;
                 const div = document.createElement('div');
                 div.id = cid;
-                div.className = "bg-slate-800 p-8 rounded-3xl text-center border border-white/5 cursor-pointer shadow-xl";
-                div.innerHTML = `🔒<br>بطاقة رقم ${i}`;
-                
+                setCardLocked(div, i, uid, cid);
                 grid.appendChild(div);
 
                 onSnapshot(doc(db, "users", uid, "activatedCards", cid), (snap) => {
                     if (snap.exists() && snap.data().active === true) {
-                        div.className = "card-active p-8 rounded-3xl text-center shadow-2xl";
-                        div.innerHTML = `✅ نشطة<br>#${Math.floor(1000 + Math.random()*9000)}`;
-                        div.onclick = null;
-                    } else {
-                        div.onclick = () => {
-                            localStorage.setItem('active_uid', uid);
-                            localStorage.setItem('active_cid', cid);
-                            window.location.href = `verify.html?id=${i}`;
-                        };
+                        const data = snap.data();
+                        const now = Date.now();
+                        const startTime = data.timestamp ? data.timestamp.toDate().getTime() : now;
+                        const diff = (now - startTime) / 1000;
+
+                        if (diff < 60) { // التفعيل لمدة 60 ثانية فقط
+                            div.className = "card-active p-8 rounded-3xl text-center shadow-2xl cursor-default";
+                            div.innerHTML = `
+                                <span class="text-[10px] font-bold mb-1 block uppercase opacity-80">نشطة ✅</span>
+                                <span class="text-3xl font-black font-mono">CODE-${Math.floor(1000 + Math.random()*9000)}</span>
+                                <p class="text-[10px] mt-2 opacity-60">ستنتهي بعد ${Math.floor(60 - diff)} ثانية</p>
+                            `;
+                            div.onclick = null;
+                            setTimeout(() => setCardLocked(div, i, uid, cid), (60 - diff) * 1000);
+                        } else {
+                            setCardLocked(div, i, uid, cid);
+                        }
                     }
                 });
             }
+        }
+
+        function setCardLocked(div, num, uid, cid) {
+            div.className = "bg-slate-800 p-8 rounded-3xl text-center border border-white/5 cursor-pointer hover:border-indigo-500 transition shadow-xl";
+            div.innerHTML = `
+                <div class="text-4xl mb-3 text-center">🔒</div>
+                <p class="font-bold text-sm text-center">البطاقة رقم ${num}</p>
+                <p class="text-[10px] text-slate-500 mt-2 text-center text-center">اضغط للتفعيل لمدة دقيقة</p>
+            `;
+            div.onclick = () => {
+                localStorage.setItem('active_uid', uid);
+                localStorage.setItem('active_cid', cid);
+                window.location.href = `verify.html?id=${num}`;
+            };
         }
     </script>
 </body>
