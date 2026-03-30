@@ -9,11 +9,11 @@
     <style>body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }</style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div class="text-center p-10 bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl max-w-sm w-full">
+    <div id="mainBox" class="text-center p-10 bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl max-w-sm w-full">
         <div id="loader" class="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-6"></div>
         <div id="successIcon" class="hidden text-6xl mb-6 text-center">✅</div>
-        <h2 id="msg" class="text-2xl font-bold text-center">جاري التفعيل...</h2>
-        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">يرجى الانتظار للحظة واحدة.</p>
+        <h2 id="msg" class="text-2xl font-bold text-center">جاري التحقق...</h2>
+        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">لحظة واحدة من فضلك.</p>
     </div>
 
     <script type="module">
@@ -33,35 +33,40 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // محاولة جلب البيانات من الرابط أو من ذاكرة المتصفح
         const params = new URLSearchParams(window.location.search);
-        const uid = params.get('uid') || localStorage.getItem('active_uid');
-        const cid = params.get('cid') || localStorage.getItem('active_cid');
+        const urlToken = params.get('token'); // الرمز القادم من الرابط المختصر
+        const storedToken = localStorage.getItem('verify_token'); // الرمز المخزن عند الضغط
+        
+        const uid = localStorage.getItem('active_uid');
+        const cid = localStorage.getItem('active_cid');
 
         async function activate() {
-            if (uid && cid) {
+            // الشرط الجديد: يجب أن يتطابق الرمزين لكي يتم التفعيل
+            if (uid && cid && urlToken && urlToken === storedToken) {
                 try {
                     await setDoc(doc(db, "users", uid, "activatedCards", cid), {
                         active: true,
                         timestamp: serverTimestamp()
                     });
+                    
                     document.getElementById('loader').classList.add('hidden');
                     document.getElementById('successIcon').classList.remove('hidden');
                     document.getElementById('msg').innerText = "تم التفعيل!";
-                    document.getElementById('subMsg').innerText = "عد للموقع الأصلي الآن.";
+                    document.getElementById('subMsg').innerText = "تم التحقق من تخطي الرابط بنجاح.";
                     
-                    // مسح الذاكرة بعد النجاح
-                    localStorage.removeItem('active_uid');
-                    localStorage.removeItem('active_cid');
+                    // مسح الرموز لضمان عدم استخدامها مرة أخرى
+                    localStorage.removeItem('verify_token');
                     
-                    setTimeout(() => window.close(), 3000);
+                    setTimeout(() => window.close(), 2500);
                 } catch (e) {
-                    document.getElementById('msg').innerText = "خطأ في الاتصال";
+                    document.getElementById('msg').innerText = "خطأ في الخادم";
                 }
             } else {
+                // إذا حاول المستخدم الدخول مباشرة للرابط بدون توكن صحيح
                 document.getElementById('loader').classList.add('hidden');
-                document.getElementById('msg').innerText = "بيانات مفقودة";
-                document.getElementById('subMsg').innerText = "تأكد من فتح الرابط من التطبيق.";
+                document.getElementById('msg').innerText = "محاولة غير صالحة ⚠️";
+                document.getElementById('subMsg').innerText = "يجب عليك تخطي الرابط المختصر أولاً لكي يتم تفعيل البطاقة.";
+                document.getElementById('mainBox').classList.add('border-red-500');
             }
         }
         window.onload = activate;
