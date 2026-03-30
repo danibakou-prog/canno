@@ -13,7 +13,7 @@
         <div id="loader" class="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-6"></div>
         <div id="successIcon" class="hidden text-6xl mb-6 text-center">✅</div>
         <h2 id="msg" class="text-2xl font-bold text-center text-indigo-400">تحقق Firebase...</h2>
-        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">نتأكد من الرمز السري للعملية.</p>
+        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">نتأكد من صحة طلب التفعيل من السيرفر.</p>
     </div>
 
     <script type="module">
@@ -33,26 +33,27 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        async function verify() {
-            const params = new URLSearchParams(window.location.search);
-            const urlToken = params.get('token'); // الرمز من الرابط
+        async function runVerification() {
             const uid = localStorage.getItem('active_uid');
             
-            if (!uid || !urlToken) {
-                return updateUI("دخول مرفوض ⚠️", "المفتاح الأمني مفقود أو غير صالح.", false);
+            if (!uid) {
+                return updateUI("دخول مرفوض ⚠️", "يرجى الضغط على البطاقة من داخل التطبيق أولاً.", false);
             }
 
+            // البحث عن طلب التفعيل المرتبط بهذا المستخدم في Firebase
             const requestRef = doc(db, "activation_requests", uid);
             const requestSnap = await getDoc(requestRef);
 
             if (requestSnap.exists()) {
                 const data = requestSnap.data();
-                
-                // مطابقة الرمز المسجل مع الرمز القادم من الرابط
-                if (data.token === urlToken) {
+                const now = Date.now();
+                const reqTime = data.timestamp.toDate().getTime();
+
+                // السماح بالتفعيل فقط إذا كان الطلب جديداً (أقل من 10 دقائق)
+                if (now - reqTime < 600000) {
                     const cid = data.cid;
 
-                    // 1. حذف الطلب فوراً (لإغلاق الثغرة نهائياً قبل التفعيل)
+                    // 1. حذف الطلب فوراً من Firebase لضمان عدم تكرار التفعيل
                     await deleteDoc(requestRef);
 
                     // 2. تفعيل البطاقة المحددة فقط
@@ -61,13 +62,14 @@
                         timestamp: serverTimestamp()
                     });
 
-                    updateUI("تم التفعيل ✅", "تم تفعيل البطاقة " + cid + " بنجاح.", true);
+                    updateUI("تم التفعيل ✅", "تم تنشيط البطاقة " + cid + " بنجاح.", true);
                     setTimeout(() => window.close(), 2500);
                 } else {
-                    updateUI("رمز غير صالح", "هذا الرابط لم يعد صالحاً للاستخدام.", false);
+                    updateUI("انتهت الصلاحية", "لقد استغرقت وقتاً طويلاً. حاول مجدداً.", false);
+                    await deleteDoc(requestRef);
                 }
             } else {
-                updateUI("طلب غير موجود", "انتهت صلاحية الرابط أو تم التفعيل مسبقاً.", false);
+                updateUI("طلب غير موجود", "تم تفعيل هذا الرابط مسبقاً أو أنك دخلت بطريقة غير قانونية.", false);
             }
         }
 
@@ -82,7 +84,7 @@
             }
         }
 
-        window.onload = verify;
+        window.onload = runVerification;
     </script>
 </body>
 </html>
