@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الطومبولا</title>
+    <title>طومبولا - نظام المعرفات الفريدة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script type="module">
@@ -44,7 +44,10 @@
 
     <div id="dashboardPage" class="page max-w-4xl mx-auto mt-10">
         <div class="flex justify-between items-center bg-slate-900 p-6 rounded-3xl border border-white/10 mb-8 shadow-xl">
-            <h2 class="font-bold text-center">لوحة التحكم</h2>
+            <div>
+                <h2 class="font-bold">لوحة التحكم</h2>
+                <p id="userStatus" class="text-[10px] text-slate-400"></p>
+            </div>
             <button onclick="window.auth.signOut()" class="text-red-400 text-sm font-bold bg-red-400/10 px-4 py-2 rounded-xl">خروج</button>
         </div>
         <div id="cardsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
@@ -55,10 +58,11 @@
         import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const customLinks = ["https://ouo.io/pYezj25", "https://ouo.io/K73fp6", "https://ouo.io/RVJoxO"];
-        const defaultShortLink = "https://ouo.io/ofE7Qg"; 
+        const defaultLink = "https://ouo.io/ofE7Qg";
 
         onAuthStateChanged(window.auth, (user) => {
             if (user) {
+                document.getElementById('userStatus').innerText = "ID: " + user.uid.substring(0,8);
                 renderCards(user.uid);
                 document.getElementById('loginPage').classList.remove('active');
                 document.getElementById('dashboardPage').classList.add('active');
@@ -71,24 +75,24 @@
         document.getElementById('authBtn').onclick = async () => {
             const e = document.getElementById('emailInput').value;
             const p = document.getElementById('passwordInput').value;
-            if(!e || !p) return alert("يرجى ملء جميع الحقول");
+            if(!e || !p) return alert("ملء الحقول!");
             try { await signInWithEmailAndPassword(window.auth, e, p); }
             catch { try { await createUserWithEmailAndPassword(window.auth, e, p); } catch(err) { alert(err.message); } }
         };
 
         function setCardLocked(div, i, uid, cid, finalLink) {
             div.className = "bg-slate-800 p-6 rounded-2xl text-center border border-white/5 cursor-pointer hover:border-indigo-500 transition shadow-inner";
-            div.innerHTML = `<span class="text-3xl mb-3 block text-center">🔒</span><p class="text-[10px] font-bold text-slate-400 text-center">البطاقة رقم ${i}</p>`;
+            div.innerHTML = `<span class="text-3xl mb-3 block text-center">🔒</span><p class="text-[10px] font-bold text-slate-400 text-center">بطاقة: ${i}</p>`;
             div.onclick = () => {
-                // حفظ وقت الضغط وبقية البيانات
-                localStorage.setItem('active_uid', uid);
-                localStorage.setItem('active_cid', cid);
-                localStorage.setItem('click_time', Date.now()); 
+                // ربط المعرفات ببعضها في الذاكرة
+                localStorage.setItem('target_uid', uid);
+                localStorage.setItem('target_cid', cid);
+                localStorage.setItem('request_time', Date.now());
 
                 window.open(finalLink, '_blank');
                 
                 div.className = "card-waiting p-6 rounded-2xl text-center shadow-lg border-amber-500/50";
-                div.innerHTML = `<p class="text-[10px] font-bold text-amber-300 text-center">بانتظار التخطي...</p>`;
+                div.innerHTML = `<p class="text-[10px] font-bold text-amber-300 text-center">جاري التحقق من التخطي...</p>`;
             };
         }
 
@@ -99,9 +103,9 @@
                 const cid = `card_${i}`;
                 const div = document.createElement('div');
                 div.id = cid;
-                let finalLink = (i <= customLinks.length) ? customLinks[i-1] : defaultShortLink;
+                let link = (i <= customLinks.length) ? customLinks[i-1] : defaultLink;
                 
-                setCardLocked(div, i, uid, cid, finalLink);
+                setCardLocked(div, i, uid, cid, link);
                 grid.appendChild(div);
 
                 onSnapshot(doc(window.db, "users", uid, "activatedCards", cid), (snap) => {
@@ -109,18 +113,16 @@
                         const data = snap.data();
                         const now = Date.now();
                         const startTime = data.timestamp ? data.timestamp.toDate().getTime() : now;
-                        const diff = (now - startTime) / 1000;
-
-                        if (diff < 60) {
+                        if ((now - startTime) / 1000 < 60) {
                             const el = document.getElementById(cid);
                             if(el) {
                                 el.className = "card-active p-6 rounded-2xl text-center shadow-lg";
-                                el.innerHTML = `<span class="text-[10px] font-bold mb-1 block uppercase opacity-70 text-center">نشطة ✅</span><span class="text-xl font-black font-mono text-center">#${Math.floor(1000 + Math.random()*8999)}</span>`;
+                                el.innerHTML = `<span class="text-[10px] font-bold mb-1 block uppercase opacity-70 text-center text-white">نشطة ✅</span><span class="text-xl font-black font-mono text-center text-white">#${Math.floor(1000 + Math.random()*8999)}</span>`;
                                 el.onclick = null;
-                                setTimeout(() => setCardLocked(el, i, uid, cid, finalLink), (60 - diff) * 1000);
+                                setTimeout(() => setCardLocked(el, i, uid, cid, link), 60000 - (now - startTime));
                             }
                         } else {
-                            setCardLocked(document.getElementById(cid), i, uid, cid, finalLink);
+                            setCardLocked(document.getElementById(cid), i, uid, cid, link);
                         }
                     }
                 });
