@@ -33,16 +33,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const params = new URLSearchParams(window.location.search);
-        const urlToken = params.get('token'); // الرمز القادم من الرابط المختصر
-        const storedToken = localStorage.getItem('verify_token'); // الرمز المخزن عند الضغط
-        
         const uid = localStorage.getItem('active_uid');
         const cid = localStorage.getItem('active_cid');
+        const clickTime = localStorage.getItem('click_time');
 
         async function activate() {
-            // الشرط الجديد: يجب أن يتطابق الرمزين لكي يتم التفعيل
-            if (uid && cid && urlToken && urlToken === storedToken) {
+            const now = Date.now();
+            // التحقق: هل تمت الضغطة في آخر 5 دقائق؟
+            const isValidRequest = clickTime && (now - clickTime < 300000); 
+
+            if (uid && cid && isValidRequest) {
                 try {
                     await setDoc(doc(db, "users", uid, "activatedCards", cid), {
                         active: true,
@@ -52,20 +52,19 @@
                     document.getElementById('loader').classList.add('hidden');
                     document.getElementById('successIcon').classList.remove('hidden');
                     document.getElementById('msg').innerText = "تم التفعيل!";
-                    document.getElementById('subMsg').innerText = "تم التحقق من تخطي الرابط بنجاح.";
+                    document.getElementById('subMsg').innerText = "عد للتطبيق الآن، البطاقة مفتوحة لدقيقة.";
                     
-                    // مسح الرموز لضمان عدم استخدامها مرة أخرى
-                    localStorage.removeItem('verify_token');
+                    // مسح الوقت لضمان عدم استخدامه مرة ثانية
+                    localStorage.removeItem('click_time');
                     
                     setTimeout(() => window.close(), 2500);
                 } catch (e) {
-                    document.getElementById('msg').innerText = "خطأ في الخادم";
+                    document.getElementById('msg').innerText = "خطأ في الاتصال";
                 }
             } else {
-                // إذا حاول المستخدم الدخول مباشرة للرابط بدون توكن صحيح
                 document.getElementById('loader').classList.add('hidden');
-                document.getElementById('msg').innerText = "محاولة غير صالحة ⚠️";
-                document.getElementById('subMsg').innerText = "يجب عليك تخطي الرابط المختصر أولاً لكي يتم تفعيل البطاقة.";
+                document.getElementById('msg').innerText = "طلب مرفوض ⚠️";
+                document.getElementById('subMsg').innerText = "يجب تخطي الإعلان من داخل التطبيق أولاً.";
                 document.getElementById('mainBox').classList.add('border-red-500');
             }
         }
