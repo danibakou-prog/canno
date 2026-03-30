@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طومبولا - نظام الحماية</title>
+    <title>تطبيق الطومبولا</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script type="module">
@@ -80,15 +80,12 @@
             div.className = "bg-slate-800 p-6 rounded-2xl text-center border border-white/5 cursor-pointer hover:border-indigo-500 transition shadow-inner";
             div.innerHTML = `<span class="text-3xl mb-3 block text-center">🔒</span><p class="text-[10px] font-bold text-slate-400 text-center">البطاقة رقم ${i}</p>`;
             div.onclick = () => {
-                // توليد رمز تحقق عشوائي
-                const secretToken = Math.random().toString(36).substring(7);
+                // حفظ وقت الضغط وبقية البيانات
                 localStorage.setItem('active_uid', uid);
                 localStorage.setItem('active_cid', cid);
-                localStorage.setItem('verify_token', secretToken); // حفظ الرمز في المتصفح
+                localStorage.setItem('click_time', Date.now()); 
 
-                // إرسال الرمز عبر الرابط لـ ouo.io
-                const secureLink = finalLink + (finalLink.includes('?') ? '&' : '?') + "token=" + secretToken;
-                window.open(secureLink, '_blank');
+                window.open(finalLink, '_blank');
                 
                 div.className = "card-waiting p-6 rounded-2xl text-center shadow-lg border-amber-500/50";
                 div.innerHTML = `<p class="text-[10px] font-bold text-amber-300 text-center">بانتظار التخطي...</p>`;
