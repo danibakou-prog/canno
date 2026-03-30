@@ -3,32 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طومبولا - لوحة التحكم</title>
+    <title>طومبولا - البطاقات</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #020617; color: white; min-height: 100-vh; }
+        body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }
         .page { display: none; }
         .page.active { display: block; }
-        .card-active { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); border: 1px solid #34d399; animation: slideIn 0.5s ease; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .card-active { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); border: 1px solid #34d399; }
     </style>
 </head>
 <body class="p-4">
 
     <div id="loginPage" class="page active max-w-md mx-auto mt-20 bg-white text-slate-900 p-8 rounded-3xl shadow-2xl">
-        <h1 class="text-3xl font-black mb-6 text-indigo-600 text-center">طومبولا الحظ 🎰</h1>
+        <h1 class="text-3xl font-black mb-6 text-indigo-600 text-center">دخول النظام 🎰</h1>
         <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-4 mb-4 border rounded-2xl outline-none text-left" dir="ltr">
         <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-4 mb-6 border rounded-2xl outline-none text-left" dir="ltr">
-        <button id="authBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition">دخول / تسجيل جديد</button>
+        <button id="authBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition">دخول</button>
     </div>
 
     <div id="dashboardPage" class="page max-w-2xl mx-auto mt-10">
         <div class="flex justify-between items-center bg-slate-900 p-6 rounded-3xl border border-white/10 mb-8 shadow-xl">
-            <h2 class="font-bold">بطاقاتي النشطة</h2>
+            <h2 class="font-bold">لوحة التحكم</h2>
             <button id="logoutBtn" class="text-red-400 text-sm font-bold bg-red-400/10 px-4 py-2 rounded-xl">خروج</button>
         </div>
-        
         <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </div>
 
@@ -51,13 +49,6 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // الروابط المطلوبة
-        const targetLinks = [
-            "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf",
-            "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198"
-        ];
-
-        // مراقبة حالة المستخدم
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('loginPage').classList.remove('active');
@@ -69,69 +60,41 @@
             }
         });
 
-        // تسجيل الدخول
         document.getElementById('authBtn').onclick = async () => {
             const e = document.getElementById('emailInput').value;
             const p = document.getElementById('passwordInput').value;
-            if(!e || !p) return alert("يرجى ملء البيانات");
             try { await signInWithEmailAndPassword(auth, e, p); }
-            catch { try { await createUserWithEmailAndPassword(auth, e, p); } catch(err) { alert("خطأ: " + err.message); } }
+            catch { await createUserWithEmailAndPassword(auth, e, p); }
         };
 
-        // خروج
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         function renderCards(uid) {
             const grid = document.getElementById('cardsGrid');
             grid.innerHTML = '';
-
-            for(let i=0; i<2; i++) {
-                const cid = `card_${i+1}`;
+            for(let i=1; i<=2; i++) {
+                const cid = `card_${i}`;
                 const div = document.createElement('div');
                 div.id = cid;
+                div.className = "bg-slate-800 p-8 rounded-3xl text-center border border-white/5 cursor-pointer shadow-xl";
+                div.innerHTML = `🔒<br>بطاقة رقم ${i}`;
                 
-                // الحالة الافتراضية (مغلقة)
-                setCardLocked(div, i+1, uid, cid, targetLinks[i]);
                 grid.appendChild(div);
 
-                // مراقبة قاعدة البيانات للتفعيل اللحظي
                 onSnapshot(doc(db, "users", uid, "activatedCards", cid), (snap) => {
                     if (snap.exists() && snap.data().active === true) {
-                        const data = snap.data();
-                        const now = Date.now();
-                        const startTime = data.timestamp ? data.timestamp.toDate().getTime() : now;
-                        const diff = (now - startTime) / 1000;
-
-                        if (diff < 3600) { // البطاقة تبقى نشطة لمدة ساعة (3600 ثانية)
-                            div.className = "card-active p-8 rounded-3xl text-center shadow-2xl transition-all";
-                            div.innerHTML = `
-                                <span class="text-xs font-bold mb-2 block uppercase tracking-widest opacity-80">بطاقة نشطة ✅</span>
-                                <span class="text-3xl font-black font-mono">CODE-${Math.floor(10000 + Math.random()*89999)}</span>
-                                <p class="text-[10px] mt-4 opacity-60 text-center">ستنتهي الصلاحية قريباً</p>
-                            `;
-                            div.onclick = null;
-                        } else {
-                            setCardLocked(div, i+1, uid, cid, targetLinks[i]);
-                        }
+                        div.className = "card-active p-8 rounded-3xl text-center shadow-2xl";
+                        div.innerHTML = `✅ نشطة<br>#${Math.floor(1000 + Math.random()*9000)}`;
+                        div.onclick = null;
+                    } else {
+                        div.onclick = () => {
+                            localStorage.setItem('active_uid', uid);
+                            localStorage.setItem('active_cid', cid);
+                            window.location.href = `verify.html?id=${i}`;
+                        };
                     }
                 });
             }
-        }
-
-        function setCardLocked(div, num, uid, cid, link) {
-            div.className = "bg-slate-800 p-8 rounded-3xl text-center border border-white/5 cursor-pointer hover:border-indigo-500 hover:bg-slate-800/50 transition-all shadow-xl group";
-            div.innerHTML = `
-                <div class="text-4xl mb-4 group-hover:scale-110 transition">🔒</div>
-                <p class="font-bold text-slate-300">البطاقة رقم ${num}</p>
-                <p class="text-[10px] text-slate-500 mt-2 text-center">انقر للتفعيل (انتظر 5 ثوانٍ بعد فتح الرابط)</p>
-            `;
-            div.onclick = () => {
-                localStorage.setItem('active_uid', uid);
-                localStorage.setItem('active_cid', cid);
-                window.open(link, '_blank');
-                // الانتقال لصفحة التفعيل بعد ثانية واحدة
-                setTimeout(() => { window.location.href = 'verify.html'; }, 1000);
-            };
         }
     </script>
 </body>
