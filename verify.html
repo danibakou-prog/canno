@@ -13,7 +13,7 @@
         <div id="loader" class="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-6"></div>
         <div id="successIcon" class="hidden text-6xl mb-6 text-center">✅</div>
         <h2 id="msg" class="text-2xl font-bold text-center text-indigo-400">تحقق Firebase...</h2>
-        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">نبحث عن طلب تفعيل شرعي في قاعدة البيانات.</p>
+        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">نتأكد من الرمز السري للعملية.</p>
     </div>
 
     <script type="module">
@@ -34,42 +34,40 @@
         const db = getFirestore(app);
 
         async function verify() {
+            const params = new URLSearchParams(window.location.search);
+            const urlToken = params.get('token'); // الرمز من الرابط
             const uid = localStorage.getItem('active_uid');
             
-            if (!uid) {
-                return updateUI("دخول مرفوض", "يجب عليك الضغط على البطاقة من داخل موقعك أولاً.", false);
+            if (!uid || !urlToken) {
+                return updateUI("دخول مرفوض ⚠️", "المفتاح الأمني مفقود أو غير صالح.", false);
             }
 
-            // محاولة جلب طلب التفعيل من السيرفر
             const requestRef = doc(db, "activation_requests", uid);
             const requestSnap = await getDoc(requestRef);
 
             if (requestSnap.exists()) {
                 const data = requestSnap.data();
-                const now = Date.now();
-                const reqTime = data.timestamp.toDate().getTime();
-
-                // التحقق من أن الطلب جديد (أقل من 10 دقائق)
-                if (now - reqTime < 600000) {
+                
+                // مطابقة الرمز المسجل مع الرمز القادم من الرابط
+                if (data.token === urlToken) {
                     const cid = data.cid;
 
-                    // 1. تفعيل البطاقة رسمياً في الفايرباس
+                    // 1. حذف الطلب فوراً (لإغلاق الثغرة نهائياً قبل التفعيل)
+                    await deleteDoc(requestRef);
+
+                    // 2. تفعيل البطاقة المحددة فقط
                     await setDoc(doc(db, "users", uid, "activatedCards", cid), {
                         active: true,
                         timestamp: serverTimestamp()
                     });
 
-                    // 2. حذف الطلب فوراً لضمان عدم إعادة استخدام الرابط (قفل الثغرة)
-                    await deleteDoc(requestRef);
-
-                    updateUI("تم التفعيل!", "تم تنشيط البطاقة " + cid + " بنجاح.", true);
+                    updateUI("تم التفعيل ✅", "تم تفعيل البطاقة " + cid + " بنجاح.", true);
                     setTimeout(() => window.close(), 2500);
                 } else {
-                    updateUI("طلب منتهي", "انتهت صلاحية طلب التفعيل. حاول مرة أخرى.", false);
-                    await deleteDoc(requestRef);
+                    updateUI("رمز غير صالح", "هذا الرابط لم يعد صالحاً للاستخدام.", false);
                 }
             } else {
-                updateUI("محاولة غش ⚠️", "لا يوجد طلب تفعيل مسجل لهذا المستخدم. التفعيل المباشر ممنوع.", false);
+                updateUI("طلب غير موجود", "انتهت صلاحية الرابط أو تم التفعيل مسبقاً.", false);
             }
         }
 
