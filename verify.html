@@ -10,19 +10,19 @@
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
     <div class="text-center p-10 bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl max-w-sm w-full">
-        <h2 id="title" class="text-2xl font-bold mb-4 text-indigo-400">تحقق من الأمان</h2>
-        <p class="text-slate-400 mb-6 text-sm">سيتم عرض زر التفعيل بعد انتهاء العداد</p>
+        <h2 id="title" class="text-2xl font-bold mb-4 text-indigo-400">نظام الحماية</h2>
+        <p id="subText" class="text-slate-400 mb-6 text-sm">يرجى الانتظار لتجهيز رابط التفعيل</p>
         
-        <div id="timer" class="text-6xl font-black mb-8 text-white">5</div>
+        <div id="timer" class="text-6xl font-black mb-8">5</div>
 
-        <button id="verifyBtn" class="hidden w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl transition shadow-lg animate-bounce">
-             إضغط هنا لتفعيل البطاقة ✅
+        <button id="verifyBtn" class="hidden w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl transition shadow-lg">
+             اضغط هنا للتفعيل وفتح الرابط ✅
         </button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
@@ -37,7 +37,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // روابط الإعلانات الخاصة بك
         const ads = {
             "1": "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf",
             "2": "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198"
@@ -47,38 +46,36 @@
         const cardNum = params.get('id');
         const adLink = ads[cardNum] || ads["1"];
 
-        let timeLeft = 5;
+        let count = 5;
         const timerEl = document.getElementById('timer');
         const verifyBtn = document.getElementById('verifyBtn');
 
-        // العداد التنازلي
-        const interval = setInterval(() => {
-            timeLeft--;
-            timerEl.innerText = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                timerEl.classList.add('hidden');
+        const countdown = setInterval(() => {
+            count--;
+            timerEl.innerText = count;
+            if (count <= 0) {
+                clearInterval(countdown);
+                timerEl.style.display = 'none';
                 verifyBtn.classList.remove('hidden');
-                document.getElementById('title').innerText = "البطاقة جاهزة!";
+                document.getElementById('subText').innerText = "الرابط جاهز الآن";
             }
         }, 1000);
 
-        // عند الضغط على زر التفعيل
         verifyBtn.onclick = async () => {
             const uid = localStorage.getItem('active_uid');
             const cid = localStorage.getItem('active_cid');
 
             if (uid && cid) {
-                // 1. تفعيل البطاقة في الداتابيز فوراً
+                // تفعيل البطاقة
                 await setDoc(doc(db, "users", uid, "activatedCards", cid), {
                     active: true,
                     timestamp: serverTimestamp()
                 });
 
-                // 2. فتح رابط الإعلان في صفحة جديدة
+                // فتح الإعلان في نافذة جديدة
                 window.open(adLink, '_blank');
 
-                // 3. العودة للصفحة الرئيسية
+                // العودة للرئيسية
                 window.location.href = "index.html";
             }
         };
