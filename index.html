@@ -54,7 +54,7 @@
         import { onSnapshot, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // ملاحظة: تأكد أن هذا الرابط تم إنشاؤه في ouo.io ليشير إلى صفحة verify.html الخاصة بك على GitHub
+        // الرابط المختصر الخاص بك من ouo.io
         const myShortLink = "https://ouo.io/ofE7Qg"; 
 
         onAuthStateChanged(window.auth, (user) => {
@@ -87,21 +87,22 @@
                 div.innerHTML = `<span class="text-3xl mb-3 block text-center">🔒</span><p class="text-[10px] font-bold text-slate-400 text-center">تفعيل البطاقة</p>`;
                 
                 div.onclick = () => {
-                    // تعديل مهم: نرسل الرابط مع البيانات بشكل يضمن وصولها لصفحة verify
-                    const activationUrl = myShortLink + "?uid=" + uid + "&cid=" + cid;
-                    window.open(activationUrl, '_blank');
+                    // تخزين البيانات في المتصفح لتجنب فقدانها عبر ouo.io
+                    localStorage.setItem('active_uid', uid);
+                    localStorage.setItem('active_cid', cid);
+                    
+                    window.open(myShortLink, '_blank');
                     
                     div.className = "card-waiting p-6 rounded-2xl text-center shadow-lg border-amber-500/50";
                     div.innerHTML = `<p class="text-[10px] font-bold text-amber-300 text-center">بانتظار التخطي...</p>`;
                 };
                 grid.appendChild(div);
 
-                // الاستماع للتغييرات في قاعدة البيانات
                 onSnapshot(doc(window.db, "users", uid, "activatedCards", cid), (snap) => {
                     if (snap.exists() && snap.data().active === true) {
                         const el = document.getElementById(cid);
                         if(el) {
-                            el.className = "card-active p-6 rounded-2xl text-center shadow-lg shadow-emerald-500/20";
+                            el.className = "card-active p-6 rounded-2xl text-center shadow-lg";
                             el.innerHTML = `<span class="text-[10px] font-bold mb-1 block uppercase opacity-70 text-center">نشطة ✅</span><span class="text-xl font-black font-mono text-center">#${Math.floor(1000 + Math.random()*8999)}</span>`;
                             el.onclick = null;
                         }
