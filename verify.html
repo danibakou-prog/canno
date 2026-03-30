@@ -2,17 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>????? ??????? ?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد التفعيل</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }</style>
+    <style>
+        body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }
+    </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen p-4">
     <div class="text-center p-10 bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl max-w-sm w-full">
         <div id="loader" class="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-6"></div>
-        <div id="successIcon" class="hidden text-6xl mb-6 text-center text-center text-center">?</div>
-        <h2 id="msg" class="text-2xl font-bold text-center">???? ????? ???????...</h2>
-        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">????? ?????? ???????? ???? ?????? ????? ????.</p>
+        
+        <div id="successIcon" class="hidden text-6xl mb-6 text-center">✅</div>
+        
+        <h2 id="msg" class="text-2xl font-bold text-center">جاري تأكيد التفعيل...</h2>
+        <p id="subMsg" class="text-slate-400 mt-2 text-sm text-center">يرجى الانتظار ثانية واحدة لمعالجة طلبك.</p>
     </div>
 
     <script type="module">
@@ -32,6 +37,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // التقاط البيانات من الرابط
         const params = new URLSearchParams(window.location.search);
         const uid = params.get('uid');
         const cid = params.get('cid');
@@ -39,21 +45,37 @@
         async function activate() {
             if (uid && cid) {
                 try {
+                    // إرسال إشارة التفعيل لقاعدة البيانات
                     await setDoc(doc(db, "users", uid, "activatedCards", cid), {
                         active: true,
                         timestamp: serverTimestamp()
                     });
+
+                    // تحديث الواجهة عند النجاح
                     document.getElementById('loader').classList.add('hidden');
                     document.getElementById('successIcon').classList.remove('hidden');
-                    document.getElementById('msg').innerText = "?? ??????? ?????!";
-                    document.getElementById('subMsg').innerText = "????? ?????? ??????? ????.";
-                    setTimeout(() => window.close(), 3000);
+                    document.getElementById('msg').innerText = "تم التفعيل بنجاح!";
+                    document.getElementById('subMsg').innerText = "يمكنك العودة للموقع الآن، ستجد البطاقة مفتوحة.";
+                    
+                    // إغلاق الصفحة تلقائياً بعد 3 ثوانٍ
+                    setTimeout(() => {
+                        window.close();
+                    }, 3000);
+
                 } catch (e) {
-                    document.getElementById('msg').innerText = "??? ???";
+                    console.error("Error:", e);
+                    document.getElementById('msg').innerText = "حدث خطأ في التفعيل";
+                    document.getElementById('subMsg').innerText = "تأكد من اتصالك بالإنترنت وحاول مجدداً.";
                 }
+            } else {
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('msg').innerText = "بيانات مفقودة";
+                document.getElementById('subMsg').innerText = "يبدو أنك دخلت الرابط بشكل خاطئ.";
             }
         }
-        activate();
+
+        // تشغيل الدالة فور تحميل الصفحة
+        window.onload = activate;
     </script>
 </body>
 </html>
