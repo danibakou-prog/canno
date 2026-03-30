@@ -1,181 +1,65 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام البطاقات الذكي 🎰</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+<script type="module">
+    // ... (نفس إعدادات Firebase السابقة)
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
-            authDomain: "soug-62f2f.firebaseapp.com",
-            projectId: "soug-62f2f",
-            storageBucket: "soug-62f2f.firebasestorage.app",
-            messagingSenderId: "672944475308",
-            appId: "1:672944475308:web:c8158bdf2c5613f51c2309"
-        };
+    // الروابط الجديدة الخاصة بك
+    const customLinks = [
+        "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf",
+        "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198"
+    ];
 
-        const app = initializeApp(firebaseConfig);
-        window.db = getFirestore(app);
-        window.auth = getAuth(app);
-    </script>
+    function renderCards(uid) {
+        const grid = document.getElementById('cardsGrid');
+        grid.innerHTML = '';
+        
+        // التكرار لبطاقتين فقط
+        for(let i=1; i<=2; i++) {
+            const cid = `card_${i}`;
+            const div = document.createElement('div');
+            div.id = cid;
+            let finalLink = customLinks[i-1];
+            
+            setCardLocked(div, i, uid, cid, finalLink);
+            grid.appendChild(div);
 
-    <style>
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background: #020617; 
-            color: white; 
-            min-height: screen;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card { 
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            position: relative; 
-            overflow: hidden;
-            border: 2px solid #1e293b;
-        }
-        .card-active { 
-            background: linear-gradient(135deg, #059669 0%, #064e3b 100%); 
-            border-color: #10b981;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-        }
-        .card-inactive { 
-            background: #0f172a; 
-        }
-        .progress-bar { 
-            position: absolute; 
-            bottom: 0; 
-            left: 0; 
-            height: 5px; 
-            background: #10b981; 
-            width: 0%; 
-            transition: width 5s linear; 
-        }
-        .loading-text {
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-    </style>
-</head>
-<body class="p-6">
+            onSnapshot(doc(window.db, "users", uid, "activatedCards", cid), (snap) => {
+                if (snap.exists() && snap.data().active === true) {
+                    const data = snap.data();
+                    const now = Date.now();
+                    const startTime = data.timestamp ? data.timestamp.toDate().getTime() : now;
+                    const diff = (now - startTime) / 1000;
 
-    <div class="max-w-md w-full space-y-8">
-        <div class="text-center">
-            <h1 class="text-4xl font-black text-indigo-400 mb-2">بطاقات الحظ 💎</h1>
-            <p class="text-slate-400 text-sm font-bold">اضغط للتفعيل التلقائي بعد 5 ثوانٍ</p>
-        </div>
-
-        <div class="grid grid-cols-1 gap-6">
-            <div id="card_1" onclick="startActivation(1)" class="card card-inactive p-8 rounded-[2rem] cursor-pointer hover:scale-[1.02] group">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold mb-1">البطاقة الأولى</h3>
-                        <p id="status_1" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">غير نشطة 🔒</p>
-                    </div>
-                    <span id="icon_1" class="text-4xl opacity-40 group-hover:opacity-100 transition-opacity">💳</span>
-                </div>
-                <div id="progress_1" class="progress-bar"></div>
-            </div>
-
-            <div id="card_2" onclick="startActivation(2)" class="card card-inactive p-8 rounded-[2rem] cursor-pointer hover:scale-[1.02] group">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold mb-1">البطاقة الثانية</h3>
-                        <p id="status_2" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">غير نشطة 🔒</p>
-                    </div>
-                    <span id="icon_2" class="text-4xl opacity-40 group-hover:opacity-100 transition-opacity">💰</span>
-                </div>
-                <div id="progress_2" class="progress-bar"></div>
-            </div>
-        </div>
-
-        <p class="text-center text-[10px] text-slate-600 italic">ملاحظة: التفعيل يتم برمجياً في السيرفر بمجرد انتهاء العداد.</p>
-    </div>
-
-    <script type="module">
-        import { doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        // الروابط المختصرة الخاصة بك
-        const LINKS = {
-            1: "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf",
-            2: "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198"
-        };
-
-        let userUID = null;
-
-        // تسجيل الدخول مجهول الهوية للتعرف على المستخدم
-        window.auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                userUID = user.uid;
-                monitorCards(user.uid);
-            } else {
-                await signInAnonymously(window.auth);
-            }
-        });
-
-        // وظيفة الضغط على البطاقة
-        window.startActivation = async (id) => {
-            if (!userUID) return;
-
-            // 1. فتح الإعلان في نافذة جديدة
-            window.open(LINKS[id], '_blank');
-
-            // 2. تحديث الواجهة لبدء العد التنازلي
-            const status = document.getElementById(`status_${id}`);
-            const progress = document.getElementById(`progress_${id}`);
-            const card = document.getElementById(`card_${id}`);
-
-            status.innerText = "جاري التحقق... ⏳";
-            status.className = "text-[10px] font-black text-amber-400 uppercase tracking-widest loading-text";
-            progress.style.width = "100%";
-            card.style.pointerEvents = "none"; // منع الضغط المتكرر
-
-            // 3. التفعيل التلقائي بعد 5 ثوانٍ
-            setTimeout(async () => {
-                await setDoc(doc(window.db, "users", userUID, "activatedCards", `card_${id}`), {
-                    active: true,
-                    timestamp: serverTimestamp()
-                });
-            }, 5000);
-        };
-
-        // مراقبة حالة البطاقات من Firebase
-        function monitorCards(uid) {
-            [1, 2].forEach(id => {
-                onSnapshot(doc(window.db, "users", uid, "activatedCards", `card_${id}`), (snap) => {
-                    if (snap.exists() && snap.data().active) {
-                        applyActiveUI(id);
+                    // تفعيل البطاقة لمدة 60 ثانية كمثال (يمكنك تغيير المدة)
+                    if (diff < 60) {
+                        const el = document.getElementById(cid);
+                        if(el) {
+                            el.className = "card-active p-6 rounded-2xl text-center shadow-lg";
+                            el.innerHTML = `<span class="text-[10px] font-bold mb-1 block uppercase opacity-70">نشطة ✅</span><span class="text-xl font-black font-mono">#${Math.floor(1000 + Math.random()*8999)}</span>`;
+                            el.onclick = null;
+                            setTimeout(() => setCardLocked(el, i, uid, cid, finalLink), (60 - diff) * 1000);
+                        }
+                    } else {
+                        setCardLocked(document.getElementById(cid), i, uid, cid, finalLink);
                     }
-                });
+                }
             });
         }
+    }
 
-        // تحويل شكل البطاقة إلى "نشطة"
-        function applyActiveUI(id) {
-            const card = document.getElementById(`card_${id}`);
-            const status = document.getElementById(`status_${id}`);
-            const icon = document.getElementById(`icon_${id}`);
-            const progress = document.getElementById(`progress_${id}`);
-
-            card.classList.replace('card-inactive', 'card-active');
-            card.onclick = null; // تعطيل الزر تماماً
-            status.innerText = "نشطة ومؤكدة ✅";
-            status.className = "text-[10px] font-black text-emerald-200 uppercase tracking-widest";
-            icon.classList.replace('opacity-40', 'opacity-100');
-            progress.style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+    function setCardLocked(div, i, uid, cid, finalLink) {
+        div.className = "bg-slate-800 p-6 rounded-2xl text-center border border-white/5 cursor-pointer hover:border-indigo-500 transition shadow-inner";
+        div.innerHTML = `<span class="text-3xl mb-3 block">🔒</span><p class="text-[10px] font-bold text-slate-400">البطاقة رقم ${i}</p>`;
+        div.onclick = () => {
+            localStorage.setItem('active_uid', uid);
+            localStorage.setItem('active_cid', cid);
+            
+            // فتح رابط الإعلان في نافذة جديدة
+            window.open(finalLink, '_blank');
+            
+            // تحويل الصفحة الحالية إلى صفحة التأكيد (الموجودة بالأسفل)
+            // ملاحظة: افترضنا أن اسم ملف التأكيد هو verify.html
+            setTimeout(() => {
+                window.location.href = "verify.html"; 
+            }, 500);
+        };
+    }
+</script>
