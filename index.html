@@ -3,156 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طومبولا الحظ | Pro</title>
+    <title>طومبولا الحظ | النسخة الذهبية</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --accent: #10b981;
-        }
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background: #0f172a; 
-            color: white; 
-            overflow-x: hidden;
-        }
-        /* خلفية متحركة */
-        .bg-animate {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 20% 30%, #1e1b4b 0%, #0f172a 100%);
-            z-index: -1;
-        }
-        .blob {
-            position: absolute;
-            width: 400px; height: 400px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            filter: blur(80px);
-            border-radius: 50%;
-            opacity: 0.15;
-            animation: move 20s infinite alternate;
-        }
-        @keyframes move {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(20%, 20%); }
+            --gold-light: #fdf2d5;
+            --gold-main: #d4af37;
+            --gold-dark: #aa841e;
+            --white-soft: #fcfcfc;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+            color: #2d3436;
+            overflow-x: hidden;
+            background-image: radial-gradient(#d4af371a 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f2d06b 50%, #aa841e 100%);
+        }
+
+        .gold-text {
+            background: linear-gradient(135deg, #aa841e 0%, #d4af37 50%, #aa841e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             border-radius: 24px;
         }
 
-        .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
+        .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.5s ease; }
         .page.active { display: flex; flex-direction: column; opacity: 1; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
-            transition: all 0.3s ease;
+        .luck-card {
+            position: relative;
+            background: white;
+            border: 2px solid #f1f2f6;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.6); }
 
-        .card-activated {
-            background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
-            border: 1px solid #34d399;
+        .luck-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold-main);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        .luck-card.active-state {
+            background: linear-gradient(145deg, #ffffff, #fdf2d5);
+            border: 2px solid var(--gold-main);
+        }
+
+        .card-pattern {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 80px;
+            height: 80px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37 0%, #aa841e 100%);
+            color: white;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .loader-ring {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--gold-main);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .shimmer {
             position: relative;
             overflow: hidden;
         }
-        .card-activated::before {
+        .shimmer::after {
             content: '';
             position: absolute;
             top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.6), transparent);
             transform: rotate(45deg);
             animation: shine 3s infinite;
         }
         @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
-
-        input { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; transition: all 0.3s !important; }
-        input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 4px rgba(99,102,241,0.1) !important; }
     </style>
 </head>
 <body>
-    <div class="bg-animate">
-        <div class="blob"></div>
-    </div>
 
     <!-- صفحة تسجيل الدخول -->
     <div id="loginPage" class="page active items-center justify-center p-4">
-        <div class="max-w-md w-full glass p-8 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">🎰</div>
-            <h1 class="text-4xl font-black mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">طومبولا الحظ</h1>
-            <p class="text-slate-400 text-center mb-8 text-sm">سجل دخولك وابدأ رحلة الربح</p>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-2">البريد الإلكتروني</label>
-                    <input type="email" id="emailInput" placeholder="name@example.com" class="w-full p-4 rounded-2xl outline-none text-left text-white" dir="ltr">
+        <div class="max-w-md w-full glass-card p-10 relative">
+            <div class="text-center mb-10">
+                <div class="inline-block p-4 rounded-full bg-gold-light mb-4">
+                    <span class="text-4xl">🏆</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-2">رقم الهاتف</label>
-                    <input type="tel" id="phoneInput" placeholder="06XXXXXXXX" class="w-full p-4 rounded-2xl outline-none text-left text-white" dir="ltr">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-2">كلمة المرور</label>
-                    <input type="password" id="passwordInput" placeholder="••••••••" class="w-full p-4 rounded-2xl outline-none text-left text-white" dir="ltr">
-                </div>
-                
-                <button id="authBtn" class="w-full btn-primary text-white font-black py-4 rounded-2xl mt-4 text-lg">دخول / إنشاء حساب</button>
+                <h1 class="text-3xl font-black gold-text mb-2">طومبولا الحظ الملكية</h1>
+                <p class="text-gray-500 text-sm">أدخل بياناتك للمشاركة في السحب</p>
             </div>
-            
-            <p id="authError" class="text-red-400 text-xs mt-4 text-center hidden font-bold"></p>
+
+            <div class="space-y-4">
+                <!-- زر جوجل -->
+                <button id="googleAuthBtn" class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-50 transition mb-2 shadow-sm">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M12 5.04c1.9 0 3.53.65 4.89 1.93l3.6-3.6C18.21 1.18 15.38 0 12 0 7.31 0 3.25 2.69 1.19 6.63l4.15 3.22c1-3.06 3.86-5.04 6.66-5.04z"/>
+                        <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58l3.89 3.02c2.27-2.08 3.53-5.2 3.53-8.84z"/>
+                        <path fill="#FBBC05" d="M5.34 14.65c-.25-.74-.4-1.53-.4-2.35s.15-1.61.4-2.35L1.19 6.63C.43 8.24 0 10.07 0 12c0 1.93.43 3.76 1.19 5.37l4.15-3.22z"/>
+                        <path fill="#34A853" d="M12 24c3.24 0 5.97-1.09 7.96-2.96l-3.89-3.02c-1.11.75-2.53 1.19-4.07 1.19-3.07 0-5.67-2.08-6.6-4.88L1.19 17.55C3.25 21.31 7.31 24 12 24z"/>
+                    </svg>
+                    الدخول بواسطة جوجل
+                </button>
+
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-gray-100"></div>
+                    <span class="flex-shrink mx-4 text-gray-300 text-xs">أو عبر البريد</span>
+                    <div class="flex-grow border-t border-gray-100"></div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 mr-1">البريد الإلكتروني</label>
+                    <input type="email" id="emailInput" placeholder="example@mail.com" class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:border-gold-main transition text-left" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 mr-1">رقم الهاتف (اختياري مع جوجل)</label>
+                    <input type="tel" id="phoneInput" placeholder="06XXXXXXXX" class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:border-gold-main transition text-left" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 mr-1">كلمة المرور</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••" class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:border-gold-main transition text-left" dir="ltr">
+                </div>
+                <button id="authBtn" class="w-full btn-gold py-4 rounded-xl font-bold text-lg mt-2">دخول / تسجيل جديد</button>
+            </div>
+            <p id="authError" class="text-red-500 text-xs mt-4 text-center hidden"></p>
         </div>
     </div>
 
-    <!-- صفحة لوحة التحكم -->
+    <!-- لوحة التحكم -->
     <div id="dashboardPage" class="page p-6">
-        <div class="max-w-4xl mx-auto w-full">
-            <header class="flex justify-between items-center mb-10 mt-4">
-                <div>
-                    <h2 class="text-2xl font-black">لوحة التحكم</h2>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                        <p id="userPhoneDisplay" class="text-sm text-slate-400">جاري التحميل...</p>
+        <div class="max-w-6xl mx-auto w-full">
+            <header class="flex justify-between items-center mb-12 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 gold-gradient rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">👑</div>
+                    <div>
+                        <h2 class="text-xl font-black text-gray-800">مرحباً بك</h2>
+                        <p id="userPhoneDisplay" class="text-sm text-gold-dark font-bold">جاري التحميل...</p>
                     </div>
                 </div>
-                <button id="logoutBtn" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-black px-5 py-2.5 rounded-xl transition">تسجيل خروج</button>
+                <button id="logoutBtn" class="px-6 py-2 border-2 border-red-50 text-red-400 hover:bg-red-50 rounded-xl transition font-bold text-sm">خروج</button>
             </header>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="cardsGrid">
-                <!-- Cards will be injected here -->
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8" id="cardsGrid">
+                <!-- الـ 10 بطاقات الذهبية -->
             </div>
 
-            <div class="mt-12 glass p-6 text-center">
-                <p class="text-slate-400 text-xs leading-relaxed">
-                    ملاحظة: البطاقة صالحة لمدة دقيقة واحدة من وقت التفعيل. <br>
-                    يجب عليك زيارة الرابط لضمان بقاء البطاقة نشطة.
-                </p>
-            </div>
+            <footer class="mt-16 text-center">
+                <div class="inline-block px-8 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                    <p class="text-gray-400 text-xs">
+                        تنبيه: تفعيل البطاقة يستمر لمدة دقيقة واحدة. <br>
+                        <span class="text-gold-main font-bold">يجب البقاء في صفحة الرابط لضمان الاعتماد.</span>
+                    </p>
+                </div>
+            </footer>
         </div>
     </div>
 
-    <!-- صفحة التأكيد -->
+    <!-- صفحة التحقق -->
     <div id="verifyPage" class="page items-center justify-center p-4">
-        <div class="glass p-12 text-center max-w-sm w-full relative">
-            <div id="vLoader" class="relative w-24 h-24 mx-auto mb-8">
-                <div class="absolute inset-0 border-4 border-indigo-500/20 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-t-indigo-500 rounded-full animate-spin"></div>
-                <div id="vTimer" class="absolute inset-0 flex items-center justify-center text-3xl font-black text-indigo-400">5</div>
-            </div>
-            <h2 id="vMsg" class="text-xl font-black mb-3">جاري التحقق من الرابط...</h2>
-            <p class="text-slate-400 text-sm">سيتم تفعيل البطاقة فور انتهاء العد</p>
+        <div class="glass-card p-12 text-center max-w-sm w-full border-t-8 border-t-gold-main">
+            <div class="loader-ring mx-auto mb-6"></div>
+            <div id="vTimer" class="text-4xl font-black gold-text mb-4">5</div>
+            <h2 id="vMsg" class="text-xl font-black text-gray-800 mb-2">جاري فحص الارتباط...</h2>
+            <p class="text-gray-400 text-sm italic">يرجى الانتظار، نحن نجهز هديتك</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
@@ -160,33 +213,45 @@
             projectId: "soug-62f2f",
             storageBucket: "soug-62f2f.firebasestorage.app",
             messagingSenderId: "672944475308",
-            appId: "1:672944475308:web:c8158bdf2c5613f51c2309",
-            measurementId: "G-YE7431JXSF"
+            appId: "1:672944475308:web:c8158bdf2c5613f51c2309"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const appId = "tombola-luck-v1";
+        const provider = new GoogleAuthProvider();
+        const appId = "tombola-gold-v2";
 
         const targetLinks = [
             "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf",
-            "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198"
+            "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198",
+            "https://www.profitablecpmratenetwork.com/jgqg9xia?key=b49affbb6945808aa8cd9074e2910c1d",
+            "https://www.profitablecpmratenetwork.com/iv5y621fra?key=f98727da96eb655e76c5c01de54d9aa4",
+            "https://www.profitablecpmratenetwork.com/wbh3kjsg?key=8bf605a96985bb2997c4376a4f31c468",
+            "https://www.profitablecpmratenetwork.com/m1mwi7qm9k?key=afe3a8cb4cd1a81b0c4109acb199a6c3",
+            "https://www.profitablecpmratenetwork.com/kcr4jsdt69?key=ce9024bab49c39c00da9e4d0c7a6fc65",
+            "https://www.profitablecpmratenetwork.com/ttmvtandh?key=42cad8785acf77e1ea4e0c20f75151c0",
+            "https://www.profitablecpmratenetwork.com/f4earp03d2?key=3617f1575ee370ad1ae82be1863f9471",
+            "https://www.profitablecpmratenetwork.com/t4cf8hjjw8?key=03431c64240f459d21cd2f16f13baf92"
         ];
 
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active');
+            setTimeout(() => {
+                const target = document.getElementById(id);
+                if (target) target.classList.add('active');
+            }, 50);
         }
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 let ph = localStorage.getItem('user_phone');
                 if (!ph) {
-                    const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
-                    ph = snap.exists() ? snap.data().phone : "غير مسجل";
-                    localStorage.setItem('user_phone', ph);
+                    try {
+                        const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
+                        ph = snap.exists() ? snap.data().phone : (user.phoneNumber || user.email);
+                        localStorage.setItem('user_phone', ph);
+                    } catch (e) { ph = "Unknown"; }
                 }
                 document.getElementById('userPhoneDisplay').innerText = ph;
                 showPage('dashboardPage');
@@ -196,12 +261,36 @@
             }
         });
 
+        // تسجيل الدخول بجوجل
+        document.getElementById('googleAuthBtn').onclick = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                // فحص إذا كان المستخدم جديداً لحفظ بياناته
+                const profileDoc = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
+                const snap = await getDoc(profileDoc);
+                if (!snap.exists()) {
+                    await setDoc(profileDoc, {
+                        phone: user.email, // استخدام الايميل كمعرف افتراضي للهاتف إذا سجل بجوجل
+                        email: user.email,
+                        name: user.displayName,
+                        createdAt: serverTimestamp()
+                    });
+                }
+            } catch (error) {
+                const eb = document.getElementById('authError');
+                eb.innerText = "خطأ جوجل: " + error.message;
+                eb.classList.remove('hidden');
+            }
+        };
+
+        // تسجيل الدخول العادي
         document.getElementById('authBtn').onclick = async () => {
             const e = document.getElementById('emailInput').value;
             const p = document.getElementById('passwordInput').value;
             const ph = document.getElementById('phoneInput').value;
-            if(!e || !p || !ph) return alert("يرجى ملء كافة الخانات");
-            
+            if(!e || !p || !ph) return;
+
             localStorage.setItem('user_phone', ph);
             try { 
                 await signInWithEmailAndPassword(auth, e, p);
@@ -220,15 +309,15 @@
         };
 
         document.getElementById('logoutBtn').onclick = () => {
-            localStorage.removeItem('user_phone');
+            localStorage.clear();
             signOut(auth);
         };
 
         function renderCards(uid) {
             const grid = document.getElementById('cardsGrid');
             grid.innerHTML = '';
-            for(let i=1; i<=2; i++) {
-                const cid = `card_${i}`;
+            for(let i=1; i<=10; i++) {
+                const cid = `gold_card_${i}`;
                 const container = document.createElement('div');
                 container.id = cid;
                 grid.appendChild(container);
@@ -236,34 +325,30 @@
                 onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', cid), (snap) => {
                     const data = snap.data();
                     const now = Date.now();
-                    const active = snap.exists() && data.active && data.timestamp && (now - data.timestamp.toDate().getTime())/1000 < 60;
+                    const active = snap.exists() && data && data.active && data.timestamp && (now - data.timestamp.toDate().getTime())/1000 < 60;
 
                     if(active) {
-                        container.className = "card-activated p-10 rounded-[32px] text-center shadow-2xl scale-100 transition-all duration-500";
+                        container.className = "luck-card active-state p-8 text-center shimmer";
                         container.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <div class="bg-white/20 p-3 rounded-2xl mb-4">
-                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <h3 class="text-xs font-bold tracking-widest text-emerald-200 uppercase mb-2">بطاقة نشطة</h3>
-                                <div class="text-4xl font-black font-mono tracking-tighter">LUCK-${Math.floor(10000+Math.random()*90000)}</div>
-                                <div class="mt-6 pt-4 border-t border-white/10 w-full">
-                                    <p class="text-[10px] text-emerald-100/60 uppercase">المعرف المسجل</p>
-                                    <p class="text-sm font-bold">${data.phone}</p>
-                                </div>
+                            <div class="relative z-10">
+                                <div class="text-gold-main font-black text-xs tracking-widest mb-2 uppercase">مفعلة بنجاح</div>
+                                <div class="text-3xl mb-4">⭐</div>
+                                <div class="text-xl font-bold text-gray-800 mb-1">بطاقة الحظ #${i}</div>
+                                <div class="text-sm font-mono text-gold-dark bg-gold-light/30 py-2 rounded-lg">GLD-${Math.floor(100000+Math.random()*899999)}</div>
+                                <div class="mt-4 text-[10px] text-gray-400">تاريخ التفعيل: ${new Date().toLocaleTimeString('ar-EG')}</div>
                             </div>
                         `;
                     } else {
-                        container.className = "glass p-10 rounded-[32px] text-center cursor-pointer hover:bg-white/10 transition-all duration-300 group border-white/5 hover:border-indigo-500/50";
+                        container.className = "luck-card p-8 text-center cursor-pointer group";
                         container.innerHTML = `
-                            <div class="mb-6 relative inline-block">
-                                <div class="text-5xl group-hover:scale-110 transition duration-500">🔒</div>
-                                <div class="absolute -top-2 -right-2 w-4 h-4 bg-indigo-500 rounded-full animate-ping opacity-0 group-hover:opacity-100"></div>
-                            </div>
-                            <h3 class="text-xl font-black mb-2">بطاقة الحظ #${i}</h3>
-                            <p class="text-slate-500 text-xs">انقر لفتح القفل وتنشيط الكود الخاص بك</p>
-                            <div class="mt-8 py-3 bg-indigo-500/10 rounded-xl text-indigo-400 text-xs font-bold group-hover:bg-indigo-500 group-hover:text-white transition duration-300">
-                                تفعيل الآن
+                            <div class="card-pattern"></div>
+                            <div class="relative z-10 flex flex-col h-full justify-between">
+                                <div>
+                                    <div class="text-4xl mb-4 grayscale group-hover:grayscale-0 transition duration-500">🎁</div>
+                                    <h3 class="text-lg font-black text-gray-700">بطاقة السحب #${i}</h3>
+                                    <p class="text-xs text-gray-400 mt-2">اضغط للمطالبة بفرصتك</p>
+                                </div>
+                                <div class="mt-8 py-3 btn-gold rounded-xl font-bold text-xs uppercase tracking-wider">تفعيل البطاقة</div>
                             </div>
                         `;
                         container.onclick = () => { 
@@ -271,7 +356,7 @@
                             handleActivation(uid, cid); 
                         };
                     }
-                });
+                }, (error) => console.error(error));
             }
         }
 
@@ -284,17 +369,14 @@
                 timerEl.innerText = time;
                 if(time <= 0) {
                     clearInterval(itv);
-                    const ph = localStorage.getItem('user_phone') || "Unknown";
+                    const ph = localStorage.getItem('user_phone') || auth.currentUser.email;
                     try {
                         await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', cid), {
                             active: true, phone: ph, timestamp: serverTimestamp()
                         });
-                        await addDoc(collection(db, 'all_activations'), {
-                            phone: ph, userId: uid, card: cid, time: serverTimestamp()
-                        });
-                        document.getElementById('vMsg').innerText = "اكتمل التفعيل!";
+                        document.getElementById('vMsg').innerText = "تم التوثيق!";
                         setTimeout(() => showPage('dashboardPage'), 800);
-                    } catch (e) { alert(e.message); }
+                    } catch (e) { console.error(e); }
                 }
             }, 1000);
         }
