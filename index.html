@@ -3,382 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طومبولا الحظ | النسخة الذهبية</title>
+    <title>نظام تسجيل الدخول والتذاكر</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold-light: #fdf2d5;
-            --gold-main: #d4af37;
-            --gold-dark: #aa841e;
-            --white-soft: #fcfcfc;
-        }
-
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #f8f9fa;
-            color: #2d3436;
-            overflow-x: hidden;
-            background-image: radial-gradient(#d4af371a 1px, transparent 1px);
-            background-size: 30px 30px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 100%);
+            min-height: 100vh;
         }
-
-        .gold-gradient {
-            background: linear-gradient(135deg, #d4af37 0%, #f2d06b 50%, #aa841e 100%);
-        }
-
-        .gold-text {
-            background: linear-gradient(135deg, #aa841e 0%, #d4af37 50%, #aa841e 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 32px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
         }
-
-        .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.5s ease; }
-        .page.active { display: flex; flex-direction: column; opacity: 1; }
-
-        .luck-card {
-            position: relative;
-            background: white;
-            border: 2px solid #f1f2f6;
-            border-radius: 20px;
-            overflow: hidden;
+        .ticket-card {
+            min-height: 400px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .luck-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--gold-main);
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
-        }
-
-        .luck-card.active-state {
-            background: linear-gradient(145deg, #ffffff, #fdf2d5);
-            border: 2px solid var(--gold-main);
-        }
-
-        .card-pattern {
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 80px;
-            height: 80px;
-            background: var(--gold-light);
-            border-radius: 50%;
-            opacity: 0.3;
-            z-index: 0;
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, #d4af37 0%, #aa841e 100%);
-            color: white;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-gold:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
-        }
-
-        .loader-ring {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--gold-main);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .shimmer {
+            border: 3px dashed #cbd5e1;
+            background: white;
             position: relative;
-            overflow: hidden;
         }
-        .shimmer::after {
+        .ticket-card:hover {
+            transform: translateY(-15px);
+            border-color: #2563eb;
+            box-shadow: 0 30px 50px -15px rgba(37, 99, 235, 0.2);
+        }
+        .hidden-page {
+            display: none;
+        }
+        .ticket-cutout::before, .ticket-cutout::after {
             content: '';
             position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.6), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
+            left: -20px;
+            width: 40px;
+            height: 40px;
+            background: #e0e7ff;
+            border-radius: 50%;
+            top: 70%;
+            transform: translateY(-50%);
         }
-        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+        .ticket-cutout::after {
+            left: auto;
+            right: -20px;
+        }
+        .ticket-divider {
+            border-top: 3px dashed #f1f5f9;
+            width: 100%;
+            margin-top: auto;
+            padding-top: 2rem;
+            position: relative;
+        }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center p-4 md:p-10">
 
-    <!-- صفحة تسجيل الدخول -->
-    <div id="loginPage" class="page active items-center justify-center p-4">
-        <div class="max-w-md w-full glass-card p-10 relative">
-            <div class="text-center mb-10">
-                <div class="inline-block p-4 rounded-full bg-gold-light mb-4">
-                    <span class="text-4xl">🏆</span>
+    <!-- Auth Section -->
+    <div id="auth-container" class="w-full max-w-lg p-12 glass-card">
+        <div class="text-center mb-10">
+            <h1 id="auth-title" class="text-4xl font-black text-gray-900">تسجيل الدخول</h1>
+            <p id="auth-subtitle" class="text-gray-500 mt-3 text-xl">مرحباً بك في منصة التذاكر</p>
+        </div>
+
+        <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-6">
+            <div id="register-fields" class="hidden-page space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">رقم الهاتف</label>
+                    <input type="tel" id="phone" placeholder="05xxxxxxxx" class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:outline-none transition-all text-lg">
                 </div>
-                <h1 class="text-3xl font-black gold-text mb-2">طومبولا الحظ الملكية</h1>
-                <p class="text-gray-500 text-sm">أدخل بياناتك للمشاركة في السحب</p>
             </div>
 
-            <div class="space-y-4">
-                <!-- زر جوجل -->
-                <button id="googleAuthBtn" class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 py-3 rounded-xl font-bold text-gray-700 hover:bg-gray-50 transition mb-2 shadow-sm">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24">
-                        <path fill="#EA4335" d="M12 5.04c1.9 0 3.53.65 4.89 1.93l3.6-3.6C18.21 1.18 15.38 0 12 0 7.31 0 3.25 2.69 1.19 6.63l4.15 3.22c1-3.06 3.86-5.04 6.66-5.04z"/>
-                        <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58l3.89 3.02c2.27-2.08 3.53-5.2 3.53-8.84z"/>
-                        <path fill="#FBBC05" d="M5.34 14.65c-.25-.74-.4-1.53-.4-2.35s.15-1.61.4-2.35L1.19 6.63C.43 8.24 0 10.07 0 12c0 1.93.43 3.76 1.19 5.37l4.15-3.22z"/>
-                        <path fill="#34A853" d="M12 24c3.24 0 5.97-1.09 7.96-2.96l-3.89-3.02c-1.11.75-2.53 1.19-4.07 1.19-3.07 0-5.67-2.08-6.6-4.88L1.19 17.55C3.25 21.31 7.31 24 12 24z"/>
-                    </svg>
-                    الدخول بواسطة جوجل
-                </button>
-
-                <div class="relative flex py-2 items-center">
-                    <div class="flex-grow border-t border-gray-100"></div>
-                    <span class="flex-shrink mx-4 text-gray-300 text-xs">أو عبر البريد</span>
-                    <div class="flex-grow border-t border-gray-100"></div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 mr-1">البريد الإلكتروني</label>
-                    <input type="email" id="emailInput" placeholder="example@mail.com" class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:border-gold-main transition text-left" dir="ltr">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 mr-1">رقم الهاتف (اختياري مع جوجل)</label>
-                    <input type="tel" id="phoneInput" placeholder="06XXXXXXXX" class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:border-gold-main transition text-left" dir="ltr">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 mr-1">كلمة المرور</label>
-                    <input type="password" id="passwordInput" placeholder="••••••••" class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-none focus:border-gold-main transition text-left" dir="ltr">
-                </div>
-                <button id="authBtn" class="w-full btn-gold py-4 rounded-xl font-bold text-lg mt-2">دخول / تسجيل جديد</button>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">البريد الإلكتروني</label>
+                <input type="email" id="email" required placeholder="name@company.com" class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:outline-none transition-all text-lg">
             </div>
-            <p id="authError" class="text-red-500 text-xs mt-4 text-center hidden"></p>
+
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">كلمة السر</label>
+                <input type="password" id="password" required placeholder="••••••••" class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 focus:outline-none transition-all text-lg">
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 transform hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-blue-300 mt-8">
+                دخول للنظام
+            </button>
+        </form>
+
+        <div class="mt-10 text-center border-t border-gray-100 pt-8">
+            <button onclick="toggleAuthMode()" id="toggle-link" class="text-blue-600 font-bold text-lg hover:text-blue-800 transition-colors">
+                ليس لديك حساب؟ اشترك الآن
+            </button>
         </div>
     </div>
 
-    <!-- لوحة التحكم -->
-    <div id="dashboardPage" class="page p-6">
-        <div class="max-w-6xl mx-auto w-full">
-            <header class="flex justify-between items-center mb-12 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 gold-gradient rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">👑</div>
-                    <div>
-                        <h2 class="text-xl font-black text-gray-800">مرحباً بك</h2>
-                        <p id="userPhoneDisplay" class="text-sm text-gold-dark font-bold">جاري التحميل...</p>
-                    </div>
-                </div>
-                <button id="logoutBtn" class="px-6 py-2 border-2 border-red-50 text-red-400 hover:bg-red-50 rounded-xl transition font-bold text-sm">خروج</button>
-            </header>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8" id="cardsGrid">
-                <!-- الـ 10 بطاقات الذهبية -->
+    <!-- Tickets Section -->
+    <div id="tickets-container" class="hidden-page w-full max-w-[1600px]">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-16 bg-white p-10 rounded-[40px] shadow-xl border border-white">
+            <div class="mb-6 md:mb-0 text-center md:text-right">
+                <h2 class="text-5xl font-black text-gray-900 tracking-tight">التذاكر النشطة</h2>
+                <p class="text-blue-600 text-2xl mt-2 font-medium">سيتم التوجه إلى Google في هذه الصفحة عند النقر</p>
             </div>
+            <button onclick="logout()" class="bg-gray-100 text-gray-800 px-10 py-4 rounded-2xl hover:bg-red-500 hover:text-white transition-all font-black text-xl shadow-sm">
+                خروج
+            </button>
+        </div>
 
-            <footer class="mt-16 text-center">
-                <div class="inline-block px-8 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                    <p class="text-gray-400 text-xs">
-                        تنبيه: تفعيل البطاقة يستمر لمدة دقيقة واحدة. <br>
-                        <span class="text-gold-main font-bold">يجب البقاء في صفحة الرابط لضمان الاعتماد.</span>
-                    </p>
-                </div>
-            </footer>
+        <div id="tickets-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
+            <!-- Tickets injected here -->
         </div>
     </div>
 
-    <!-- صفحة التحقق -->
-    <div id="verifyPage" class="page items-center justify-center p-4">
-        <div class="glass-card p-12 text-center max-w-sm w-full border-t-8 border-t-gold-main">
-            <div class="loader-ring mx-auto mb-6"></div>
-            <div id="vTimer" class="text-4xl font-black gold-text mb-4">5</div>
-            <h2 id="vMsg" class="text-xl font-black text-gray-800 mb-2">جاري فحص الارتباط...</h2>
-            <p class="text-gray-400 text-sm italic">يرجى الانتظار، نحن نجهز هديتك</p>
-        </div>
-    </div>
+    <script>
+        let isLoginMode = true;
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+            const registerFields = document.getElementById('register-fields');
+            const submitBtn = document.getElementById('submit-btn');
+            const toggleLink = document.getElementById('toggle-link');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
-            authDomain: "soug-62f2f.firebaseapp.com",
-            projectId: "soug-62f2f",
-            storageBucket: "soug-62f2f.firebasestorage.app",
-            messagingSenderId: "672944475308",
-            appId: "1:672944475308:web:c8158bdf2c5613f51c2309"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const appId = "tombola-gold-v2";
-
-        const targetLinks = [
-            "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf",
-            "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198",
-            "https://www.profitablecpmratenetwork.com/jgqg9xia?key=b49affbb6945808aa8cd9074e2910c1d",
-            "https://www.profitablecpmratenetwork.com/iv5y621fra?key=f98727da96eb655e76c5c01de54d9aa4",
-            "https://www.profitablecpmratenetwork.com/wbh3kjsg?key=8bf605a96985bb2997c4376a4f31c468",
-            "https://www.profitablecpmratenetwork.com/m1mwi7qm9k?key=afe3a8cb4cd1a81b0c4109acb199a6c3",
-            "https://www.profitablecpmratenetwork.com/kcr4jsdt69?key=ce9024bab49c39c00da9e4d0c7a6fc65",
-            "https://www.profitablecpmratenetwork.com/ttmvtandh?key=42cad8785acf77e1ea4e0c20f75151c0",
-            "https://www.profitablecpmratenetwork.com/f4earp03d2?key=3617f1575ee370ad1ae82be1863f9471",
-            "https://www.profitablecpmratenetwork.com/t4cf8hjjw8?key=03431c64240f459d21cd2f16f13baf92"
-        ];
-
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            setTimeout(() => {
-                const target = document.getElementById(id);
-                if (target) target.classList.add('active');
-            }, 50);
-        }
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                let ph = localStorage.getItem('user_phone');
-                if (!ph) {
-                    try {
-                        const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
-                        ph = snap.exists() ? snap.data().phone : (user.phoneNumber || user.email);
-                        localStorage.setItem('user_phone', ph);
-                    } catch (e) { ph = "Unknown"; }
-                }
-                document.getElementById('userPhoneDisplay').innerText = ph;
-                showPage('dashboardPage');
-                renderCards(user.uid);
+            if (isLoginMode) {
+                title.innerText = 'تسجيل الدخول';
+                subtitle.innerText = 'مرحباً بك في منصة التذاكر';
+                registerFields.classList.add('hidden-page');
+                submitBtn.innerText = 'دخول للنظام';
+                toggleLink.innerText = 'ليس لديك حساب؟ اشترك الآن';
             } else {
-                showPage('loginPage');
-            }
-        });
-
-        // تسجيل الدخول بجوجل
-        document.getElementById('googleAuthBtn').onclick = async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                // فحص إذا كان المستخدم جديداً لحفظ بياناته
-                const profileDoc = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
-                const snap = await getDoc(profileDoc);
-                if (!snap.exists()) {
-                    await setDoc(profileDoc, {
-                        phone: user.email, // استخدام الايميل كمعرف افتراضي للهاتف إذا سجل بجوجل
-                        email: user.email,
-                        name: user.displayName,
-                        createdAt: serverTimestamp()
-                    });
-                }
-            } catch (error) {
-                const eb = document.getElementById('authError');
-                eb.innerText = "خطأ جوجل: " + error.message;
-                eb.classList.remove('hidden');
-            }
-        };
-
-        // تسجيل الدخول العادي
-        document.getElementById('authBtn').onclick = async () => {
-            const e = document.getElementById('emailInput').value;
-            const p = document.getElementById('passwordInput').value;
-            const ph = document.getElementById('phoneInput').value;
-            if(!e || !p || !ph) return;
-
-            localStorage.setItem('user_phone', ph);
-            try { 
-                await signInWithEmailAndPassword(auth, e, p);
-            } catch (err) { 
-                try { 
-                    const res = await createUserWithEmailAndPassword(auth, e, p);
-                    await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), {
-                        phone: ph, email: e, createdAt: serverTimestamp()
-                    });
-                } catch(err2) { 
-                    const eb = document.getElementById('authError');
-                    eb.innerText = "خطأ: " + err2.message;
-                    eb.classList.remove('hidden');
-                } 
-            }
-        };
-
-        document.getElementById('logoutBtn').onclick = () => {
-            localStorage.clear();
-            signOut(auth);
-        };
-
-        function renderCards(uid) {
-            const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = '';
-            for(let i=1; i<=10; i++) {
-                const cid = `gold_card_${i}`;
-                const container = document.createElement('div');
-                container.id = cid;
-                grid.appendChild(container);
-
-                onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', cid), (snap) => {
-                    const data = snap.data();
-                    const now = Date.now();
-                    const active = snap.exists() && data && data.active && data.timestamp && (now - data.timestamp.toDate().getTime())/1000 < 60;
-
-                    if(active) {
-                        container.className = "luck-card active-state p-8 text-center shimmer";
-                        container.innerHTML = `
-                            <div class="relative z-10">
-                                <div class="text-gold-main font-black text-xs tracking-widest mb-2 uppercase">مفعلة بنجاح</div>
-                                <div class="text-3xl mb-4">⭐</div>
-                                <div class="text-xl font-bold text-gray-800 mb-1">بطاقة الحظ #${i}</div>
-                                <div class="text-sm font-mono text-gold-dark bg-gold-light/30 py-2 rounded-lg">GLD-${Math.floor(100000+Math.random()*899999)}</div>
-                                <div class="mt-4 text-[10px] text-gray-400">تاريخ التفعيل: ${new Date().toLocaleTimeString('ar-EG')}</div>
-                            </div>
-                        `;
-                    } else {
-                        container.className = "luck-card p-8 text-center cursor-pointer group";
-                        container.innerHTML = `
-                            <div class="card-pattern"></div>
-                            <div class="relative z-10 flex flex-col h-full justify-between">
-                                <div>
-                                    <div class="text-4xl mb-4 grayscale group-hover:grayscale-0 transition duration-500">🎁</div>
-                                    <h3 class="text-lg font-black text-gray-700">بطاقة السحب #${i}</h3>
-                                    <p class="text-xs text-gray-400 mt-2">اضغط للمطالبة بفرصتك</p>
-                                </div>
-                                <div class="mt-8 py-3 btn-gold rounded-xl font-bold text-xs uppercase tracking-wider">تفعيل البطاقة</div>
-                            </div>
-                        `;
-                        container.onclick = () => { 
-                            window.open(targetLinks[i-1], '_blank'); 
-                            handleActivation(uid, cid); 
-                        };
-                    }
-                }, (error) => console.error(error));
+                title.innerText = 'إنشاء حساب';
+                subtitle.innerText = 'ابدأ رحلتك معنا واحصل على تذاكرك';
+                registerFields.classList.remove('hidden-page');
+                submitBtn.innerText = 'تأكيد الاشتراك';
+                toggleLink.innerText = 'لديك حساب؟ سجل دخولك';
             }
         }
 
-        async function handleActivation(uid, cid) {
-            showPage('verifyPage');
-            let time = 5;
-            const timerEl = document.getElementById('vTimer');
-            const itv = setInterval(async () => {
-                time--;
-                timerEl.innerText = time;
-                if(time <= 0) {
-                    clearInterval(itv);
-                    const ph = localStorage.getItem('user_phone') || auth.currentUser.email;
-                    try {
-                        await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', cid), {
-                            active: true, phone: ph, timestamp: serverTimestamp()
-                        });
-                        document.getElementById('vMsg').innerText = "تم التوثيق!";
-                        setTimeout(() => showPage('dashboardPage'), 800);
-                    } catch (e) { console.error(e); }
-                }
-            }, 1000);
+        function handleAuth(event) {
+            event.preventDefault();
+            showTicketsPage();
+        }
+
+        function showTicketsPage() {
+            document.getElementById('auth-container').classList.add('hidden-page');
+            document.getElementById('tickets-container').classList.remove('hidden-page');
+            renderTickets();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function redirectToGoogle() {
+            // التوجه إلى جوجل في نفس الصفحة
+            window.location.href = 'https://www.google.com';
+        }
+
+        function renderTickets() {
+            const grid = document.getElementById('tickets-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 1; i <= 10; i++) {
+                const ticket = document.createElement('div');
+                ticket.className = 'ticket-card p-10 flex flex-col items-center ticket-cutout cursor-pointer rounded-[32px] shadow-sm hover:shadow-2xl';
+                
+                // إضافة مستمع النقر للتحويل في نفس الصفحة
+                ticket.addEventListener('click', redirectToGoogle);
+                
+                ticket.innerHTML = `
+                    <div class="text-center w-full flex-grow">
+                        <div class="inline-flex p-6 bg-blue-100 rounded-3xl text-blue-700 mb-8">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-black text-gray-800 mb-3">تذكرة ذهبية</h3>
+                        <p class="text-xl font-bold text-blue-500">رقم التسلسل: #${100 + i}</p>
+                        <div class="mt-4 bg-gray-50 py-2 px-4 rounded-xl inline-block">
+                             <p class="text-xs text-gray-400 font-mono tracking-tighter">ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                        </div>
+                    </div>
+
+                    <div class="ticket-divider text-center">
+                        <div class="bg-blue-600 text-white py-4 px-6 rounded-2xl font-black text-lg shadow-lg">
+                            فتح Google هنا
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 font-bold uppercase tracking-widest">تحويل مباشر</p>
+                    </div>
+                `;
+                grid.appendChild(ticket);
+            }
+        }
+
+        function logout() {
+            document.getElementById('tickets-container').classList.add('hidden-page');
+            document.getElementById('auth-container').classList.remove('hidden-page');
+            document.getElementById('auth-form').reset();
         }
     </script>
 </body>
