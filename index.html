@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تسجيل الدخول والتذاكر</title>
+    <title>نظام التذاكر الذكي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -11,6 +11,7 @@
             font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
         .glass-card {
             background: rgba(255, 255, 255, 0.98);
@@ -55,11 +56,15 @@
             padding-top: 2rem;
             position: relative;
         }
+        /* أنيميشن العداد */
+        .countdown-circle {
+            transition: stroke-dashoffset 1s linear;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center p-4 md:p-10">
 
-    <!-- Auth Section -->
+    <!-- واجهة تسجيل الدخول / الاشتراك -->
     <div id="auth-container" class="w-full max-w-lg p-12 glass-card">
         <div class="text-center mb-10">
             <h1 id="auth-title" class="text-4xl font-black text-gray-900">تسجيل الدخول</h1>
@@ -96,12 +101,12 @@
         </div>
     </div>
 
-    <!-- Tickets Section -->
+    <!-- واجهة التذاكر -->
     <div id="tickets-container" class="hidden-page w-full max-w-[1600px]">
         <div class="flex flex-col md:flex-row justify-between items-center mb-16 bg-white p-10 rounded-[40px] shadow-xl border border-white">
             <div class="mb-6 md:mb-0 text-center md:text-right">
                 <h2 class="text-5xl font-black text-gray-900 tracking-tight">التذاكر النشطة</h2>
-                <p class="text-blue-600 text-2xl mt-2 font-medium">سيتم التوجه إلى Google في هذه الصفحة عند النقر</p>
+                <p class="text-blue-600 text-2xl mt-2 font-medium">اختر تذكرة لبدء العد التنازلي</p>
             </div>
             <button onclick="logout()" class="bg-gray-100 text-gray-800 px-10 py-4 rounded-2xl hover:bg-red-500 hover:text-white transition-all font-black text-xl shadow-sm">
                 خروج
@@ -109,7 +114,27 @@
         </div>
 
         <div id="tickets-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
-            <!-- Tickets injected here -->
+            <!-- التذاكر سيتم توليدها هنا -->
+        </div>
+    </div>
+
+    <!-- واجهة العد التنازلي -->
+    <div id="countdown-container" class="hidden-page w-full max-w-2xl text-center p-16 glass-card">
+        <div class="relative inline-flex items-center justify-center mb-8">
+            <svg class="w-48 h-48 transform -rotate-90">
+                <circle cx="96" cy="96" r="88" stroke="currentColor" stroke-width="8" fill="transparent" class="text-gray-100" />
+                <circle cx="96" cy="96" r="88" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="552.92" stroke-dashoffset="0" class="text-blue-600 countdown-circle" id="countdown-bar" />
+            </svg>
+            <span id="countdown-text" class="absolute text-7xl font-black text-gray-800">5</span>
+        </div>
+        <h2 class="text-4xl font-black text-gray-900 mb-4">جاري المعالجة...</h2>
+        <p class="text-xl text-gray-500">يرجى الانتظار، ستعود تلقائياً إلى صفحة التذاكر خلال لحظات.</p>
+        <div class="mt-10 flex justify-center">
+            <div class="animate-bounce p-3 bg-blue-50 rounded-full text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
         </div>
     </div>
 
@@ -146,14 +171,37 @@
 
         function showTicketsPage() {
             document.getElementById('auth-container').classList.add('hidden-page');
+            document.getElementById('countdown-container').classList.add('hidden-page');
             document.getElementById('tickets-container').classList.remove('hidden-page');
             renderTickets();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function redirectToGoogle() {
-            // التوجه إلى جوجل في نفس الصفحة
-            window.location.href = 'https://www.google.com';
+        function startCountdown() {
+            document.getElementById('tickets-container').classList.add('hidden-page');
+            document.getElementById('countdown-container').classList.remove('hidden-page');
+            
+            let timeLeft = 5;
+            const countdownText = document.getElementById('countdown-text');
+            const countdownBar = document.getElementById('countdown-bar');
+            const totalDash = 552.92; // 2 * PI * r (r=88)
+
+            countdownText.innerText = timeLeft;
+            countdownBar.style.strokeDashoffset = 0;
+
+            const timer = setInterval(() => {
+                timeLeft -= 1;
+                countdownText.innerText = timeLeft;
+                
+                // تحديث شريط التقدم الدائري
+                const offset = totalDash - (totalDash * (timeLeft / 5));
+                countdownBar.style.strokeDashoffset = offset;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    showTicketsPage(); // العودة التلقائية
+                }
+            }, 1000);
         }
 
         function renderTickets() {
@@ -162,10 +210,9 @@
             
             for (let i = 1; i <= 10; i++) {
                 const ticket = document.createElement('div');
-                ticket.className = 'ticket-card p-10 flex flex-col items-center ticket-cutout cursor-pointer rounded-[32px] shadow-sm hover:shadow-2xl';
+                ticket.className = 'ticket-card p-10 flex flex-col items-center ticket-cutout cursor-pointer rounded-[32px] shadow-sm';
                 
-                // إضافة مستمع النقر للتحويل في نفس الصفحة
-                ticket.addEventListener('click', redirectToGoogle);
+                ticket.addEventListener('click', startCountdown);
                 
                 ticket.innerHTML = `
                     <div class="text-center w-full flex-grow">
@@ -176,16 +223,13 @@
                         </div>
                         <h3 class="text-3xl font-black text-gray-800 mb-3">تذكرة ذهبية</h3>
                         <p class="text-xl font-bold text-blue-500">رقم التسلسل: #${100 + i}</p>
-                        <div class="mt-4 bg-gray-50 py-2 px-4 rounded-xl inline-block">
-                             <p class="text-xs text-gray-400 font-mono tracking-tighter">ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
-                        </div>
                     </div>
 
                     <div class="ticket-divider text-center">
                         <div class="bg-blue-600 text-white py-4 px-6 rounded-2xl font-black text-lg shadow-lg">
-                            فتح Google هنا
+                            استخدام التذكرة
                         </div>
-                        <p class="text-xs text-gray-400 mt-4 font-bold uppercase tracking-widest">تحويل مباشر</p>
+                        <p class="text-xs text-gray-400 mt-4 font-bold uppercase tracking-widest">انتظار لمدة 5 ثوانٍ</p>
                     </div>
                 `;
                 grid.appendChild(ticket);
@@ -194,6 +238,7 @@
 
         function logout() {
             document.getElementById('tickets-container').classList.add('hidden-page');
+            document.getElementById('countdown-container').classList.add('hidden-page');
             document.getElementById('auth-container').classList.remove('hidden-page');
             document.getElementById('auth-form').reset();
         }
