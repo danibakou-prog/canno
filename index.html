@@ -3,39 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طومبولا - لوحة التحكم</title>
+    <title>طومبولا الحظ | Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #020617; color: white; min-height: 100-vh; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .card-active { background: linear-gradient(135deg, #10b981 0%, #064e3b 100%); border: 1px solid #34d399; animation: slideIn 0.5s ease; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #10b981;
+        }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: #0f172a; 
+            color: white; 
+            overflow-x: hidden;
+        }
+        /* خلفية متحركة */
+        .bg-animate {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1e1b4b 0%, #0f172a 100%);
+            z-index: -1;
+        }
+        .blob {
+            position: absolute;
+            width: 400px; height: 400px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: move 20s infinite alternate;
+        }
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(20%, 20%); }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
+        .page.active { display: flex; flex-direction: column; opacity: 1; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.6); }
+
+        .card-activated {
+            background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
+            border: 1px solid #34d399;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-activated::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+
+        input { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; transition: all 0.3s !important; }
+        input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 4px rgba(99,102,241,0.1) !important; }
     </style>
 </head>
-<body class="p-4">
-
-    <div id="loginPage" class="page active max-w-md mx-auto mt-20 bg-white text-slate-900 p-8 rounded-3xl shadow-2xl">
-        <h1 class="text-3xl font-black mb-6 text-indigo-600 text-center">طومبولا الحظ 🎰</h1>
-        <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-4 mb-4 border rounded-2xl outline-none text-left" dir="ltr">
-        <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-4 mb-6 border rounded-2xl outline-none text-left" dir="ltr">
-        <button id="authBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl hover:bg-indigo-700 transition">دخول / تسجيل جديد</button>
+<body>
+    <div class="bg-animate">
+        <div class="blob"></div>
     </div>
 
-    <div id="dashboardPage" class="page max-w-2xl mx-auto mt-10">
-        <div class="flex justify-between items-center bg-slate-900 p-6 rounded-3xl border border-white/10 mb-8 shadow-xl">
-            <h2 class="font-bold">بطاقاتي النشطة</h2>
-            <button id="logoutBtn" class="text-red-400 text-sm font-bold bg-red-400/10 px-4 py-2 rounded-xl">خروج</button>
+    <!-- صفحة تسجيل الدخول -->
+    <div id="loginPage" class="page active items-center justify-center p-4">
+        <div class="max-w-md w-full glass p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">🎰</div>
+            <h1 class="text-4xl font-black mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">طومبولا الحظ</h1>
+            <p class="text-slate-400 text-center mb-8 text-sm">سجل دخولك وابدأ رحلة الربح</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-2">البريد الإلكتروني</label>
+                    <input type="email" id="emailInput" placeholder="name@example.com" class="w-full p-4 rounded-2xl outline-none text-left text-white" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-2">رقم الهاتف</label>
+                    <input type="tel" id="phoneInput" placeholder="06XXXXXXXX" class="w-full p-4 rounded-2xl outline-none text-left text-white" dir="ltr">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2 mr-2">كلمة المرور</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••" class="w-full p-4 rounded-2xl outline-none text-left text-white" dir="ltr">
+                </div>
+                
+                <button id="authBtn" class="w-full btn-primary text-white font-black py-4 rounded-2xl mt-4 text-lg">دخول / إنشاء حساب</button>
+            </div>
+            
+            <p id="authError" class="text-red-400 text-xs mt-4 text-center hidden font-bold"></p>
         </div>
-        
-        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+
+    <!-- صفحة لوحة التحكم -->
+    <div id="dashboardPage" class="page p-6">
+        <div class="max-w-4xl mx-auto w-full">
+            <header class="flex justify-between items-center mb-10 mt-4">
+                <div>
+                    <h2 class="text-2xl font-black">لوحة التحكم</h2>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <p id="userPhoneDisplay" class="text-sm text-slate-400">جاري التحميل...</p>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-black px-5 py-2.5 rounded-xl transition">تسجيل خروج</button>
+            </header>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="cardsGrid">
+                <!-- Cards will be injected here -->
+            </div>
+
+            <div class="mt-12 glass p-6 text-center">
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    ملاحظة: البطاقة صالحة لمدة دقيقة واحدة من وقت التفعيل. <br>
+                    يجب عليك زيارة الرابط لضمان بقاء البطاقة نشطة.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة التأكيد -->
+    <div id="verifyPage" class="page items-center justify-center p-4">
+        <div class="glass p-12 text-center max-w-sm w-full relative">
+            <div id="vLoader" class="relative w-24 h-24 mx-auto mb-8">
+                <div class="absolute inset-0 border-4 border-indigo-500/20 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-t-indigo-500 rounded-full animate-spin"></div>
+                <div id="vTimer" class="absolute inset-0 flex items-center justify-center text-3xl font-black text-indigo-400">5</div>
+            </div>
+            <h2 id="vMsg" class="text-xl font-black mb-3">جاري التحقق من الرابط...</h2>
+            <p class="text-slate-400 text-sm">سيتم تفعيل البطاقة فور انتهاء العد</p>
+        </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
@@ -50,88 +167,136 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const appId = "tombola-luck-v1";
 
-        // الروابط المطلوبة
         const targetLinks = [
             "https://www.profitablecpmratenetwork.com/jw3rniiam?key=2549f3c1e8bb50a2b75b5e231c40e1cf",
             "https://www.profitablecpmratenetwork.com/p9qjyutf?key=04b4b213dffd6cfb8639df9bde979198"
         ];
 
-        // مراقبة حالة المستخدم
-        onAuthStateChanged(auth, (user) => {
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active');
+        }
+
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                document.getElementById('loginPage').classList.remove('active');
-                document.getElementById('dashboardPage').classList.add('active');
+                let ph = localStorage.getItem('user_phone');
+                if (!ph) {
+                    const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
+                    ph = snap.exists() ? snap.data().phone : "غير مسجل";
+                    localStorage.setItem('user_phone', ph);
+                }
+                document.getElementById('userPhoneDisplay').innerText = ph;
+                showPage('dashboardPage');
                 renderCards(user.uid);
             } else {
-                document.getElementById('loginPage').classList.add('active');
-                document.getElementById('dashboardPage').classList.remove('active');
+                showPage('loginPage');
             }
         });
 
-        // تسجيل الدخول
         document.getElementById('authBtn').onclick = async () => {
             const e = document.getElementById('emailInput').value;
             const p = document.getElementById('passwordInput').value;
-            if(!e || !p) return alert("يرجى ملء البيانات");
-            try { await signInWithEmailAndPassword(auth, e, p); }
-            catch { try { await createUserWithEmailAndPassword(auth, e, p); } catch(err) { alert("خطأ: " + err.message); } }
+            const ph = document.getElementById('phoneInput').value;
+            if(!e || !p || !ph) return alert("يرجى ملء كافة الخانات");
+            
+            localStorage.setItem('user_phone', ph);
+            try { 
+                await signInWithEmailAndPassword(auth, e, p);
+            } catch (err) { 
+                try { 
+                    const res = await createUserWithEmailAndPassword(auth, e, p);
+                    await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), {
+                        phone: ph, email: e, createdAt: serverTimestamp()
+                    });
+                } catch(err2) { 
+                    const eb = document.getElementById('authError');
+                    eb.innerText = "خطأ: " + err2.message;
+                    eb.classList.remove('hidden');
+                } 
+            }
         };
 
-        // خروج
-        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+        document.getElementById('logoutBtn').onclick = () => {
+            localStorage.removeItem('user_phone');
+            signOut(auth);
+        };
 
         function renderCards(uid) {
             const grid = document.getElementById('cardsGrid');
             grid.innerHTML = '';
+            for(let i=1; i<=2; i++) {
+                const cid = `card_${i}`;
+                const container = document.createElement('div');
+                container.id = cid;
+                grid.appendChild(container);
 
-            for(let i=0; i<2; i++) {
-                const cid = `card_${i+1}`;
-                const div = document.createElement('div');
-                div.id = cid;
-                
-                // الحالة الافتراضية (مغلقة)
-                setCardLocked(div, i+1, uid, cid, targetLinks[i]);
-                grid.appendChild(div);
+                onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', cid), (snap) => {
+                    const data = snap.data();
+                    const now = Date.now();
+                    const active = snap.exists() && data.active && data.timestamp && (now - data.timestamp.toDate().getTime())/1000 < 60;
 
-                // مراقبة قاعدة البيانات للتفعيل اللحظي
-                onSnapshot(doc(db, "users", uid, "activatedCards", cid), (snap) => {
-                    if (snap.exists() && snap.data().active === true) {
-                        const data = snap.data();
-                        const now = Date.now();
-                        const startTime = data.timestamp ? data.timestamp.toDate().getTime() : now;
-                        const diff = (now - startTime) / 1000;
-
-                        if (diff < 3600) { // البطاقة تبقى نشطة لمدة ساعة (3600 ثانية)
-                            div.className = "card-active p-8 rounded-3xl text-center shadow-2xl transition-all";
-                            div.innerHTML = `
-                                <span class="text-xs font-bold mb-2 block uppercase tracking-widest opacity-80">بطاقة نشطة ✅</span>
-                                <span class="text-3xl font-black font-mono">CODE-${Math.floor(10000 + Math.random()*89999)}</span>
-                                <p class="text-[10px] mt-4 opacity-60 text-center">ستنتهي الصلاحية قريباً</p>
-                            `;
-                            div.onclick = null;
-                        } else {
-                            setCardLocked(div, i+1, uid, cid, targetLinks[i]);
-                        }
+                    if(active) {
+                        container.className = "card-activated p-10 rounded-[32px] text-center shadow-2xl scale-100 transition-all duration-500";
+                        container.innerHTML = `
+                            <div class="flex flex-col items-center">
+                                <div class="bg-white/20 p-3 rounded-2xl mb-4">
+                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <h3 class="text-xs font-bold tracking-widest text-emerald-200 uppercase mb-2">بطاقة نشطة</h3>
+                                <div class="text-4xl font-black font-mono tracking-tighter">LUCK-${Math.floor(10000+Math.random()*90000)}</div>
+                                <div class="mt-6 pt-4 border-t border-white/10 w-full">
+                                    <p class="text-[10px] text-emerald-100/60 uppercase">المعرف المسجل</p>
+                                    <p class="text-sm font-bold">${data.phone}</p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        container.className = "glass p-10 rounded-[32px] text-center cursor-pointer hover:bg-white/10 transition-all duration-300 group border-white/5 hover:border-indigo-500/50";
+                        container.innerHTML = `
+                            <div class="mb-6 relative inline-block">
+                                <div class="text-5xl group-hover:scale-110 transition duration-500">🔒</div>
+                                <div class="absolute -top-2 -right-2 w-4 h-4 bg-indigo-500 rounded-full animate-ping opacity-0 group-hover:opacity-100"></div>
+                            </div>
+                            <h3 class="text-xl font-black mb-2">بطاقة الحظ #${i}</h3>
+                            <p class="text-slate-500 text-xs">انقر لفتح القفل وتنشيط الكود الخاص بك</p>
+                            <div class="mt-8 py-3 bg-indigo-500/10 rounded-xl text-indigo-400 text-xs font-bold group-hover:bg-indigo-500 group-hover:text-white transition duration-300">
+                                تفعيل الآن
+                            </div>
+                        `;
+                        container.onclick = () => { 
+                            window.open(targetLinks[i-1], '_blank'); 
+                            handleActivation(uid, cid); 
+                        };
                     }
                 });
             }
         }
 
-        function setCardLocked(div, num, uid, cid, link) {
-            div.className = "bg-slate-800 p-8 rounded-3xl text-center border border-white/5 cursor-pointer hover:border-indigo-500 hover:bg-slate-800/50 transition-all shadow-xl group";
-            div.innerHTML = `
-                <div class="text-4xl mb-4 group-hover:scale-110 transition">🔒</div>
-                <p class="font-bold text-slate-300">البطاقة رقم ${num}</p>
-                <p class="text-[10px] text-slate-500 mt-2 text-center">انقر للتفعيل (انتظر 5 ثوانٍ بعد فتح الرابط)</p>
-            `;
-            div.onclick = () => {
-                localStorage.setItem('active_uid', uid);
-                localStorage.setItem('active_cid', cid);
-                window.open(link, '_blank');
-                // الانتقال لصفحة التفعيل بعد ثانية واحدة
-                setTimeout(() => { window.location.href = 'verify.html'; }, 1000);
-            };
+        async function handleActivation(uid, cid) {
+            showPage('verifyPage');
+            let time = 5;
+            const timerEl = document.getElementById('vTimer');
+            const itv = setInterval(async () => {
+                time--;
+                timerEl.innerText = time;
+                if(time <= 0) {
+                    clearInterval(itv);
+                    const ph = localStorage.getItem('user_phone') || "Unknown";
+                    try {
+                        await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', cid), {
+                            active: true, phone: ph, timestamp: serverTimestamp()
+                        });
+                        await addDoc(collection(db, 'all_activations'), {
+                            phone: ph, userId: uid, card: cid, time: serverTimestamp()
+                        });
+                        document.getElementById('vMsg').innerText = "اكتمل التفعيل!";
+                        setTimeout(() => showPage('dashboardPage'), 800);
+                    } catch (e) { alert(e.message); }
+                }
+            }, 1000);
         }
     </script>
 </body>
