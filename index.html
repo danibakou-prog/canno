@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طومبولا الحظ | النسخة الذهبية</title>
+    
+    <meta name="clckd" content="fabcde1b59a93b85b2552ba6ed868ddb" />
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -164,7 +167,6 @@
         <iframe id="adFrame" src=""></iframe>
     </div>
 
-    <!-- صفحة تسجيل الدخول -->
     <div id="loginPage" class="page active items-center justify-center p-4">
         <div class="max-w-md w-full glass p-8">
             <div class="flex justify-center mb-6">
@@ -181,7 +183,6 @@
         </div>
     </div>
 
-    <!-- لوحة التحكم -->
     <div id="dashboardPage" class="page p-4 md:p-10">
         <div class="max-w-6xl mx-auto w-full">
             <header class="flex justify-between items-center mb-10 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
@@ -195,7 +196,7 @@
             <div class="prizes-grid" id="prizesGrid"></div>
 
             <div class="text-center mt-16 text-slate-400 text-xs font-medium">
-                جميع الحقوق محفوظة &copy; طومبولا الحظ الذهبية 2024
+                جميع الحقوق محفوظة &copy; طومبولا الحظ الذهبية 2026
             </div>
         </div>
     </div>
@@ -218,7 +219,9 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
-        const AVISO_URL = "https://aviso.bz/?r=id_2812";
+
+        // *** ملاحظة للمطور: استبدل هذا الرابط بـ Direct Link الذي ستحصل عليه من Clickadu ***
+        const CLICKADU_DIRECT_LINK = "https://aviso.bz/?r=id_2812"; 
 
         const prizeData = {
             1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
@@ -320,7 +323,6 @@
                             </div>
                         `;
                     } else {
-                        // إظهار الصور في البطاقات المحددة (1-9) قبل التفعيل لتعزيز المصداقية
                         const isSpecial = [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(i);
                         const showImg = isSpecial ? `<img src="${prize.img}" class="w-20 h-20 object-contain mb-2 opacity-90">` : `<span class="text-3xl text-amber-500 mb-4">🏆</span>`;
                         
@@ -344,7 +346,12 @@
             const timerEl = document.getElementById('frameTimer');
             
             container.style.display = 'block';
-            frame.src = AVISO_URL;
+            
+            // فتح رابط الإعلان في نافذة جديدة (لزيادة الأرباح وضمان ظهور الإعلان)
+            window.open(CLICKADU_DIRECT_LINK, '_blank');
+            
+            // استمرار عرض الإطار الداخلي لضمان بقاء المستخدم في الموقع
+            frame.src = CLICKADU_DIRECT_LINK;
 
             let time = 10;
             timerEl.innerText = time;
