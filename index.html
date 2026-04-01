@@ -17,10 +17,10 @@
             --primary: #1e293b;
         }
         body { 
-            font-family: 'Cairo', sans-serif; 
-            background: #ffffff; 
-            color: var(--primary); 
-            overflow-x: hidden;
+             font-family: 'Cairo', sans-serif; 
+             background: #ffffff; 
+             color: var(--primary); 
+             overflow-x: hidden;
             margin: 0;
         }
         .bg-animate {
@@ -38,7 +38,6 @@
         }
         .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
         .page.active { display: flex; flex-direction: column; opacity: 1; }
-
         .prizes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -51,7 +50,6 @@
                 gap: 30px;
             }
         }
-
         .btn-activate {
             background: #fff;
             border: 3px dashed var(--gold);
@@ -73,7 +71,6 @@
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgba(251, 191, 36, 0.3);
         }
-
         .prize-card {
             border-radius: 28px;
             overflow: hidden;
@@ -86,12 +83,10 @@
             flex-direction: column;
             border: 3px solid var(--gold);
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .prize-img {
             flex: 1;
             width: 100%;
@@ -100,7 +95,6 @@
             padding: 15px;
             background: white;
         }
-
         .prize-info {
             background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
             color: white;
@@ -108,7 +102,6 @@
             text-align: center;
             flex-shrink: 0;
         }
-
         #adFrameContainer {
             display: none;
             position: fixed;
@@ -127,7 +120,6 @@
             border-bottom: 3px solid var(--gold);
             z-index: 10000;
         }
-        
         #toast {
             position: fixed;
             bottom: 20px;
@@ -142,7 +134,6 @@
             display: none;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
         }
-
         input {
             background: #f8fafc !important;
             border: 2px solid #e2e8f0 !important;
@@ -156,7 +147,6 @@
 <body>
     <div class="bg-animate"></div>
     <div id="toast"></div>
-
     <div id="adFrameContainer">
         <div class="ad-header">
             <div class="flex items-center gap-4">
@@ -194,7 +184,6 @@
             </header>
             
             <div class="prizes-grid" id="prizesGrid"></div>
-
             <div class="text-center mt-16 text-slate-400 text-xs font-medium">
                 جميع الحقوق محفوظة &copy; طومبولا الحظ الذهبية 2026
             </div>
@@ -220,7 +209,7 @@
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
 
-        // *** ملاحظة للمطور: استبدل هذا الرابط بـ Direct Link الذي ستحصل عليه من Clickadu ***
+        // *** هام: بمجرد حصولك على Direct Link من Clickadu، ضعه هنا بدلاً من الرابط الحالي ***
         const CLICKADU_DIRECT_LINK = "https://aviso.bz/?r=id_2812"; 
 
         const prizeData = {
@@ -270,15 +259,17 @@
             const email = document.getElementById('emailInput').value.trim();
             const password = document.getElementById('passwordInput').value.trim();
             const phone = document.getElementById('phoneInput').value.trim();
+            
             if(!email || !password || !phone) {
                 showMessage("يرجى إكمال كافة البيانات للمشاركة");
                 return;
             }
-            try { 
-                await signInWithEmailAndPassword(auth, email, password);
+
+            try {
+                 await signInWithEmailAndPassword(auth, email, password);
                 localStorage.setItem('user_phone', phone);
-            } catch (err) { 
-                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-email') {
+            } catch (err) {
+                 if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-email') {
                     try {
                         const res = await createUserWithEmailAndPassword(auth, email, password);
                         await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), {
@@ -336,7 +327,7 @@
                             </div>
                         `;
                     }
-                }, (error) => console.error("Error fetching card state:", error));
+                });
             }
         }
 
@@ -346,20 +337,14 @@
             const timerEl = document.getElementById('frameTimer');
             
             container.style.display = 'block';
-            
-            // فتح رابط الإعلان في نافذة جديدة (لزيادة الأرباح وضمان ظهور الإعلان)
             window.open(CLICKADU_DIRECT_LINK, '_blank');
-            
-            // استمرار عرض الإطار الداخلي لضمان بقاء المستخدم في الموقع
             frame.src = CLICKADU_DIRECT_LINK;
 
             let time = 10;
             timerEl.innerText = time;
-
             const interval = setInterval(async () => {
                 time--;
                 timerEl.innerText = time;
-
                 if(time <= 0) {
                     clearInterval(interval);
                     const phone = localStorage.getItem('user_phone') || "Unknown";
