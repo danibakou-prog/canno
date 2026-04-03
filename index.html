@@ -383,19 +383,19 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
-        const AVISO_URL = "https://www.profitablecpmratenetwork.com/bjhh9kwpd7?key=ad758bcc77889eece37a2050b1144fe3";
 
+        // مصفوفة الجوائز مع روابط التفعيل الخاصة بكل جائزة
         const prizeData = {
-            1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
-            2: { name: "Smart Watch Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/aac8ea81-cdea-499f-8668-21507e131368.jpg?raw=true" },
-            3: { name: "Airpods Pro 2", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/ca9ed7f7-e22c-407a-933c-b351bb8bf665.jpg?raw=true" },
-            4: { name: "PlayStation 5 Slim", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/d64385f1-7120-42b5-8d23-06b38b980b24.jpg?raw=true" },
-            5: { name: "Gaming Mouse RGB", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/b3fbe8f8-09ee-4669-9bef-cc051f9a68da.jpg?raw=true" },
-            6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true" },
-            7: { name: "Laptop Sleeve", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/656c9ef8-d45e-4cd8-a745-54a34faa6be4.jpg?raw=true" },
-            8: { name: "Amazon Gift Card $50", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/99a3c8f6-f38f-4b43-9970-adfa06c9533d.jpg?raw=true" },
-            9: { name: "iPhone 15 Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/5310e3d5-4f07-4495-8221-a60aee958a66.jpg?raw=true" },
-            10: { name: "iPad Air M2", img: "https://m.media-amazon.com/images/I/61T0pX9O67L._AC_SL1500_.jpg" }
+            1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true", url: "https://seo-task.com/login" },
+            2: { name: "Smart Watch Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/aac8ea81-cdea-499f-8668-21507e131368.jpg?raw=true", url: "https://beta.publishers.adsterra.com/payouts" },
+            3: { name: "Airpods Pro 2", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/ca9ed7f7-e22c-407a-933c-b351bb8bf665.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            4: { name: "PlayStation 5 Slim", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/d64385f1-7120-42b5-8d23-06b38b980b24.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            5: { name: "Gaming Mouse RGB", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/b3fbe8f8-09ee-4669-9bef-cc051f9a68da.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            7: { name: "Laptop Sleeve", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/656c9ef8-d45e-4cd8-a745-54a34faa6be4.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            8: { name: "Amazon Gift Card $50", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/99a3c8f6-f38f-4b43-9970-adfa06c9533d.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            9: { name: "iPhone 15 Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/5310e3d5-4f07-4495-8221-a60aee958a66.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            10: { name: "iPad Air M2", img: "https://m.media-amazon.com/images/I/61T0pX9O67L._AC_SL1500_.jpg", url: "https://aviso.bz/?r=id_2812" }
         };
 
         const names = ["أحمد", "ياسين", "سارة", "محمد", "مريم", "حمزة", "ليلى", "كريم", "خديجة", "نور الدين", "إسماعيل", "فاطمة"];
@@ -420,19 +420,15 @@
             wrapper.innerHTML = tickerHTML + tickerHTML;
         }
 
-        // دالة إعادة تعيين البطاقات إلى غير مفعلة
         async function resetAllCards(uid) {
             try {
                 const batch = writeBatch(db);
                 for (let i = 1; i <= 10; i++) {
                     const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`);
-                    // نقوم بتحديث الحالة إلى false وحذف رقم التذكرة لضمان العودة للبداية
                     batch.set(cardRef, { active: false, ticketNumber: null }, { merge: true });
                 }
                 await batch.commit();
                 showMessage("تم إجراء السحب! انتهت صلاحية التذاكر، فعل جوائز جديدة الآن.");
-                
-                // تنظيف الـ Map المحلي لتحديث العرض فوراً
                 activeTicketsMap = {};
                 updateActiveTicketsDisplay();
             } catch (e) {
@@ -440,25 +436,20 @@
             }
         }
 
-        // عد تنازلي كل دقيقتين
         function startDrawCountdown(uid) {
-            let totalSeconds = 120; // دقيقتين
-
+            let totalSeconds = 120;
             function updateTimer() {
                 const minutes = Math.floor(totalSeconds / 60);
                 const seconds = totalSeconds % 60;
-
                 document.getElementById('mn').innerText = minutes.toString().padStart(2, '0');
                 document.getElementById('sc').innerText = seconds.toString().padStart(2, '0');
-
                 if (totalSeconds <= 0) {
-                    totalSeconds = 120; // إعادة ضبط العداد فوراً
-                    resetAllCards(uid); // إلغاء تفعيل البطاقات في قاعدة البيانات
+                    totalSeconds = 120;
+                    resetAllCards(uid);
                 } else {
                     totalSeconds--;
                 }
             }
-
             setInterval(updateTimer, 1000);
             updateTimer();
         }
@@ -595,9 +586,10 @@
             const container = document.getElementById('adFrameContainer');
             const frame = document.getElementById('adFrame');
             const timerEl = document.getElementById('frameTimer');
+            const prize = prizeData[index]; // جلب بيانات الجائزة المحددة
             
             container.style.display = 'block';
-            frame.src = AVISO_URL;
+            frame.src = prize.url; // استخدام رابط التفعيل الخاص بالبطاقة
 
             let time = 6;
             timerEl.innerText = time;
@@ -610,7 +602,6 @@
                     clearInterval(interval);
                     const phone = localStorage.getItem('user_phone') || "Unknown";
                     const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
-                    const prize = prizeData[index];
 
                     try {
                         const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`);
