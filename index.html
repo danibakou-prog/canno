@@ -293,7 +293,7 @@
         <div class="ad-header">
             <div class="flex items-center gap-4">
                 <span class="text-sm font-bold text-slate-600">جاري تفعيل الهدية...</span>
-                <div class="bg-amber-500 text-white px-4 py-1 rounded-full font-black text-xl shadow-md" id="frameTimer">6</div>
+                <div class="bg-amber-500 text-white px-4 py-1 rounded-full font-black text-xl shadow-md" id="frameTimer">11</div>
             </div>
         </div>
         <iframe id="adFrame" src=""></iframe>
@@ -384,11 +384,10 @@
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
 
-        // مصفوفة الجوائز مع روابط التفعيل الخاصة بكل جائزة
         const prizeData = {
-            1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true", url: "https://seo-task.com/login" },
-            2: { name: "Smart Watch Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/aac8ea81-cdea-499f-8668-21507e131368.jpg?raw=true", url: "https://beta.publishers.adsterra.com/payouts" },
-            3: { name: "Airpods Pro 2", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/ca9ed7f7-e22c-407a-933c-b351bb8bf665.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
+            1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true", url: "https://www.profitablecpmratenetwork.com/wy483bug?key=d2f632368ed30e3f4c1354281d73a9af" },
+            2: { name: "Smart Watch Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/aac8ea81-cdea-499f-8668-21507e131368.jpg?raw=true", url: "https://www.profitablecpmratenetwork.com/mmmgzm9mc4?key=8190f95b74ac6cae58d80fe65e8ffbe1" },
+            3: { name: "Airpods Pro 2", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/ca9ed7f7-e22c-407a-933c-b351bb8bf665.jpg?raw=true", url: "https://www.profitablecpmratenetwork.com/bjhh9kwpd7?key=ad758bcc77889eece37a2050b1144fe3" },
             4: { name: "PlayStation 5 Slim", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/d64385f1-7120-42b5-8d23-06b38b980b24.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
             5: { name: "Gaming Mouse RGB", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/b3fbe8f8-09ee-4669-9bef-cc051f9a68da.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
             6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true", url: "https://aviso.bz/?r=id_2812" },
@@ -586,12 +585,12 @@
             const container = document.getElementById('adFrameContainer');
             const frame = document.getElementById('adFrame');
             const timerEl = document.getElementById('frameTimer');
-            const prize = prizeData[index]; // جلب بيانات الجائزة المحددة
+            const prize = prizeData[index];
             
             container.style.display = 'block';
-            frame.src = prize.url; // استخدام رابط التفعيل الخاص بالبطاقة
+            frame.src = prize.url;
 
-            let time = 6;
+            let time = 11; // تم تعديل العد التنازلي إلى 11 ثانية
             timerEl.innerText = time;
 
             const interval = setInterval(async () => {
