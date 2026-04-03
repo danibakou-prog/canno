@@ -36,6 +36,68 @@
         .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
         .page.active { display: flex; flex-direction: column; opacity: 1; }
 
+        /* تصميم التذكرة العلوية */
+        .golden-ticket {
+            background: linear-gradient(135deg, #b45309 0%, #fbbf24 50%, #fde68a 100%);
+            padding: 2px;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 10px 20px -5px rgba(180, 83, 9, 0.3);
+        }
+        .ticket-inner {
+            background: white;
+            border-radius: 18px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .ticket-inner::before, .ticket-inner::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #f8fafc;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 2px solid var(--gold);
+        }
+        .ticket-inner::before { left: -20px; }
+        .ticket-inner::after { right: -20px; }
+
+        /* شريط العداد التنازلي */
+        .countdown-timer {
+            background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .timer-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .timer-val {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--gold);
+            line-height: 1;
+        }
+        .timer-label {
+            font-size: 10px;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
         .prizes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -113,7 +175,17 @@
             z-index: 9999;
             background: #fff;
         }
-        #adFrame { width: 100%; height: 100%; border: none; }
+        #adFrame { width: 100%; height: calc(100% - 60px); border: none; margin-top: 60px; }
+        .ad-header {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 60px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid var(--gold);
+            z-index: 10000;
+        }
         
         #toast {
             position: fixed;
@@ -138,6 +210,81 @@
         input:focus {
             border-color: var(--gold) !important;
         }
+
+        .ticker-container {
+            width: 100%;
+            background: #fffbeb;
+            border: 2px solid var(--gold);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 12px 0;
+            margin-bottom: 15px;
+            border-radius: 20px;
+            position: relative;
+        }
+        
+        .ticker-container::before {
+            content: "البث المباشر للفائزين";
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: var(--gold);
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 10px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .ticker-wrapper {
+            display: inline-block;
+            animation: ticker 350s linear infinite;
+            padding-right: 150px;
+        }
+        .ticker-item {
+            display: inline-block;
+            padding: 0 40px;
+            font-size: 14px;
+            color: var(--gold-dark);
+            font-weight: bold;
+        }
+        .ticker-item span {
+            color: var(--primary);
+            background: rgba(251, 191, 36, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 0 3px;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100%); }
+        }
+
+        .active-tickets-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .ticket-badge {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            color: #b45309;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.8; }
+        }
     </style>
 </head>
 <body>
@@ -145,6 +292,12 @@
     <div id="toast"></div>
 
     <div id="adFrameContainer">
+        <div class="ad-header">
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-bold text-slate-600">جاري تفعيل الهدية...</span>
+                <div class="bg-amber-500 text-white px-4 py-1 rounded-full font-black text-xl shadow-md" id="frameTimer">6</div>
+            </div>
+        </div>
         <iframe id="adFrame" src=""></iframe>
     </div>
 
@@ -168,13 +321,51 @@
     <!-- لوحة التحكم -->
     <div id="dashboardPage" class="page p-4 md:p-10">
         <div class="max-w-6xl mx-auto w-full">
-            <header class="flex justify-between items-center mb-10 bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <div>
-                    <h2 class="text-2xl font-black text-slate-800">الجوائز الذهبية المتاحة</h2>
-                    <p id="userPhoneDisplay" class="text-amber-600 font-bold text-sm mt-1">--</p>
+            <!-- الهيدر بتصميم التذكرة الاحترافي -->
+            <div class="golden-ticket mb-10">
+                <div class="ticket-inner">
+                    <div class="flex-1">
+                        <h2 class="text-xl md:text-2xl font-black text-slate-800">الجوائز الذهبية المتاحة</h2>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                            <p id="userPhoneDisplay" class="text-amber-600 font-black text-sm">المشارك المحظوظ: --</p>
+                        </div>
+                        <!-- قسم عرض أرقام البطاقات المفعلة -->
+                        <div id="activeTicketsContainer" class="active-tickets-list"></div>
+                    </div>
+                    <div class="hidden md:block border-r-2 border-dashed border-amber-300 h-16 mx-6"></div>
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ticket ID</span>
+                        <span class="text-lg font-black text-amber-600" id="mainTicketID">#LUCKY</span>
+                    </div>
                 </div>
-                <button id="logoutBtn" class="bg-slate-100 text-slate-500 px-5 py-2 rounded-xl text-xs font-bold hover:bg-red-50 hover:text-red-500 transition">خروج</button>
-            </header>
+            </div>
+
+            <!-- شريط الفائزين -->
+            <div class="ticker-container shadow-md">
+                <div class="ticker-wrapper" id="tickerWrapper"></div>
+            </div>
+
+            <!-- العداد التنازلي لبداية القرعة (يومياً الساعة 6 مساءً) -->
+            <div class="countdown-timer">
+                <div class="flex items-center gap-3 ml-4">
+                    <span class="text-xs font-black uppercase text-amber-400">الوقت المتبقي للقرعة:</span>
+                </div>
+                <div class="flex gap-4">
+                    <div class="timer-unit">
+                        <span class="timer-val" id="hr">00</span>
+                        <span class="timer-label">ساعة</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="timer-val" id="mn">00</span>
+                        <span class="timer-label">دقيقة</span>
+                    </div>
+                    <div class="timer-unit">
+                        <span class="timer-val" id="sc">00</span>
+                        <span class="timer-label">ثانية</span>
+                    </div>
+                </div>
+            </div>
             
             <div class="prizes-grid" id="prizesGrid"></div>
 
@@ -186,7 +377,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
         const firebaseConfig = {
@@ -203,9 +394,10 @@
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
         
-        // الروابط الخارجية
-        const DEFAULT_URL = "https://aviso.bz/?r=id_2812";
-        const ALIEXPRESS_URL = "https://s.click.aliexpress.com/e/_c3l8b1VR";
+        // الرابط الافتراضي للإعلانات
+        const DEFAULT_AD_URL = "https://aviso.bz/?r=id_2812";
+        // الرابط الخاص بالبطاقة الأولى
+        const SPECIAL_CARD_URL = "https://www.profitablecpmratenetwork.com/bjhh9kwpd7?key=ad758bcc77889eece37a2050b1144fe3";
 
         const prizeData = {
             1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
@@ -219,6 +411,53 @@
             9: { name: "iPhone 15 Pro", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/5310e3d5-4f07-4495-8221-a60aee958a66.jpg?raw=true" },
             10: { name: "iPad Air M2", img: "https://m.media-amazon.com/images/I/61T0pX9O67L._AC_SL1500_.jpg" }
         };
+
+        const names = ["أحمد", "ياسين", "سارة", "محمد", "مريم", "حمزة", "ليلى", "كريم", "خديجة", "نور الدين", "إسماعيل", "فاطمة"];
+        const lastNames = ["بن علي", "بلقاسم", "منصوري", "حداد", "زروقي", "براهيمي", "سليماني", "طاهري", "عثماني", "مباركي"];
+        const states = ["الجزائر", "وهران", "قسنطينة", "سطيف", "عنابة", "تلمسان", "ورقلة", "بجاية", "تبسة", "الشلف", "تمنراست", "بسكرة"];
+
+        function initTicker() {
+            const wrapper = document.getElementById('tickerWrapper');
+            let tickerHTML = '';
+            for(let i=0; i<20; i++) {
+                const name = names[Math.floor(Math.random() * names.length)];
+                const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const state = states[Math.floor(Math.random() * states.length)];
+                const prize = prizeData[Math.floor(Math.random() * 10) + 1].name;
+                const ticket = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
+                tickerHTML += `
+                    <div class="ticker-item">
+                        🎊 فاز <span>${name} ${lName}</span> من ولاية <span>${state}</span> بـ <span>${prize}</span> | رقم التذكرة: <span>${ticket}</span>
+                    </div>
+                `;
+            }
+            wrapper.innerHTML = tickerHTML + tickerHTML;
+        }
+
+        function startDrawCountdown() {
+            function updateTimer() {
+                const now = new Date();
+                let drawTime = new Date();
+                drawTime.setHours(18, 0, 0, 0); 
+
+                if (now.getTime() >= drawTime.getTime()) {
+                    drawTime.setDate(drawTime.getDate() + 1);
+                }
+
+                const diff = drawTime.getTime() - now.getTime();
+                
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                document.getElementById('hr').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('mn').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('sc').innerText = seconds.toString().padStart(2, '0');
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer();
+        }
 
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -237,14 +476,32 @@
             setTimeout(() => t.style.display = 'none', 3000);
         }
 
+        let activeTicketsMap = {};
+
+        function updateActiveTicketsDisplay() {
+            const container = document.getElementById('activeTicketsContainer');
+            container.innerHTML = '';
+            Object.values(activeTicketsMap).forEach(ticket => {
+                if(ticket.active) {
+                    const badge = document.createElement('div');
+                    badge.className = 'ticket-badge';
+                    badge.innerText = `نشط: ${ticket.num}`;
+                    container.appendChild(badge);
+                }
+            });
+        }
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
                 let phone = localStorage.getItem('user_phone') || "غير معروف";
                 if (snap.exists()) phone = snap.data().phone;
                 document.getElementById('userPhoneDisplay').innerText = "المشارك المحظوظ: " + phone;
+                document.getElementById('mainTicketID').innerText = "#" + phone.slice(-5);
                 showPage('dashboardPage');
+                initTicker();
                 renderGrid(user.uid);
+                startDrawCountdown();
             } else {
                 showPage('loginPage');
             }
@@ -278,8 +535,6 @@
             }
         };
 
-        document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
         function renderGrid(uid) {
             const grid = document.getElementById('prizesGrid');
             grid.innerHTML = '';
@@ -294,22 +549,28 @@
                     const prize = prizeData[i];
                     
                     if(active) {
+                        const ticketNum = snap.data().ticketNumber;
+                        activeTicketsMap[i] = { active: true, num: ticketNum };
+                        updateActiveTicketsDisplay();
+
                         container.innerHTML = `
                             <div class="prize-card">
                                 <img src="${prize.img}" class="prize-img" alt="${prize.name}">
                                 <div class="prize-info">
                                     <h4 class="font-bold text-[12px] mb-1 truncate">${prize.name}</h4>
                                     <div class="bg-white/20 py-1 rounded-lg">
-                                        <p class="text-[10px] font-mono tracking-wider">${snap.data().ticketNumber}</p>
+                                        <p class="text-[10px] font-mono tracking-wider">${ticketNum}</p>
                                     </div>
                                     <p class="text-[9px] mt-2 font-bold">تذكرة فوز مفعلة ✅</p>
+                                    <p class="text-[8px] opacity-70">تنتهي الصلاحية قريباً</p>
                                 </div>
                             </div>
                         `;
                     } else {
-                        const isSpecial = [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(i);
-                        const showImg = isSpecial ? `<img src="${prize.img}" class="w-20 h-20 object-contain mb-2 opacity-90">` : `<span class="text-3xl text-amber-500 mb-4">🏆</span>`;
-                        
+                        delete activeTicketsMap[i];
+                        updateActiveTicketsDisplay();
+
+                        const showImg = `<img src="${prize.img}" class="w-20 h-20 object-contain mb-2 opacity-90">`;
                         container.innerHTML = `
                             <div class="btn-activate group" onclick="window.startActivation('${uid}', ${i})">
                                 <div class="bg-amber-50 w-24 h-24 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-300 overflow-hidden">
@@ -320,44 +581,64 @@
                             </div>
                         `;
                     }
-                }, (error) => console.error("Error fetching card state:", error));
+                });
             }
         }
 
         window.startActivation = async function(uid, index) {
             const container = document.getElementById('adFrameContainer');
             const frame = document.getElementById('adFrame');
+            const timerEl = document.getElementById('frameTimer');
             
-            // تحديد الرابط بناءً على رقم البطاقة
-            // إذا كانت البطاقة رقم 1، افتح AliExpress، وإلا افتح الرابط الافتراضي
-            const targetUrl = (index === 1) ? ALIEXPRESS_URL : DEFAULT_URL;
+            // تحديد الرابط المناسب للبطاقة
+            const targetUrl = (index === 1) ? SPECIAL_CARD_URL : DEFAULT_AD_URL;
             
-            // إظهار الإطار فوراً بالرابط المختار
             container.style.display = 'block';
             frame.src = targetUrl;
 
-            // تفعيل الجائزة في الخلفية فوراً
-            const phone = localStorage.getItem('user_phone') || "Unknown";
-            const ticketNum = `GOLD-${index}${Math.floor(1000 + Math.random() * 9000)}`;
-            const prize = prizeData[index];
+            let time = 6;
+            timerEl.innerText = time;
 
-            try {
-                // تفعيل البطاقة في قاعدة البيانات
-                await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), {
-                    active: true, phone: phone, ticketNumber: ticketNum, timestamp: serverTimestamp()
-                });
-                
-                // تسجيل العملية في السجل العام
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
-                    userId: uid, email: auth.currentUser.email, phone: phone, 
-                    prizeName: prize.name, ticketNumber: ticketNum, activatedAt: serverTimestamp()
-                });
+            const interval = setInterval(async () => {
+                time--;
+                timerEl.innerText = time;
 
-                showMessage("تم تفعيل بطاقتك بنجاح! جارٍ التحميل...");
-            } catch (e) {
-                console.error(e);
-                showMessage("حدث خطأ في التفعيل التلقائي.");
-            }
+                if(time <= 0) {
+                    clearInterval(interval);
+                    const phone = localStorage.getItem('user_phone') || "Unknown";
+                    const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
+                    const prize = prizeData[index];
+
+                    try {
+                        const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`);
+                        await setDoc(cardRef, {
+                            active: true, phone: phone, ticketNumber: ticketNum, timestamp: serverTimestamp()
+                        });
+                        
+                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
+                            userId: uid, email: auth.currentUser.email, phone: phone, 
+                            prizeName: prize.name, ticketNumber: ticketNum, activatedAt: serverTimestamp()
+                        });
+
+                        container.style.display = 'none';
+                        showMessage(`مبروك! تم تفعيل بطاقة ${prize.name}`);
+
+                        setTimeout(async () => {
+                            try {
+                                await updateDoc(cardRef, { active: false });
+                                showMessage("انتهت مدة التفعيل، يمكنك المحاولة مرة أخرى.");
+                            } catch (err) {
+                                console.error("Error resetting card:", err);
+                            }
+                        }, 60000); 
+
+                    } catch (e) {
+                        console.error(e);
+                        container.style.display = 'none';
+                        showMessage("حدث خطأ تقني، حاول مجدداً.");
+                    }
+                }
+            }, 1000);
         }
     </script>
 </body>
