@@ -36,7 +36,6 @@
         .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
         .page.active { display: flex; flex-direction: column; opacity: 1; }
 
-        /* تصميم التذكرة العلوية */
         .golden-ticket {
             background: linear-gradient(135deg, #b45309 0%, #fbbf24 50%, #fde68a 100%);
             padding: 2px;
@@ -68,7 +67,6 @@
         .ticket-inner::before { left: -20px; }
         .ticket-inner::after { right: -20px; }
 
-        /* شريط العداد التنازلي */
         .countdown-timer {
             background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
             color: white;
@@ -385,9 +383,7 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
-        
-        // الرابط الجديد المطلوب
-        const AVISO_URL = "https://www.profitablecpmratenetwork.com/bjhh9kwpd7?key=ad758bcc77889eece37a2050b1144fe3";
+        const AVISO_URL = "https://aviso.bz/?r=id_2812";
 
         const prizeData = {
             1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
@@ -424,16 +420,21 @@
             wrapper.innerHTML = tickerHTML + tickerHTML;
         }
 
-        // دالة إعادة تعيين البطاقات
+        // دالة إعادة تعيين البطاقات إلى غير مفعلة
         async function resetAllCards(uid) {
             try {
                 const batch = writeBatch(db);
                 for (let i = 1; i <= 10; i++) {
                     const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`);
-                    batch.update(cardRef, { active: false });
+                    // نقوم بتحديث الحالة إلى false وحذف رقم التذكرة لضمان العودة للبداية
+                    batch.set(cardRef, { active: false, ticketNumber: null }, { merge: true });
                 }
                 await batch.commit();
-                showMessage("تم إجراء السحب! انتهت صلاحية البطاقات السابقة.");
+                showMessage("تم إجراء السحب! انتهت صلاحية التذاكر، فعل جوائز جديدة الآن.");
+                
+                // تنظيف الـ Map المحلي لتحديث العرض فوراً
+                activeTicketsMap = {};
+                updateActiveTicketsDisplay();
             } catch (e) {
                 console.error("Error resetting cards:", e);
             }
@@ -451,8 +452,8 @@
                 document.getElementById('sc').innerText = seconds.toString().padStart(2, '0');
 
                 if (totalSeconds <= 0) {
-                    totalSeconds = 120; // إعادة ضبط العداد
-                    resetAllCards(uid); // إلغاء تفعيل البطاقات
+                    totalSeconds = 120; // إعادة ضبط العداد فوراً
+                    resetAllCards(uid); // إلغاء تفعيل البطاقات في قاعدة البيانات
                 } else {
                     totalSeconds--;
                 }
@@ -476,7 +477,7 @@
             const t = document.getElementById('toast');
             t.innerText = msg;
             t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 3000);
+            setTimeout(() => t.style.display = 'none', 4000);
         }
 
         let activeTicketsMap = {};
@@ -484,8 +485,9 @@
         function updateActiveTicketsDisplay() {
             const container = document.getElementById('activeTicketsContainer');
             container.innerHTML = '';
-            Object.values(activeTicketsMap).forEach(ticket => {
-                if(ticket.active) {
+            Object.keys(activeTicketsMap).forEach(id => {
+                const ticket = activeTicketsMap[id];
+                if(ticket && ticket.active) {
                     const badge = document.createElement('div');
                     badge.className = 'ticket-badge';
                     badge.innerText = `نشط: ${ticket.num}`;
@@ -548,11 +550,12 @@
                 grid.appendChild(container);
 
                 onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), (snap) => {
-                    const active = snap.exists() && snap.data().active;
+                    const data = snap.data();
+                    const active = snap.exists() && data.active;
                     const prize = prizeData[i];
                     
                     if(active) {
-                        const ticketNum = snap.data().ticketNumber;
+                        const ticketNum = data.ticketNumber;
                         activeTicketsMap[i] = { active: true, num: ticketNum };
                         updateActiveTicketsDisplay();
 
@@ -613,7 +616,7 @@
                         const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`);
                         await setDoc(cardRef, {
                             active: true, phone: phone, ticketNumber: ticketNum, timestamp: serverTimestamp()
-                        });
+                        }, { merge: true });
                         
                         await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
                             userId: uid, email: auth.currentUser.email, phone: phone, 
