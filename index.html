@@ -393,11 +393,7 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
-        
-        // الرابط الافتراضي للإعلانات
-        const DEFAULT_AD_URL = "https://aviso.bz/?r=id_2812";
-        // الرابط الخاص بالبطاقة الأولى
-        const SPECIAL_CARD_URL = "https://www.profitablecpmratenetwork.com/bjhh9kwpd7?key=ad758bcc77889eece37a2050b1144fe3";
+        const AVISO_URL = "https://aviso.bz/?r=id_2812";
 
         const prizeData = {
             1: { name: "Samsung Galaxy A24", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/%D9%87%D8%A7%D8%AA%D9%81-Samsung-Galaxy-A24.jpg?raw=true" },
@@ -434,12 +430,14 @@
             wrapper.innerHTML = tickerHTML + tickerHTML;
         }
 
+        // وظيفة العد التنازلي (السادسة مساءً)
         function startDrawCountdown() {
             function updateTimer() {
                 const now = new Date();
                 let drawTime = new Date();
-                drawTime.setHours(18, 0, 0, 0); 
+                drawTime.setHours(18, 0, 0, 0); // الساعة 6 مساءً
 
+                // إذا مرت الساعة 6 مساءً اليوم، القرعة غداً
                 if (now.getTime() >= drawTime.getTime()) {
                     drawTime.setDate(drawTime.getDate() + 1);
                 }
@@ -590,11 +588,8 @@
             const frame = document.getElementById('adFrame');
             const timerEl = document.getElementById('frameTimer');
             
-            // تحديد الرابط المناسب للبطاقة
-            const targetUrl = (index === 1) ? SPECIAL_CARD_URL : DEFAULT_AD_URL;
-            
             container.style.display = 'block';
-            frame.src = targetUrl;
+            frame.src = AVISO_URL;
 
             let time = 6;
             timerEl.innerText = time;
