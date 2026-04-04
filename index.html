@@ -2,11 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- ✅ تحسينات الموبايل -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- ✅ تحسينات الموبايل المتقدمة -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#fbbf24">
+    <meta name="format-detection" content="telephone=no">
     
     <title>تومبولا الحظ | الإصدار الذهبي</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,13 +21,23 @@
             --success-green: #10b981;
             --danger-red: #ef4444;
         }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
         body { 
             font-family: 'Cairo', sans-serif; 
             background: #ffffff; 
             color: var(--primary); 
             overflow-x: hidden;
             margin: 0;
+            padding: 0;
             -webkit-font-smoothing: antialiased;
+            font-size: 14px;
+            line-height: 1.4;
         }
         
         /* ✅ منع التكبير التلقائي في آيفون */
@@ -39,32 +50,43 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             z-index: -1;
+            pointer-events: none;
         }
         .glass {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border: 2px solid var(--gold);
             border-radius: 24px;
             box-shadow: 0 10px 25px -5px rgba(180, 83, 9, 0.1);
+            margin: 0 auto;
+            max-width: 640px;
+            width: 100%;
         }
-        .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.4s ease; }
+        .page { 
+            display: none; 
+            min-height: 100vh; 
+            opacity: 0; 
+            transition: opacity 0.3s ease; 
+            padding: 8px;
+        }
         .page.active { display: flex; flex-direction: column; opacity: 1; }
 
         .golden-ticket {
             background: linear-gradient(135deg, #b45309 0%, #fbbf24 50%, #fde68a 100%);
-            padding: 3px;
-            border-radius: 24px;
+            padding: 2px;
+            border-radius: 20px;
             position: relative;
-            box-shadow: 0 15px 35px -10px rgba(180, 83, 9, 0.4);
+            box-shadow: 0 8px 20px -5px rgba(180, 83, 9, 0.3);
             overflow: hidden;
+            margin: 0 4px;
         }
         .ticket-inner {
             background: white;
-            border-radius: 21px;
-            padding: 20px;
+            border-radius: 18px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             position: relative;
             overflow: hidden;
             text-align: right;
@@ -73,171 +95,170 @@
         .ticket-inner::before, .ticket-inner::after {
             content: '';
             position: absolute;
-            width: 30px; height: 30px;
+            width: 20px; height: 20px;
             background: #f8fafc;
             border-radius: 50%;
             top: 50%; transform: translateY(-50%);
             border: 2px solid var(--gold);
             z-index: 5;
         }
-        .ticket-inner::before { right: -18px; }
-        .ticket-inner::after { left: -18px; }
+        .ticket-inner::before { right: -12px; }
+        .ticket-inner::after { left: -12px; }
 
         .countdown-timer {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: white;
-            border-radius: 20px;
-            padding: 20px 15px;
-            margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 12px 10px;
+            margin: 12px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: 3px solid var(--gold);
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 2px solid var(--gold);
             position: relative;
         }
         .timer-grid { 
             display: flex; 
-            gap: 15px; 
+            gap: 10px; 
             flex-wrap: wrap;
             justify-content: center;
         }
-        .timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
-        .timer-val { font-size: 32px; font-weight: 900; color: var(--gold); line-height: 1; text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
-        .timer-label { font-size: 11px; color: #94a3b8; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+        .timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
+        .timer-val { font-size: 24px; font-weight: 900; color: var(--gold); line-height: 1; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+        .timer-label { font-size: 9px; color: #94a3b8; font-weight: bold; margin-top: 3px; text-transform: uppercase; }
 
         .draw-info-box {
             background: rgba(180, 83, 9, 0.15);
             border: 2px dashed var(--gold);
-            padding: 8px 15px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 10px;
             color: var(--gold-dark);
             font-weight: 900;
-            font-size: 14px;
+            font-size: 12px;
             animation: blinker 1.5s linear infinite;
             text-align: center;
             width: 100%;
             max-width: 100%;
         }
 
-        .prizes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 12px;
-            padding: 5px;
-        }
-        
+        /* ✅ شبكة الجوائز المميزة - 3 أعمدة مصغرة */
         .featured-prizes {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 6px;
+            margin-bottom: 16px;
+            padding: 0 2px;
         }
 
         .btn-activate {
             background: #fff;
-            border: 3px dashed var(--gold);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px dashed var(--gold);
+            transition: all 0.2s ease;
             width: 100%;
-            aspect-ratio: 3/4;
+            aspect-ratio: 4/5;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 24px;
+            border-radius: 16px;
             cursor: pointer;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            padding: 8px;
+            box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.08);
+            padding: 4px;
             position: relative;
-            /* ✅ تحسين اللمس */
             min-height: 44px;
+            min-width: 44px;
         }
         .btn-activate:active {
             border-style: solid;
             background: #fffbeb;
-            transform: scale(0.98);
-            box-shadow: 0 20px 25px -5px rgba(251, 191, 36, 0.3);
+            transform: scale(0.97);
+            box-shadow: 0 12px 20px -5px rgba(251, 191, 36, 0.25);
         }
 
         .prize-card {
-            border-radius: 24px;
+            border-radius: 16px;
             overflow: hidden;
             background: white;
             width: 100%;
-            aspect-ratio: 3/4;
-            animation: fadeIn 0.5s ease-out;
-            box-shadow: 0 15px 30px -10px rgba(180, 83, 9, 0.2);
+            aspect-ratio: 4/5;
+            animation: fadeIn 0.4s ease-out;
+            box-shadow: 0 10px 20px -8px rgba(180, 83, 9, 0.15);
             display: flex;
             flex-direction: column;
-            border: 3px solid var(--gold);
+            border: 2px solid var(--gold);
         }
 
         .normal-prize-card {
-            border-radius: 24px;
+            border-radius: 16px;
             background: white;
             border: 2px solid #e2e8f0;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            aspect-ratio: 3/4;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            aspect-ratio: 4/5;
+            box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
             cursor: pointer;
             position: relative;
             min-height: 44px;
+            min-width: 44px;
         }
         .normal-prize-card:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
             border-color: var(--gold);
-            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.2);
+            box-shadow: 0 8px 16px -4px rgba(251, 191, 36, 0.2);
         }
 
         .discount-badge {
             position: absolute;
-            top: 10px;
-            left: -25px;
+            top: 8px;
+            left: -22px;
             background: var(--danger-red);
             color: white;
-            padding: 3px 30px;
-            font-size: 8px;
+            padding: 2px 25px;
+            font-size: 7px;
             font-weight: 900;
             transform: rotate(-45deg);
-            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
             z-index: 10;
         }
 
         .coming-soon-frame {
-            border: 4px double var(--gold);
+            border: 3px double var(--gold);
             background: rgba(251, 191, 36, 0.03);
-            padding: 15px;
-            border-radius: 30px;
-            margin-top: 15px;
+            padding: 10px;
+            border-radius: 24px;
+            margin-top: 12px;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes blinker {
-            50% { opacity: 0.3; transform: scale(0.98); }
+            50% { opacity: 0.4; transform: scale(0.99); }
         }
 
         .prize-img {
             flex: 1;
             width: 100%;
-            height: 60%;
+            height: 55%;
             object-fit: contain;
-            padding: 12px;
+            padding: 8px;
             background: white;
+            image-rendering: -webkit-optimize-contrast;
+            will-change: transform;
+            loading: lazy;
         }
 
         .prize-info {
             background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
             color: white;
-            padding: 10px;
+            padding: 8px 6px;
             text-align: center;
             flex-shrink: 0;
         }
@@ -245,42 +266,43 @@
         .normal-prize-info {
             background: #f8fafc;
             color: #1e293b;
-            padding: 8px;
+            padding: 6px 4px;
             text-align: center;
             border-top: 1px solid #f1f5f9;
         }
 
         #toast {
             position: fixed;
-            bottom: 15px;
+            bottom: 12px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 12px 20px;
-            border-radius: 14px;
+            padding: 10px 16px;
+            border-radius: 12px;
             background: var(--primary);
             color: white;
-            font-size: 13px;
+            font-size: 12px;
             z-index: 1000;
             display: none;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px -4px rgba(0,0,0,0.25);
             text-align: center;
             width: 90%;
-            max-width: 320px;
+            max-width: 300px;
             min-width: auto;
+            pointer-events: none;
         }
 
         .code-input-area {
             position: absolute;
             bottom: 0; left: 0; right: 0;
             background: white;
-            padding: 10px;
-            border-radius: 0 0 20px 20px;
+            padding: 6px 8px;
+            border-radius: 0 0 14px 14px;
             display: none;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
             border-top: 1px solid #eee;
             z-index: 20;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
         }
 
         .ticker-container {
@@ -289,9 +311,9 @@
             border: 2px solid var(--gold);
             overflow: hidden;
             white-space: nowrap;
-            padding: 10px 0;
-            margin-bottom: 20px;
-            border-radius: 16px;
+            padding: 8px 0;
+            margin: 8px 0 16px;
+            border-radius: 14px;
             position: relative;
         }
         
@@ -302,8 +324,8 @@
             background: var(--gold);
             color: var(--primary);
             font-weight: 900;
-            font-size: 9px;
-            padding: 0 12px;
+            font-size: 8px;
+            padding: 0 10px;
             display: flex;
             align-items: center;
             z-index: 10;
@@ -311,13 +333,13 @@
 
         .ticker-wrapper {
             display: inline-block;
-            animation: ticker 350s linear infinite;
-            padding-right: 120px;
+            animation: ticker 300s linear infinite;
+            padding-right: 100px;
         }
         .ticker-item {
             display: inline-block;
-            padding: 0 30px;
-            font-size: 12px;
+            padding: 0 25px;
+            font-size: 11px;
             color: var(--gold-dark);
             font-weight: bold;
         }
@@ -328,18 +350,18 @@
 
         .active-tickets-list { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
-            gap: 6px; 
-            margin-top: 12px; 
+            grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); 
+            gap: 5px; 
+            margin-top: 10px; 
             width: 100%;
         }
         .ticket-badge {
             background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
             border: 1px solid #fbbf24;
             color: #b45309;
-            padding: 6px 10px;
-            border-radius: 10px;
-            font-size: 11px;
+            padding: 5px 8px;
+            border-radius: 8px;
+            font-size: 10px;
             font-weight: 800;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             text-align: center;
@@ -347,183 +369,340 @@
         }
         @keyframes pulse {
             0% { opacity: 0.9; }
-            50% { opacity: 1; transform: scale(1.02); }
+            50% { opacity: 1; transform: scale(1.01); }
             100% { opacity: 0.9; }
         }
 
         .paste-btn-green {
             background-color: var(--success-green);
             color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 9px;
             font-weight: bold;
             border: none;
             cursor: pointer;
             transition: all 0.2s;
-            min-height: 32px;
+            min-height: 28px;
+            min-width: 28px;
         }
         
         .promo-banner {
             background: linear-gradient(90deg, #b45309, #fbbf24, #b45309);
             color: white;
-            padding: 12px 10px;
-            border-radius: 16px;
-            font-size: 14px;
+            padding: 10px 8px;
+            border-radius: 14px;
+            font-size: 12px;
             font-weight: 900;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-            border: 3px solid #fff;
-            box-shadow: 0 8px 16px rgba(180, 83, 9, 0.3);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            margin: 8px 0 16px;
+            border: 2px solid #fff;
+            box-shadow: 0 6px 12px rgba(180, 83, 9, 0.25);
             animation: blinker 2s ease-in-out infinite;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             line-height: 1.3;
         }
 
-        input::placeholder { text-align: right; }
+        input::placeholder { text-align: right; color: #94a3b8; }
+        input {
+            font-size: 16px !important;
+            padding: 10px 12px !important;
+            border-radius: 12px !important;
+            border: 2px solid #e2e8f0 !important;
+            outline: none !important;
+            transition: border-color 0.2s !important;
+        }
+        input:focus { border-color: var(--gold) !important; }
 
         .profile-badge {
             background: #f1f5f9;
-            padding: 4px 10px;
-            border-radius: 16px;
+            padding: 3px 8px;
+            border-radius: 14px;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            margin-bottom: 5px;
+            gap: 4px;
+            margin-bottom: 4px;
         }
 
         .footer-frame {
             border: 2px solid var(--gold);
             background: #f8fafc;
-            padding: 15px;
-            border-radius: 20px;
-            margin-top: 30px;
+            padding: 12px;
+            border-radius: 18px;
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            gap: 10px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
         }
         
-        /* ✅ تحسينات الموبايل - ميديا كويري */
+        /* ✅ تحسينات الموبايل - ميديا كويري متقدمة */
         @media (max-width: 640px) {
             .glass { 
-                border-radius: 20px !important; 
-                padding: 16px !important;
-                margin: 0 8px !important;
+                border-radius: 18px !important; 
+                padding: 12px !important;
+                margin: 0 4px !important;
+                width: calc(100% - 8px) !important;
             }
             
             .golden-ticket { 
-                margin: 0 -8px !important; 
+                margin: 0 -2px !important; 
                 border-radius: 0 !important; 
+                padding: 1px !important;
             }
             .ticket-inner { 
-                padding: 15px !important; 
-                border-radius: 18px !important;
+                padding: 10px !important; 
+                border-radius: 16px !important;
             }
             .ticket-inner::before, .ticket-inner::after {
-                width: 25px; height: 25px;
-                right: -15px; left: -15px;
-                border-width: 2px;
+                width: 18px; height: 18px;
+                right: -10px; left: -10px;
+                border-width: 1px;
             }
             
-            h1 { font-size: 1.5rem !important; }
-            h2 { font-size: 1.25rem !important; }
+            h1 { font-size: 1.3rem !important; line-height: 1.3; }
+            h2 { font-size: 1.1rem !important; }
             
+            /* ✅ البطاقات المميزة - 3 أعمدة مصغرة */
+            .featured-prizes { 
+                grid-template-columns: repeat(3, 1fr) !important; 
+                gap: 5px !important; 
+                margin-bottom: 14px !important;
+            }
+            
+            .btn-activate {
+                aspect-ratio: 4/5 !important;
+                padding: 3px !important;
+                border-radius: 14px !important;
+                border-width: 2px !important;
+            }
+            
+            .btn-activate .bg-amber-50 {
+                width: 42px !important;
+                height: 42px !important;
+                border-radius: 50% !important;
+                margin-bottom: 4px !important;
+            }
+            
+            .btn-activate .bg-amber-50 img {
+                width: 32px !important;
+                height: 32px !important;
+                object-fit: contain !important;
+            }
+            
+            .btn-activate span.font-black {
+                font-size: 8px !important;
+                line-height: 1.2 !important;
+                font-weight: 800 !important;
+            }
+            
+            .btn-activate span.text-\[9px\] {
+                font-size: 7px !important;
+                margin-top: 2px !important;
+            }
+            
+            /* ✅ البطاقات العادية - شبكة 2 أعمدة */
             .prizes-grid { 
                 grid-template-columns: repeat(2, 1fr) !important; 
-                gap: 10px !important; 
-            }
-            .featured-prizes { 
-                grid-template-columns: 1fr !important; 
-                gap: 15px !important; 
+                gap: 8px !important; 
+                padding: 0 !important;
             }
             
-            .timer-grid { gap: 8px !important; }
-            .timer-val { font-size: 26px !important; }
-            .timer-label { font-size: 10px !important; }
+            .normal-prize-card {
+                border-radius: 14px !important;
+                aspect-ratio: 4/5 !important;
+                border-width: 2px !important;
+            }
+            
+            .normal-prize-info {
+                padding: 5px !important;
+            }
+            
+            .normal-prize-info h4 {
+                font-size: 9px !important;
+                font-weight: 700 !important;
+            }
+            
+            .normal-prize-info p {
+                font-size: 8px !important;
+                margin-top: 2px !important;
+            }
+            
+            .discount-badge {
+                top: 6px !important;
+                left: -20px !important;
+                padding: 2px 20px !important;
+                font-size: 6px !important;
+            }
+            
+            /* ✅ العد التنازلي */
+            .timer-grid { gap: 6px !important; }
+            .timer-val { font-size: 20px !important; }
+            .timer-label { font-size: 8px !important; }
             
             .countdown-timer { 
-                padding: 15px 10px !important; 
+                padding: 10px 8px !important; 
+                border-radius: 14px !important;
+                margin: 10px 0 !important;
+            }
+            
+            .draw-info-box {
+                padding: 5px 10px !important;
+                border-radius: 8px !important;
+                font-size: 11px !important;
+            }
+            
+            /* ✅ منطقة إدخال الكود */
+            .code-input-area {
+                padding: 5px 6px !important;
+                border-radius: 0 0 12px 12px !important;
+            }
+            .code-input-area input {
+                font-size: 12px !important;
+                padding: 6px !important;
+                border-radius: 8px !important;
+            }
+            
+            .code-input-area button {
+                font-size: 8px !important;
+                padding: 4px 6px !important;
+                border-radius: 6px !important;
+                min-height: 26px !important;
+            }
+            
+            /* ✅ التوست */
+            #toast {
+                width: 92% !important;
+                font-size: 11px !important;
+                padding: 8px 14px !important;
+                bottom: 8px !important;
+                border-radius: 10px !important;
+            }
+            
+            /* ✅ البانر الترويجي */
+            .promo-banner {
+                font-size: 11px !important;
+                padding: 8px 6px !important;
+                margin: 6px 0 12px !important;
+            }
+            
+            /* ✅ الفوتر */
+            .footer-frame {
+                margin-top: 16px !important;
+                padding: 10px !important;
                 border-radius: 16px !important;
             }
             
-            .btn-activate, .normal-prize-card {
-                border-radius: 20px !important;
+            .footer-frame a {
+                font-size: 10px !important;
+                padding: 8px 12px !important;
+                border-radius: 10px !important;
+                min-height: 40px !important;
             }
             
-            .code-input-area {
-                padding: 8px !important;
+            /* ✅ قائمة التذاكر النشطة */
+            .active-tickets-list { 
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 4px !important; 
             }
-            .code-input-area input {
-                font-size: 13px !important;
-                padding: 8px !important;
-            }
-            
-            #toast {
-                width: 92% !important;
-                font-size: 12px !important;
-                padding: 10px 16px !important;
-                bottom: 10px !important;
+            .ticket-badge {
+                padding: 4px 6px !important;
+                border-radius: 6px !important;
+                font-size: 9px !important;
             }
             
-            .promo-banner {
-                font-size: 13px !important;
-                padding: 10px 8px !important;
+            /* ✅ شريط الأخبار */
+            .ticker-container {
+                padding: 6px 0 !important;
+                margin: 6px 0 12px !important;
+                border-radius: 12px !important;
+            }
+            .ticker-container::before {
+                font-size: 7px !important;
+                padding: 0 8px !important;
+            }
+            .ticker-item {
+                padding: 0 20px !important;
+                font-size: 10px !important;
             }
             
-            .footer-frame {
-                margin-top: 20px !important;
-                padding: 12px !important;
-            }
-            
-            /* تحسين حقول التسجيل */
-            input {
-                padding: 12px !important;
-                font-size: 16px !important;
-                border-radius: 14px !important;
-            }
-            
-            button {
-                min-height: 48px !important;
-                font-size: 14px !important;
+            /* ✅ أزرار اللمس */
+            button, [role="button"], .btn-touch {
+                min-height: 44px !important;
+                min-width: 44px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                touch-action: manipulation !important;
             }
         }
         
         @media (max-width: 360px) {
-            .prizes-grid { grid-template-columns: 1fr !important; }
-            .timer-val { font-size: 22px !important; }
+            .featured-prizes {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 4px !important;
+            }
+            
+            .btn-activate {
+                aspect-ratio: 1/1 !important;
+                padding: 2px !important;
+            }
+            
+            .btn-activate .bg-amber-50 {
+                width: 36px !important;
+                height: 36px !important;
+            }
+            
+            .btn-activate .bg-amber-50 img {
+                width: 28px !important;
+                height: 28px !important;
+            }
+            
+            .timer-val { font-size: 18px !important; }
             .active-tickets-list { grid-template-columns: repeat(2, 1fr) !important; }
+            
+            .prizes-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
         
-        /* ✅ تحسين تجربة اللمس */
+        /* ✅ تحسين تجربة اللمس للأجهزة التي لا تدعم الهوفر */
         @media (hover: none) and (pointer: coarse) {
             .btn-activate:hover, .normal-prize-card:hover {
                 transform: none !important;
+                box-shadow: none !important;
             }
             .btn-activate:active, .normal-prize-card:active {
-                transform: scale(0.98);
+                transform: scale(0.97);
+                transition: transform 0.1s ease;
             }
-            button, a, [role="button"] {
-                min-height: 44px;
-                min-width: 44px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
+            input:focus {
+                border-color: var(--gold) !important;
+                box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2) !important;
             }
+        }
+        
+        /* ✅ تحسينات إضافية للأداء */
+        .prize-img {
+            will-change: transform;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        
+        .btn-activate, .normal-prize-card {
+            will-change: transform;
+            backface-visibility: hidden;
         }
         
         /* ✅ منع الوميض عند اللمس */
         * { -webkit-tap-highlight-color: transparent; }
         
         /* ✅ تحسين تحميل الصور */
-        .prize-img {
-            image-rendering: -webkit-optimize-contrast;
-            will-change: transform;
-            loading: lazy;
+        img[loading="lazy"] {
+            background: #f1f5f9;
+            min-height: 50px;
         }
     </style>
 </head>
@@ -532,44 +711,44 @@
     <div id="toast"></div>
 
     <!-- الصفحة الأولى: تسجيل الدخول -->
-    <div id="loginPage" class="page active items-center justify-center p-3">
-        <div class="max-w-md w-full glass p-6">
-            <div class="flex justify-center mb-4">
-                <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center text-3xl shadow-inner border-2 border-amber-400">🎁</div>
+    <div id="loginPage" class="page active items-center justify-center p-2">
+        <div class="max-w-md w-full glass p-4">
+            <div class="flex justify-center mb-3">
+                <div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-2xl shadow-inner border-2 border-amber-400">🎁</div>
             </div>
-            <h1 class="text-3xl font-black mb-1 text-center text-amber-600">تومبولا الحظ</h1>
-            <p class="text-slate-500 text-center mb-6 text-xs">سجل الآن للحصول على فرصة للفوز</p>
-            <div class="space-y-3">
-                <input type="text" id="fullNameInput" placeholder="الاسم الكامل" class="w-full p-3 rounded-xl border-2 border-slate-200 outline-none transition text-right text-mobile-lg">
-                <input type="text" id="stateInput" placeholder="الولاية / المدينة" class="w-full p-3 rounded-xl border-2 border-slate-200 outline-none transition text-right text-mobile-lg">
-                <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full p-3 rounded-xl border-2 border-slate-200 outline-none text-right transition text-mobile-lg" dir="ltr">
-                <input type="tel" id="phoneInput" placeholder="رقم الهاتف" class="w-full p-3 rounded-xl border-2 border-slate-200 outline-none text-right transition text-mobile-lg" dir="ltr" inputmode="tel">
-                <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full p-3 rounded-xl border-2 border-slate-200 outline-none text-right transition text-mobile-lg" dir="ltr">
-                <button id="authBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl mt-2 shadow-lg transition-all transform active:scale-95 btn-touch">دخول / تسجيل جديد</button>
+            <h1 class="text-2xl font-black mb-1 text-center text-amber-600">تومبولا الحظ</h1>
+            <p class="text-slate-500 text-center mb-4 text-xs">سجل الآن للحصول على فرصة للفوز</p>
+            <div class="space-y-2">
+                <input type="text" id="fullNameInput" placeholder="الاسم الكامل" class="w-full text-right" autocomplete="name">
+                <input type="text" id="stateInput" placeholder="الولاية / المدينة" class="w-full text-right" autocomplete="address-level1">
+                <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full text-right" dir="ltr" autocomplete="email" inputmode="email">
+                <input type="tel" id="phoneInput" placeholder="رقم الهاتف" class="w-full text-right" dir="ltr" autocomplete="tel" inputmode="tel">
+                <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full text-right" dir="ltr" autocomplete="new-password">
+                <button id="authBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl mt-1 shadow-lg transition-all transform active:scale-95 btn-touch">دخول / تسجيل جديد</button>
             </div>
         </div>
     </div>
 
     <!-- الصفحة الثانية: لوحة التحكم -->
-    <div id="dashboardPage" class="page p-3 md:p-5">
+    <div id="dashboardPage" class="page">
         <div class="max-w-6xl mx-auto w-full text-center">
             
-            <div class="golden-ticket mb-6">
+            <div class="golden-ticket mb-4">
                 <div class="ticket-inner">
                     <div class="flex-1 space-y-2 z-10">
                         <div class="text-right">
-                            <span class="inline-block bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-[9px] font-black mb-1 uppercase tracking-tighter border border-amber-200">🎫 نشطة</span>
-                            <h2 class="text-xl md:text-2xl font-black text-slate-800 leading-tight">الجوائز الذهبية</h2>
+                            <span class="inline-block bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[8px] font-black mb-1 uppercase tracking-tighter border border-amber-200">🎫 نشطة</span>
+                            <h2 class="text-lg font-black text-slate-800 leading-tight">الجوائز الذهبية</h2>
                         </div>
                         
-                        <div class="flex flex-wrap gap-2 justify-end items-center">
+                        <div class="flex flex-wrap gap-1.5 justify-end items-center">
                             <div class="profile-badge">
-                                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                                <span id="userPhoneDisplay" class="text-slate-700 font-bold text-[10px] md:text-xs">--</span>
+                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                <span id="userPhoneDisplay" class="text-slate-700 font-bold text-[9px]">--</span>
                             </div>
                             <div class="profile-badge">
                                 <span>📍</span>
-                                <span id="userStateDisplay" class="text-slate-600 font-bold text-[10px]">--</span>
+                                <span id="userStateDisplay" class="text-slate-600 font-bold text-[9px]">--</span>
                             </div>
                         </div>
 
@@ -590,8 +769,8 @@
 
             <div class="countdown-timer">
                 <div class="draw-info-box">🕒 السحب اليومي 18:00</div>
-                <div class="flex items-center gap-1 mb-1">
-                    <span class="text-[10px] font-bold uppercase text-amber-400 tracking-wider">الوقت المتبقي:</span>
+                <div class="flex items-center gap-1 mb-0.5">
+                    <span class="text-[9px] font-bold uppercase text-amber-400 tracking-wider">الوقت المتبقي:</span>
                 </div>
                 <div class="timer-grid">
                     <div class="timer-unit">
@@ -606,27 +785,27 @@
             </div>
 
             <div class="coming-soon-frame">
-                <div class="promo-banner bg-slate-800 border-slate-700 text-[13px]">
+                <div class="promo-banner bg-slate-800 border-slate-700 text-[11px]">
                     <span>🛍️</span> قريباً <span>🛍️</span>
                 </div>
                 <div class="prizes-grid" id="prizesGrid"></div>
             </div>
 
             <div class="footer-frame">
-                <div class="text-slate-600 text-[10px] font-black">
+                <div class="text-slate-600 text-[9px] font-black">
                     © تومبولا الحظ 2024
                 </div>
-                <a href="https://m.me/biri.vag.dz" id="whatsappLink" target="_blank" class="bg-slate-800 hover:bg-black text-white px-6 py-2.5 rounded-lg font-bold text-[11px] transition-all flex items-center gap-1.5 shadow-lg btn-touch w-full justify-center">
+                <a href="https://m.me/biri.vag.dz" id="whatsappLink" target="_blank" class="bg-slate-800 hover:bg-black text-white px-5 py-2 rounded-lg font-bold text-[10px] transition-all flex items-center gap-1.5 shadow-lg btn-touch w-full justify-center">
                     <span>📞</span> اتصل بالوسيط
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- ✅ إضافة سكريبت لتحسين تجربة الموبايل -->
+    <!-- ✅ سكريبت تحسين تجربة الموبايل -->
     <script>
-        // منع التكبير عند النقر المزدوج
         document.addEventListener('DOMContentLoaded', function() {
+            // منع التكبير عند النقر المزدوج
             let lastTouchEnd = 0;
             document.addEventListener('touchend', function(event) {
                 const now = Date.now();
@@ -634,9 +813,16 @@
                     event.preventDefault();
                 }
                 lastTouchEnd = now;
-            }, false);
+            }, { passive: false });
             
-            // تحسين تمرير الصفحة
+            // منع التكبير عند اللمس المتعدد
+            document.addEventListener('touchstart', function(event) {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            // تحسين التمرير السلس
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -646,10 +832,19 @@
                     }
                 });
             });
+            
+            // تحسين حقول الإدخال على الموبايل
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', function() {
+                    setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 100);
+                });
+            });
         });
     </script>
 
-    <!-- نظام العمل والبرمجة (نفس الكود الأصلي مع تحسينات بسيطة) -->
+    <!-- نظام العمل والبرمجة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection, writeBatch } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
@@ -763,7 +958,7 @@
             if(!t) return;
             t.innerText = msg;
             t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 4000);
+            setTimeout(() => t.style.display = 'none', 3500);
         }
 
         let activeTicketsMap = {};
@@ -777,12 +972,12 @@
                 if(ticket?.active) {
                     const badge = document.createElement('div');
                     badge.className = 'ticket-badge';
-                    badge.innerHTML = `<span class="opacity-60 text-[9px] block">تذكرة ${id}</span> ${ticket.num}`;
+                    badge.innerHTML = `<span class="opacity-60 text-[8px] block">تذكرة ${id}</span> ${ticket.num}`;
                     container.appendChild(badge);
                 }
             });
             if (Object.keys(activeTicketsMap).length === 0) {
-                container.innerHTML = `<p class="text-slate-400 text-[10px] font-bold italic">لا توجد تذاكر مفعلة 🎟️</p>`;
+                container.innerHTML = `<p class="text-slate-400 text-[9px] font-bold italic">لا توجد تذاكر مفعلة 🎟️</p>`;
             }
         }
 
@@ -845,10 +1040,10 @@
             div.onclick = () => window.open(url || "https://aviso.bz/?r=danibakou", '_blank');
             div.innerHTML = `
                 <div class="discount-badge">65%-</div>
-                <img src="${img}" class="prize-img group-active:scale-105 transition-transform duration-300" alt="${name}" onerror="this.src='https://via.placeholder.com/150?text=Gift'" loading="lazy">
+                <img src="${img}" class="prize-img group-active:scale-105 transition-transform duration-200" alt="${name}" onerror="this.src='https://via.placeholder.com/150?text=Gift'" loading="lazy">
                 <div class="normal-prize-info">
-                    <h4 class="font-bold text-[10px] truncate">${name}</h4>
-                    <p class="text-[8px] text-slate-400 mt-1">عرض محدود</p>
+                    <h4 class="font-bold text-[9px] truncate">${name}</h4>
+                    <p class="text-[8px] text-slate-400 mt-0.5">عرض محدود</p>
                 </div>`;
             return div;
         }
@@ -866,13 +1061,13 @@
                     updateActiveTicketsDisplay();
                     container.innerHTML = `
                         <div class="prize-card">
-                            <img src="${prize.img}" class="prize-img" alt="${prize.name}" loading="lazy">
+                            <img src="${prize.img}" class="prize-img" alt="${prize.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Prize'">
                             <div class="prize-info">
-                                <h4 class="font-bold text-[11px] mb-1 truncate">${prize.name}</h4>
-                                <div class="bg-white/20 py-1 rounded-lg">
-                                    <p class="text-[9px] font-mono tracking-wider">${ticketNum}</p>
+                                <h4 class="font-bold text-[10px] mb-0.5 truncate">${prize.name}</h4>
+                                <div class="bg-white/20 py-0.5 rounded-lg">
+                                    <p class="text-[8px] font-mono tracking-wider">${ticketNum}</p>
                                 </div>
-                                <p class="text-[8px] mt-1 font-bold uppercase">✅ مفعّل</p>
+                                <p class="text-[7px] mt-0.5 font-bold uppercase">✅ مفعّل</p>
                             </div>
                         </div>`;
                 } else {
@@ -880,19 +1075,19 @@
                     updateActiveTicketsDisplay();
                     container.innerHTML = `
                         <div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i})">
-                            <div class="bg-amber-50 w-20 h-20 rounded-full flex items-center justify-center mb-2 group-active:scale-105 transition-all duration-300 overflow-hidden">
-                                <img src="${prize.img}" class="w-16 h-16 object-contain mb-1 opacity-90" loading="lazy">
+                            <div class="bg-amber-50 w-[42px] h-[42px] rounded-full flex items-center justify-center mb-1 group-active:scale-105 transition-all duration-200 overflow-hidden">
+                                <img src="${prize.img}" class="w-[32px] h-[32px] object-contain opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/50?text=?'">
                             </div>
-                            <span class="font-black text-[11px] text-slate-800 text-center">تفعيل ${prize.name}</span>
-                            <span class="text-[9px] text-amber-600 font-bold mt-1">اضغط للمطالبة</span>
+                            <span class="font-black text-[8px] text-slate-800 text-center leading-tight">تفعيل ${prize.name.split(' ')[0]}</span>
+                            <span class="text-[7px] text-amber-600 font-bold mt-0.5">اضغط للمطالبة</span>
                             <div id="code-area-${i}" class="code-input-area" onclick="event.stopPropagation()">
-                                <div class="flex gap-2 mb-2">
-                                    <input type="text" id="input-code-${i}" placeholder="كود التفعيل" class="flex-1 text-xs p-2 rounded-lg border border-amber-200 outline-none text-center">
+                                <div class="flex gap-1.5 mb-1.5">
+                                    <input type="text" id="input-code-${i}" placeholder="كود التفعيل" class="flex-1 text-[11px] p-1.5 rounded-lg border border-amber-200 outline-none text-center">
                                     <button onclick="window.pasteFromClipboard(${i})" class="paste-btn-green">لصق</button>
                                 </div>
                                 <div class="flex gap-1">
-                                     <button onclick="window.verifyCode('${uid}', ${i})" class="flex-1 bg-amber-500 text-white text-[9px] py-2 rounded-lg font-bold">تأكيد</button>
-                                     <button onclick="window.openLink(${i})" class="flex-1 bg-slate-100 text-slate-600 text-[9px] py-2 rounded-lg font-bold border border-slate-200">احصل على الكود</button>
+                                     <button onclick="window.verifyCode('${uid}', ${i})" class="flex-1 bg-amber-500 text-white text-[8px] py-1.5 rounded-lg font-bold">تأكيد</button>
+                                     <button onclick="window.openLink(${i})" class="flex-1 bg-slate-100 text-slate-600 text-[8px] py-1.5 rounded-lg font-bold border border-slate-200">الكود</button>
                                 </div>
                             </div>
                         </div>`;
@@ -953,7 +1148,7 @@
                     active: true, phone, fullName, state, ticketNumber: ticketNum, timestamp: serverTimestamp()
                 }, { merge: true });
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
-                    userId: uid, email: auth.currentUser.email, phone, fullName, state,
+                    userId: uid, email: auth.currentUser?.email, phone, fullName, state,
                     prizeName: prize.name, ticketNumber: ticketNum, activatedAt: serverTimestamp()
                 });
                 showMessage(`🎉 تم تفعيل ${prize.name} ✅`);
