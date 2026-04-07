@@ -2,18 +2,30 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- ✅ تحسينات الموبايل المتقدمة -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#fbbf24">
+    <meta name="theme-color" content="#fb7701">
     <meta name="format-detection" content="telephone=no">
     
     <title>تومبولا الحظ | الإصدار الذهبي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            --temu-orange: #fb7701;
+            --temu-orange-dark: #e65c00;
+            --temu-orange-light: #fff4e6;
+            --temu-red: #ff3b30;
+            --temu-red-dark: #d32f2f;
+            --temu-bg: #f5f5f5;
+            --temu-card-bg: #ffffff;
+            --temu-text-primary: #1a1a1a;
+            --temu-text-secondary: #666666;
+            --temu-border: #e8e8e8;
+            --temu-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            --temu-shadow-hover: 0 8px 24px rgba(251, 119, 1, 0.25);
             --gold-light: #fde68a;
             --gold: #fbbf24;
             --gold-dark: #b45309;
@@ -29,680 +41,928 @@
             user-select: none;
         }
         body { 
-            font-family: 'Cairo', sans-serif; 
-            background: #ffffff; 
-            color: var(--primary); 
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: var(--temu-bg); 
+            color: var(--temu-text-primary); 
             overflow-x: hidden;
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
             font-size: 14px;
             line-height: 1.4;
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(251,119,1,0.03) 2px, transparent 0),
+                radial-gradient(circle at 75px 75px, rgba(255,59,48,0.02) 2px, transparent 0);
+            background-size: 100px 100px;
         }
-        
-        /* ✅ منع التكبير التلقائي في آيفون */
         @media screen and (-webkit-min-device-pixel-ratio: 0) {
             input, select, textarea { font-size: 16px !important; }
         }
-        
         .bg-animate {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            z-index: -1;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            z-index: -1; pointer-events: none;
         }
         .glass {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--temu-card-bg);
             backdrop-filter: blur(10px);
-            border: 2px solid var(--gold);
-            border-radius: 24px;
-            box-shadow: 0 10px 25px -5px rgba(180, 83, 9, 0.1);
-            margin: 0 auto;
-            max-width: 640px;
-            width: 100%;
+            border: 1px solid var(--temu-border);
+            border-radius: 16px;
+            box-shadow: var(--temu-shadow);
+            margin: 0 auto; max-width: 640px; width: 100%;
         }
-        .page { 
-            display: none; 
-            min-height: 100vh; 
-            opacity: 0; 
-            transition: opacity 0.3s ease; 
-            padding: 8px;
-        }
+        .page { display: none; min-height: 100vh; opacity: 0; transition: opacity 0.3s ease; padding: 8px; }
         .page.active { display: flex; flex-direction: column; opacity: 1; }
-
         .golden-ticket {
-            background: linear-gradient(135deg, #b45309 0%, #fbbf24 50%, #fde68a 100%);
-            padding: 2px;
-            border-radius: 20px;
-            position: relative;
-            box-shadow: 0 8px 20px -5px rgba(180, 83, 9, 0.3);
-            overflow: hidden;
-            margin: 0 4px;
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 50%, var(--temu-orange-light) 100%);
+            padding: 2px; border-radius: 16px; position: relative;
+            box-shadow: 0 8px 20px -5px rgba(251, 119, 1, 0.3); overflow: hidden; margin: 0 4px;
         }
         .ticket-inner {
-            background: white;
-            border-radius: 18px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            position: relative;
-            overflow: hidden;
-            text-align: right;
+            background: var(--temu-card-bg); border-radius: 14px; padding: 12px;
+            display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; text-align: right;
+            border: 1px solid var(--temu-border);
         }
-
         .ticket-inner::before, .ticket-inner::after {
-            content: '';
-            position: absolute;
-            width: 20px; height: 20px;
-            background: #f8fafc;
-            border-radius: 50%;
-            top: 50%; transform: translateY(-50%);
-            border: 2px solid var(--gold);
-            z-index: 5;
+            content: ''; position: absolute; width: 18px; height: 18px; background: var(--temu-bg);
+            border-radius: 50%; top: 50%; transform: translateY(-50%); border: 2px solid var(--temu-orange); z-index: 5;
         }
-        .ticket-inner::before { right: -12px; }
-        .ticket-inner::after { left: -12px; }
-
-        .countdown-timer {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        .ticket-inner::before { right: -10px; } .ticket-inner::after { left: -10px; }
+        
+        .temu-countdown {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
             color: white;
-            border-radius: 16px;
-            padding: 12px 10px;
-            margin: 12px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border: 2px solid var(--gold);
-            position: relative;
-        }
-        .timer-grid { 
-            display: flex; 
-            gap: 10px; 
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
-        .timer-val { font-size: 24px; font-weight: 900; color: var(--gold); line-height: 1; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
-        .timer-label { font-size: 9px; color: #94a3b8; font-weight: bold; margin-top: 3px; text-transform: uppercase; }
-
-        .draw-info-box {
-            background: rgba(180, 83, 9, 0.15);
-            border: 2px dashed var(--gold);
-            padding: 6px 12px;
-            border-radius: 10px;
-            color: var(--gold-dark);
-            font-weight: 900;
-            font-size: 12px;
-            animation: blinker 1.5s linear infinite;
-            text-align: center;
-            width: 100%;
-            max-width: 100%;
-        }
-
-        /* ✅ شبكة الجوائز المميزة - 3 أعمدة مصغرة */
-        .featured-prizes {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            margin-bottom: 16px;
-            padding: 0 2px;
-        }
-
-        .btn-activate {
-            background: #fff;
-            border: 2px dashed var(--gold);
-            transition: all 0.2s ease;
-            width: 100%;
-            aspect-ratio: 4/5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 16px;
-            cursor: pointer;
-            box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.08);
-            padding: 4px;
-            position: relative;
-            min-height: 44px;
-            min-width: 44px;
-        }
-        .btn-activate:active {
-            border-style: solid;
-            background: #fffbeb;
-            transform: scale(0.97);
-            box-shadow: 0 12px 20px -5px rgba(251, 191, 36, 0.25);
-        }
-
-        .prize-card {
-            border-radius: 16px;
-            overflow: hidden;
-            background: white;
-            width: 100%;
-            aspect-ratio: 4/5;
-            animation: fadeIn 0.4s ease-out;
-            box-shadow: 0 10px 20px -8px rgba(180, 83, 9, 0.15);
-            display: flex;
-            flex-direction: column;
-            border: 2px solid var(--gold);
-        }
-
-        .normal-prize-card {
-            border-radius: 16px;
-            background: white;
-            border: 2px solid #e2e8f0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            aspect-ratio: 4/5;
-            box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            position: relative;
-            min-height: 44px;
-            min-width: 44px;
-        }
-        .normal-prize-card:active {
-            transform: scale(0.97);
-            border-color: var(--gold);
-            box-shadow: 0 8px 16px -4px rgba(251, 191, 36, 0.2);
-        }
-
-        .discount-badge {
-            position: absolute;
-            top: 8px;
-            left: -22px;
-            background: var(--danger-red);
-            color: white;
-            padding: 2px 25px;
-            font-size: 7px;
-            font-weight: 900;
-            transform: rotate(-45deg);
-            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
-            z-index: 10;
-        }
-
-        .coming-soon-frame {
-            border: 3px double var(--gold);
-            background: rgba(251, 191, 36, 0.03);
-            padding: 10px;
-            border-radius: 24px;
-            margin-top: 12px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes blinker {
-            50% { opacity: 0.4; transform: scale(0.99); }
-        }
-
-        .prize-img {
-            flex: 1;
-            width: 100%;
-            height: 55%;
-            object-fit: contain;
-            padding: 8px;
-            background: white;
-            image-rendering: -webkit-optimize-contrast;
-            will-change: transform;
-            loading: lazy;
-        }
-
-        .prize-info {
-            background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
-            color: white;
-            padding: 8px 6px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .normal-prize-info {
-            background: #f8fafc;
-            color: #1e293b;
-            padding: 6px 4px;
-            text-align: center;
-            border-top: 1px solid #f1f5f9;
-        }
-
-        #toast {
-            position: fixed;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 16px;
             border-radius: 12px;
-            background: var(--primary);
-            color: white;
-            font-size: 12px;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 8px 20px -4px rgba(0,0,0,0.25);
-            text-align: center;
-            width: 90%;
-            max-width: 300px;
-            min-width: auto;
-            pointer-events: none;
-        }
-
-        .code-input-area {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: white;
-            padding: 6px 8px;
-            border-radius: 0 0 14px 14px;
-            display: none;
+            padding: 10px 14px;
+            display: flex;
             flex-direction: column;
-            gap: 5px;
-            border-top: 1px solid #eee;
-            z-index: 20;
-            box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 12px 0;
+            border: 2px solid var(--temu-orange);
+            box-shadow: 0 4px 16px rgba(251, 119, 1, 0.2);
         }
-
-        .ticker-container {
-            width: 100%;
-            background: #fffbeb;
-            border: 2px solid var(--gold);
-            overflow: hidden;
-            white-space: nowrap;
-            padding: 8px 0;
-            margin: 8px 0 16px;
-            border-radius: 14px;
-            position: relative;
+        .temu-countdown-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--temu-orange);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .timer-grid { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+        .timer-unit { display: flex; flex-direction: column; align-items: center; min-width: 45px; }
+        .timer-val { 
+            font-size: 22px; 
+            font-weight: 900; 
+            color: white; 
+            line-height: 1; 
+            font-family: monospace;
+            text-shadow: 0 0 10px rgba(251, 119, 1, 0.5);
+        }
+        .timer-label { font-size: 8px; color: #999; font-weight: bold; margin-top: 3px; text-transform: uppercase; }
+        
+        .draw-info-box {
+            background: rgba(251, 119, 1, 0.15); border: 2px dashed var(--temu-orange); padding: 6px 12px;
+            border-radius: 10px; color: var(--temu-orange-dark); font-weight: 900; font-size: 11px;
+            animation: blinker 1.5s linear infinite; text-align: center; width: 100%; max-width: 100%;
         }
         
+        .ticker-container {
+            width: 100%; background: var(--temu-orange-light); border: 1px solid var(--temu-border); overflow: hidden;
+            white-space: nowrap; padding: 6px 0; margin: 8px 0 12px; border-radius: 12px; position: relative;
+        }
         .ticker-container::before {
-            content: "🔴 مباشر";
-            position: absolute;
-            right: 0; top: 0; bottom: 0;
-            background: var(--gold);
-            color: var(--primary);
-            font-weight: 900;
-            font-size: 8px;
-            padding: 0 10px;
+            content: "🔴 مباشر"; position: absolute; right: 0; top: 0; bottom: 0; background: var(--temu-orange);
+            color: white; font-weight: 900; font-size: 8px; padding: 0 8px; display: flex; align-items: center; z-index: 10;
+        }
+        .ticker-wrapper { display: inline-block; animation: ticker 300s linear infinite; padding-right: 100px; }
+        .ticker-item { display: inline-block; padding: 0 20px; font-size: 10px; color: var(--temu-text-secondary); font-weight: 600; }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+        
+        .temu-top-banner {
+            background: linear-gradient(90deg, var(--temu-orange), var(--temu-red), var(--temu-orange));
+            background-size: 200% 100%;
+            color: white;
+            padding: 6px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            animation: gradientSlide 3s linear infinite;
             display: flex;
             align-items: center;
-            z-index: 10;
+            justify-content: center;
+            gap: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 8px;
         }
-
-        .ticker-wrapper {
-            display: inline-block;
-            animation: ticker 300s linear infinite;
-            padding-right: 100px;
+        @keyframes gradientSlide { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        
+        .temu-product-card {
+            background: var(--temu-card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--temu-shadow);
+            transition: all 0.2s ease;
+            border: 1px solid var(--temu-border);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            aspect-ratio: 4/5;
         }
-        .ticker-item {
-            display: inline-block;
-            padding: 0 25px;
-            font-size: 11px;
-            color: var(--gold-dark);
-            font-weight: bold;
+        .temu-product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--temu-shadow-hover);
+            border-color: var(--temu-orange);
         }
-        @keyframes ticker {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(100%); }
-        }
-
-        .active-tickets-list { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); 
-            gap: 5px; 
-            margin-top: 10px; 
-            width: 100%;
-        }
-        .ticket-badge {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 1px solid #fbbf24;
-            color: #b45309;
-            padding: 5px 8px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 800;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            text-align: center;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.9; }
-            50% { opacity: 1; transform: scale(1.01); }
-            100% { opacity: 0.9; }
-        }
-
-        .paste-btn-green {
-            background-color: var(--success-green);
+        
+        .temu-discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, var(--temu-red) 0%, var(--temu-red-dark) 100%);
             color: white;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-size: 9px;
-            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 900;
+            z-index: 10;
+            animation: temuPulse 1.5s ease-in-out infinite;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        @keyframes temuPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        
+        .btn-temu-primary {
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 100%);
+            color: white !important;
             border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(251, 119, 1, 0.35);
+            position: relative;
+            overflow: hidden;
+            min-height: 36px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            flex: 1;
+        }
+        .btn-temu-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn-temu-primary:hover::before { left: 100%; }
+        .btn-temu-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(251, 119, 1, 0.5);
+            background: linear-gradient(135deg, #ff8a3d 0%, var(--temu-orange-dark) 100%);
+        }
+        .btn-temu-primary:active { transform: translateY(0); }
+        
+        .btn-temu-secondary {
+            background: var(--temu-bg);
+            color: var(--temu-text-primary);
+            border: 1px solid var(--temu-border);
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            min-height: 28px;
-            min-width: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 36px;
+            min-width: 36px;
+        }
+        .btn-temu-secondary:hover {
+            background: #e8e8e8;
+            border-color: var(--temu-orange);
+        }
+        
+        .btn-activate {
+            background: var(--temu-card-bg); border: 1px solid var(--temu-border); transition: all 0.2s ease;
+            width: 100%; aspect-ratio: 4/5; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; border-radius: 16px; cursor: pointer;
+            box-shadow: var(--temu-shadow); padding: 8px; position: relative; min-height: 44px; min-width: 44px;
+        }
+        .btn-activate:active { border-color: var(--temu-orange); background: var(--temu-orange-light); transform: scale(0.98); }
+        
+        .featured-prizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; padding: 0 2px; }
+        
+        .prizes-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+            padding: 0 4px; 
+        }
+        
+        .prize-img { 
+            flex: 1; width: 100%; height: 55%; object-fit: contain; padding: 8px; background: white; 
+            image-rendering: -webkit-optimize-contrast; will-change: transform; loading: lazy; 
+        }
+        
+        .prize-info { 
+            background: linear-gradient(to bottom, var(--temu-orange), var(--temu-orange-dark)); 
+            color: white; padding: 8px 6px; text-align: center; flex-shrink: 0; 
+        }
+        
+        .normal-prize-info { 
+            background: var(--temu-card-bg); 
+            color: var(--temu-text-primary); 
+            padding: 10px 8px; 
+            text-align: center; 
+            border-top: 1px solid var(--temu-border);
+            flex-shrink: 0;
+        }
+        
+        .temu-float-cart {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 28px;
+            font-weight: 800;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 8px 32px rgba(251, 119, 1, 0.45);
+            z-index: 999;
+            animation: floatBounce 2s ease-in-out infinite;
+            cursor: pointer;
+            border: none;
+            min-width: 160px;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        @keyframes floatBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+        .temu-float-cart:hover {
+            animation-play-state: paused;
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 0 12px 40px rgba(251, 119, 1, 0.6);
+        }
+        
+        #toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); padding: 10px 16px;
+            border-radius: 12px; background: var(--primary); color: white; font-size: 12px; z-index: 1000;
+            display: none; box-shadow: 0 8px 20px -4px rgba(0,0,0,0.25); text-align: center; width: 90%; max-width: 300px; min-width: auto; pointer-events: none;
+        }
+        
+        .code-input-area {
+            position: absolute; bottom: 0; left: 0; right: 0; background: white; padding: 6px 8px;
+            border-radius: 0 0 14px 14px; display: none; flex-direction: column; gap: 5px;
+            border-top: 1px solid var(--temu-border); z-index: 20; box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+        }
+        
+        .active-tickets-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 5px; margin-top: 10px; width: 100%; }
+        .ticket-badge {
+            background: linear-gradient(135deg, var(--temu-orange-light) 0%, #ffe8cc 100%); border: 1px solid var(--temu-orange); color: var(--temu-orange-dark);
+            padding: 5px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.9; } 50% { opacity: 1; transform: scale(1.01); } 100% { opacity: 0.9; } }
+        
+        .paste-btn-green {
+            background-color: var(--success-green); color: white; padding: 3px 8px; border-radius: 5px;
+            font-size: 9px; font-weight: bold; border: none; cursor: pointer; transition: all 0.2s; min-height: 28px; min-width: 28px;
         }
         
         .promo-banner {
-            background: linear-gradient(90deg, #b45309, #fbbf24, #b45309);
-            color: white;
-            padding: 10px 8px;
-            border-radius: 14px;
-            font-size: 12px;
+            background: linear-gradient(90deg, var(--temu-orange), var(--temu-orange-dark), var(--temu-orange)); color: white; padding: 8px 6px;
+            border-radius: 12px; font-size: 11px; font-weight: 900; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            margin: 6px 0 12px; border: 2px solid #fff; box-shadow: 0 6px 12px rgba(251, 119, 1, 0.25);
+            animation: blinker 2s ease-in-out infinite; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.3;
+        }
+        
+        input::placeholder { text-align: right; color: #999; }
+        input { font-size: 16px !important; padding: 10px 12px !important; border-radius: 12px !important; border: 1px solid var(--temu-border) !important; outline: none !important; transition: border-color 0.2s !important; background: white !important; }
+        input:focus { border-color: var(--temu-orange) !important; box-shadow: 0 0 0 3px rgba(251, 119, 1, 0.15) !important; }
+        
+        .profile-badge { background: var(--temu-bg); padding: 3px 8px; border-radius: 14px; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+        
+        .footer-frame {
+            border: 1px solid var(--temu-border); background: var(--temu-card-bg); padding: 12px; border-radius: 16px;
+            margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: var(--temu-shadow);
+        }
+        
+        .grand-prize-frame {
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 50%, var(--temu-orange-light) 100%);
+            padding: 3px;
+            border-radius: 18px;
+            margin: 12px 4px 10px;
+            box-shadow: 0 8px 25px -5px rgba(251, 119, 1, 0.35);
+            animation: grandPrizeGlow 2s ease-in-out infinite;
+        }
+        @keyframes grandPrizeGlow {
+            0%, 100% { box-shadow: 0 8px 25px -5px rgba(251, 119, 1, 0.35); }
+            50% { box-shadow: 0 12px 35px -5px rgba(251, 119, 1, 0.6), 0 0 30px rgba(251, 119, 1, 0.3); }
+        }
+        .grand-prize-inner {
+            background: white;
+            border-radius: 15px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .grand-prize-header {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: var(--temu-orange);
+            font-size: 13px;
             font-weight: 900;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            margin: 8px 0 16px;
-            border: 2px solid #fff;
-            box-shadow: 0 6px 12px rgba(180, 83, 9, 0.25);
-            animation: blinker 2s ease-in-out infinite;
+            padding: 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-shadow: 0 0 10px rgba(251, 119, 1, 0.4);
+            border: 2px solid var(--temu-orange);
+        }
+        
+        .temu-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .temu-btn {
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 50%, var(--temu-orange) 100%);
+            background-size: 200% 100%;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 10px 6px;
+            font-size: 10px;
+            font-weight: 900;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(251, 119, 1, 0.4), 0 2px 6px rgba(0,0,0,0.1);
+            animation: temuBlink 1.8s ease-in-out infinite, temuShine 3s linear infinite;
+            min-height: 44px;
+            position: relative;
+            overflow: hidden;
+        }
+        .temu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transition: left 0.6s ease;
+        }
+        .temu-btn:hover::before { left: 100%; }
+        .temu-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 28px rgba(251, 119, 1, 0.6), 0 6px 16px rgba(0,0,0,0.15);
+            background-position: 200% center;
+        }
+        .temu-btn:active {
+            transform: scale(0.97);
+            transition: transform 0.1s ease;
+        }
+        .temu-btn i {
+            font-size: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .temu-btn span {
+            line-height: 1.2;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        @keyframes temuBlink {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 4px 14px rgba(251, 119, 1, 0.4); }
+            50% { opacity: 0.9; transform: scale(1.04); box-shadow: 0 10px 35px rgba(251, 119, 1, 0.7), 0 0 25px rgba(255,255,255,0.35); }
+        }
+        @keyframes temuShine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        
+        .temu-register-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 900;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            line-height: 1.3;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(251, 119, 1, 0.4);
+            margin: 8px 0 16px;
+            animation: registerBtnPulse 2s ease-in-out infinite;
         }
-
-        input::placeholder { text-align: right; color: #94a3b8; }
-        input {
-            font-size: 16px !important;
-            padding: 10px 12px !important;
-            border-radius: 12px !important;
-            border: 2px solid #e2e8f0 !important;
-            outline: none !important;
-            transition: border-color 0.2s !important;
+        .temu-register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(251, 119, 1, 0.6);
+            background: linear-gradient(135deg, #ff8a3d 0%, var(--temu-orange-dark) 100%);
         }
-        input:focus { border-color: var(--gold) !important; }
-
-        .profile-badge {
-            background: #f1f5f9;
-            padding: 3px 8px;
-            border-radius: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 4px;
-        }
-
-        .footer-frame {
-            border: 2px solid var(--gold);
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 18px;
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+        .temu-register-btn:active { transform: translateY(0); }
+        @keyframes registerBtnPulse {
+            0%, 100% { box-shadow: 0 6px 20px rgba(251, 119, 1, 0.4); }
+            50% { box-shadow: 0 8px 28px rgba(251, 119, 1, 0.7), 0 0 20px rgba(251, 119, 1, 0.3); }
         }
         
-        /* ✅ تحسينات الموبايل - ميديا كويري متقدمة */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes blinker { 50% { opacity: 0.4; transform: scale(0.99); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        
         @media (max-width: 640px) {
-            .glass { 
-                border-radius: 18px !important; 
-                padding: 12px !important;
-                margin: 0 4px !important;
-                width: calc(100% - 8px) !important;
-            }
-            
-            .golden-ticket { 
-                margin: 0 -2px !important; 
-                border-radius: 0 !important; 
-                padding: 1px !important;
-            }
-            .ticket-inner { 
-                padding: 10px !important; 
-                border-radius: 16px !important;
-            }
-            .ticket-inner::before, .ticket-inner::after {
-                width: 18px; height: 18px;
-                right: -10px; left: -10px;
-                border-width: 1px;
-            }
-            
-            h1 { font-size: 1.3rem !important; line-height: 1.3; }
-            h2 { font-size: 1.1rem !important; }
-            
-            /* ✅ البطاقات المميزة - 3 أعمدة مصغرة */
-            .featured-prizes { 
-                grid-template-columns: repeat(3, 1fr) !important; 
-                gap: 5px !important; 
-                margin-bottom: 14px !important;
-            }
-            
-            .btn-activate {
-                aspect-ratio: 4/5 !important;
-                padding: 3px !important;
-                border-radius: 14px !important;
-                border-width: 2px !important;
-            }
-            
-            .btn-activate .bg-amber-50 {
-                width: 42px !important;
-                height: 42px !important;
-                border-radius: 50% !important;
-                margin-bottom: 4px !important;
-            }
-            
-            .btn-activate .bg-amber-50 img {
-                width: 32px !important;
-                height: 32px !important;
-                object-fit: contain !important;
-            }
-            
-            .btn-activate span.font-black {
-                font-size: 8px !important;
-                line-height: 1.2 !important;
-                font-weight: 800 !important;
-            }
-            
-            .btn-activate span.text-\[9px\] {
-                font-size: 7px !important;
-                margin-top: 2px !important;
-            }
-            
-            /* ✅ البطاقات العادية - شبكة 2 أعمدة */
-            .prizes-grid { 
-                grid-template-columns: repeat(2, 1fr) !important; 
-                gap: 8px !important; 
-                padding: 0 !important;
-            }
-            
-            .normal-prize-card {
-                border-radius: 14px !important;
-                aspect-ratio: 4/5 !important;
-                border-width: 2px !important;
-            }
-            
-            .normal-prize-info {
-                padding: 5px !important;
-            }
-            
-            .normal-prize-info h4 {
-                font-size: 9px !important;
-                font-weight: 700 !important;
-            }
-            
-            .normal-prize-info p {
-                font-size: 8px !important;
-                margin-top: 2px !important;
-            }
-            
-            .discount-badge {
-                top: 6px !important;
-                left: -20px !important;
-                padding: 2px 20px !important;
-                font-size: 6px !important;
-            }
-            
-            /* ✅ العد التنازلي */
-            .timer-grid { gap: 6px !important; }
-            .timer-val { font-size: 20px !important; }
-            .timer-label { font-size: 8px !important; }
-            
-            .countdown-timer { 
-                padding: 10px 8px !important; 
-                border-radius: 14px !important;
-                margin: 10px 0 !important;
-            }
-            
-            .draw-info-box {
-                padding: 5px 10px !important;
-                border-radius: 8px !important;
-                font-size: 11px !important;
-            }
-            
-            /* ✅ منطقة إدخال الكود */
-            .code-input-area {
-                padding: 5px 6px !important;
-                border-radius: 0 0 12px 12px !important;
-            }
-            .code-input-area input {
-                font-size: 12px !important;
-                padding: 6px !important;
-                border-radius: 8px !important;
-            }
-            
-            .code-input-area button {
-                font-size: 8px !important;
-                padding: 4px 6px !important;
-                border-radius: 6px !important;
-                min-height: 26px !important;
-            }
-            
-            /* ✅ التوست */
-            #toast {
-                width: 92% !important;
-                font-size: 11px !important;
-                padding: 8px 14px !important;
-                bottom: 8px !important;
-                border-radius: 10px !important;
-            }
-            
-            /* ✅ البانر الترويجي */
-            .promo-banner {
-                font-size: 11px !important;
-                padding: 8px 6px !important;
-                margin: 6px 0 12px !important;
-            }
-            
-            /* ✅ الفوتر */
-            .footer-frame {
-                margin-top: 16px !important;
-                padding: 10px !important;
-                border-radius: 16px !important;
-            }
-            
-            .footer-frame a {
-                font-size: 10px !important;
-                padding: 8px 12px !important;
-                border-radius: 10px !important;
-                min-height: 40px !important;
-            }
-            
-            /* ✅ قائمة التذاكر النشطة */
-            .active-tickets-list { 
-                grid-template-columns: repeat(2, 1fr) !important; 
-                gap: 4px !important; 
-            }
-            .ticket-badge {
-                padding: 4px 6px !important;
-                border-radius: 6px !important;
-                font-size: 9px !important;
-            }
-            
-            /* ✅ شريط الأخبار */
-            .ticker-container {
-                padding: 6px 0 !important;
-                margin: 6px 0 12px !important;
-                border-radius: 12px !important;
-            }
-            .ticker-container::before {
-                font-size: 7px !important;
-                padding: 0 8px !important;
-            }
-            .ticker-item {
-                padding: 0 20px !important;
-                font-size: 10px !important;
-            }
-            
-            /* ✅ أزرار اللمس */
-            button, [role="button"], .btn-touch {
-                min-height: 44px !important;
-                min-width: 44px !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                touch-action: manipulation !important;
-            }
+            .glass { border-radius: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; margin: 0 !important; padding: 0 !important; }
+            .golden-ticket { margin: 0 !important; border-radius: 0 !important; padding: 0 !important; background: var(--temu-card-bg) !important; }
+            .ticket-inner { padding: 10px !important; border-radius: 0 !important; background: var(--temu-card-bg) !important; border: none !important; }
+            .ticket-inner::before, .ticket-inner::after { width: 16px; height: 16px; right: -8px; left: -8px; border-width: 1px; }
+            h1 { font-size: 1.2rem !important; line-height: 1.3; } h2 { font-size: 1rem !important; }
+            .featured-prizes { grid-template-columns: repeat(3, 1fr) !important; gap: 5px !important; margin-bottom: 12px !important; }
+            .btn-activate { aspect-ratio: 4/5 !important; padding: 3px !important; border-radius: 14px !important; border-width: 1px !important; }
+            .btn-activate .bg-amber-50 { width: 40px !important; height: 40px !important; border-radius: 50% !important; margin-bottom: 4px !important; }
+            .btn-activate .bg-amber-50 img { width: 30px !important; height: 30px !important; object-fit: contain !important; }
+            .btn-activate span.font-black { font-size: 8px !important; line-height: 1.2 !important; font-weight: 800 !important; }
+            .btn-activate span.text-\[9px\] { font-size: 7px !important; margin-top: 2px !important; }
+            .prizes-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; padding: 0 !important; }
+            .temu-product-card { border-radius: 12px !important; aspect-ratio: 4/5 !important; border-width: 1px !important; }
+            .normal-prize-info { padding: 8px 6px !important; } 
+            .normal-prize-info h4 { font-size: 13px !important; font-weight: 900 !important; line-height: 1.2 !important; }
+            .temu-discount-badge { top: 8px !important; left: 8px !important; padding: 3px 8px !important; font-size: 10px !important; }
+            .timer-grid { gap: 4px !important; } .timer-val { font-size: 18px !important; } .timer-label { font-size: 7px !important; }
+            .temu-countdown { padding: 8px 10px !important; border-radius: 10px !important; margin: 10px 0 !important; }
+            .draw-info-box { padding: 5px 10px !important; border-radius: 8px !important; font-size: 10px !important; }
+            .code-input-area { padding: 5px 6px !important; border-radius: 0 0 12px 12px !important; }
+            .code-input-area input { font-size: 12px !important; padding: 6px !important; border-radius: 8px !important; }
+            .code-input-area button { font-size: 8px !important; padding: 4px 6px !important; border-radius: 6px !important; min-height: 26px !important; }
+            #toast { width: 92% !important; font-size: 11px !important; padding: 8px 14px !important; bottom: 75px !important; border-radius: 10px !important; }
+            .promo-banner { font-size: 10px !important; padding: 6px 4px !important; margin: 4px 0 10px !important; }
+            .footer-frame { margin-top: 12px !important; padding: 10px !important; border-radius: 14px !important; }
+            .footer-frame a { font-size: 10px !important; padding: 8px 12px !important; border-radius: 10px !important; min-height: 40px !important; }
+            .active-tickets-list { grid-template-columns: repeat(2, 1fr) !important; gap: 4px !important; }
+            .ticket-badge { padding: 4px 6px !important; border-radius: 6px !important; font-size: 9px !important; }
+            .ticker-container { padding: 5px 0 !important; margin: 5px 0 10px !important; border-radius: 10px !important; }
+            .ticker-container::before { font-size: 7px !important; padding: 0 6px !important; }
+            .ticker-item { padding: 0 16px !important; font-size: 9px !important; }
+            button, [role="button"], .btn-touch { min-height: 44px !important; min-width: 44px !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; touch-action: manipulation !important; }
+            .grand-prize-frame { margin: 10px 2px 8px !important; padding: 2px !important; border-radius: 14px !important; }
+            .grand-prize-inner { padding: 10px 6px !important; border-radius: 12px !important; }
+            .grand-prize-header { font-size: 11px !important; padding: 6px !important; border-radius: 8px !important; }
+            .temu-buttons-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
+            .temu-btn { padding: 8px 4px !important; border-radius: 12px !important; font-size: 9px !important; min-height: 40px !important; }
+            .temu-btn i { font-size: 14px !important; }
+            .temu-float-cart { width: 85% !important; padding: 10px !important; font-size: 12px !important; border-radius: 24px !important; bottom: 12px !important; }
+            .temu-top-banner { font-size: 9px !important; padding: 5px 8px !important; }
+            .temu-register-btn { padding: 12px 16px !important; font-size: 13px !important; border-radius: 14px !important; margin: 6px 0 12px !important; }
         }
-        
         @media (max-width: 360px) {
-            .featured-prizes {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 4px !important;
-            }
-            
-            .btn-activate {
-                aspect-ratio: 1/1 !important;
-                padding: 2px !important;
-            }
-            
-            .btn-activate .bg-amber-50 {
-                width: 36px !important;
-                height: 36px !important;
-            }
-            
-            .btn-activate .bg-amber-50 img {
-                width: 28px !important;
-                height: 28px !important;
-            }
-            
-            .timer-val { font-size: 18px !important; }
-            .active-tickets-list { grid-template-columns: repeat(2, 1fr) !important; }
-            
+            .featured-prizes { grid-template-columns: repeat(3, 1fr) !important; gap: 4px !important; }
+            .btn-activate { aspect-ratio: 1/1 !important; padding: 2px !important; }
+            .btn-activate .bg-amber-50 { width: 36px !important; height: 36px !important; }
+            .btn-activate .bg-amber-50 img { width: 28px !important; height: 28px !important; }
+            .timer-val { font-size: 16px !important; } 
+            .active-tickets-list { grid-template-columns: repeat(2, 1fr) !important; } 
             .prizes-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .temu-btn { font-size: 8px !important; padding: 7px 3px !important; }
+            .temu-btn i { font-size: 12px !important; }
+            .temu-register-btn { font-size: 12px !important; padding: 10px 14px !important; }
         }
-        
-        /* ✅ تحسين تجربة اللمس للأجهزة التي لا تدعم الهوفر */
         @media (hover: none) and (pointer: coarse) {
-            .btn-activate:hover, .normal-prize-card:hover {
-                transform: none !important;
-                box-shadow: none !important;
-            }
-            .btn-activate:active, .normal-prize-card:active {
-                transform: scale(0.97);
-                transition: transform 0.1s ease;
-            }
-            input:focus {
-                border-color: var(--gold) !important;
-                box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2) !important;
-            }
+            .btn-activate:hover, .temu-product-card:hover { transform: none !important; box-shadow: none !important; }
+            .btn-activate:active, .temu-product-card:active { transform: scale(0.98); transition: transform 0.1s ease; }
+            input:focus { border-color: var(--temu-orange) !important; box-shadow: 0 0 0 3px rgba(251, 119, 1, 0.2) !important; }
         }
         
-        /* ✅ تحسينات إضافية للأداء */
-        .prize-img {
-            will-change: transform;
-            backface-visibility: hidden;
-            transform: translateZ(0);
-        }
-        
-        .btn-activate, .normal-prize-card {
-            will-change: transform;
-            backface-visibility: hidden;
-        }
-        
-        /* ✅ منع الوميض عند اللمس */
+        .prize-img { will-change: transform; backface-visibility: hidden; transform: translateZ(0); }
+        .btn-activate, .temu-product-card { will-change: transform; backface-visibility: hidden; }
         * { -webkit-tap-highlight-color: transparent; }
+        img[loading="lazy"] { background: var(--temu-bg); min-height: 50px; }
         
-        /* ✅ تحسين تحميل الصور */
-        img[loading="lazy"] {
-            background: #f1f5f9;
-            min-height: 50px;
+        .youtube-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+        .youtube-modal.active { display: flex; }
+        .youtube-modal-content { background: white; border-radius: 16px; overflow: hidden; max-width: 900px; width: 100%; max-height: 90vh; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .youtube-modal-close { position: absolute; top: 10px; right: 10px; background: var(--temu-red); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .youtube-modal-close:hover { background: var(--temu-red-dark); transform: scale(1.1); }
+        .youtube-iframe-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .youtube-iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        @media (max-width: 640px) { .youtube-modal-content { max-width: 100%; max-height: 85vh; } .youtube-modal-close { width: 36px; height: 36px; font-size: 18px; top: 8px; right: 8px; } }
+        
+        .order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 10000; justify-content: center; align-items: center; padding: 16px; animation: fadeIn 0.2s ease-out; }
+        .order-modal.active { display: flex; }
+        .order-modal-content { background: white; border-radius: 20px; padding: 20px 16px; max-width: 400px; width: 100%; position: relative; box-shadow: 0 25px 80px rgba(0,0,0,0.4); border: 3px solid var(--temu-orange); animation: slideUp 0.3s ease-out; }
+        .order-modal-close { position: absolute; top: 12px; left: 12px; background: var(--temu-bg); color: var(--temu-text-secondary); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .order-modal-close:hover { background: var(--temu-red); color: white; transform: rotate(90deg); }
+        .order-modal-title { font-size: 16px; font-weight: 900; color: var(--temu-orange-dark); text-align: center; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .order-modal-instructions { background: var(--temu-orange-light); border: 2px dashed var(--temu-orange); border-radius: 12px; padding: 12px; margin-bottom: 14px; font-size: 11px; color: var(--temu-text-primary); line-height: 1.6; text-align: right; }
+        .order-modal-instructions ol { padding-right: 18px; margin: 0; } .order-modal-instructions li { margin-bottom: 4px; }
+        .order-modal-terms { background: var(--temu-bg); border-radius: 10px; padding: 10px; margin-bottom: 14px; font-size: 10px; color: var(--temu-text-secondary); text-align: right; border: 1px solid var(--temu-border); }
+        .order-modal-terms label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+        .order-modal-terms input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--temu-orange); cursor: pointer; }
+        .order-modal-buttons { display: flex; gap: 10px; justify-content: center; }
+        .btn-modal-confirm { background: linear-gradient(135deg, var(--success-green) 0%, #059669 100%); color: white; border: none; border-radius: 12px; padding: 10px 24px; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-modal-confirm:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4); }
+        .btn-modal-confirm:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+        .btn-modal-cancel { background: var(--temu-bg); color: var(--temu-text-secondary); border: 2px solid var(--temu-border); border-radius: 12px; padding: 10px 24px; font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s; flex: 1; }
+        .btn-modal-cancel:hover { background: var(--temu-red); color: white; border-color: var(--temu-red); }
+        .order-product-name { background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 100%); color: white; padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; text-align: center; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        @media (max-width: 640px) { .order-modal-content { padding: 16px 12px !important; border-radius: 16px !important; margin: 0 4px !important; } .order-modal-title { font-size: 14px !important; } .order-modal-instructions { font-size: 10px !important; padding: 10px !important; } .order-modal-terms { font-size: 9px !important; } .order-product-name { font-size: 11px !important; padding: 6px 10px !important; } .btn-modal-confirm, .btn-modal-cancel { font-size: 11px !important; padding: 9px 16px !important; border-radius: 10px !important; } }
+        
+        .temu-instructions-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .temu-instructions-modal.active { display: flex; }
+        .temu-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 16px;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+            border: 3px solid var(--temu-orange);
+            animation: slideUp 0.3s ease-out;
+            text-align: center;
+        }
+        .temu-modal-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--temu-bg);
+            color: var(--temu-text-secondary);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .temu-modal-close:hover {
+            background: var(--temu-red);
+            color: white;
+            transform: rotate(90deg);
+        }
+        .temu-modal-title {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--temu-orange);
+            text-align: center;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .temu-modal-instructions {
+            background: #fff7ed;
+            border: 2px dashed var(--temu-orange);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 14px;
+            font-size: 11px;
+            color: var(--temu-text-primary);
+            line-height: 1.6;
+            text-align: right;
+        }
+        .temu-modal-instructions ol { padding-right: 18px; margin: 0; }
+        .temu-modal-instructions li { margin-bottom: 4px; }
+        .temu-modal-terms {
+            background: var(--temu-bg);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 14px;
+            font-size: 10px;
+            color: var(--temu-text-secondary);
+            text-align: right;
+            border: 1px solid var(--temu-border);
+        }
+        .temu-modal-terms label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .temu-modal-terms input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            accent-color: var(--temu-orange);
+            cursor: pointer;
+        }
+        .temu-modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .btn-temu-confirm {
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 24px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-temu-confirm:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(251, 119, 1, 0.4);
+        }
+        .btn-temu-confirm:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-temu-cancel {
+            background: var(--temu-bg);
+            color: var(--temu-text-secondary);
+            border: 2px solid var(--temu-border);
+            border-radius: 12px;
+            padding: 10px 24px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .btn-temu-cancel:hover {
+            background: var(--temu-red);
+            color: white;
+            border-color: var(--temu-red);
+        }
+        .temu-modal-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            animation: bounce 1s ease infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        @media (max-width: 640px) {
+            .temu-modal-content { padding: 16px 12px !important; border-radius: 16px !important; margin: 0 4px !important; }
+            .temu-modal-title { font-size: 14px !important; }
+            .temu-modal-instructions { font-size: 10px !important; padding: 10px !important; }
+            .temu-modal-terms { font-size: 9px !important; }
+            .btn-temu-confirm, .btn-temu-cancel { font-size: 11px !important; padding: 9px 16px !important; border-radius: 10px !important; }
+        }
+        
+        .temu-register-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10002;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .temu-register-modal.active { display: flex; }
+        .temu-register-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px 20px;
+            max-width: 380px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+            border: 3px solid var(--temu-orange);
+            animation: slideUp 0.3s ease-out;
+            text-align: center;
+        }
+        .temu-register-modal-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--temu-bg);
+            color: var(--temu-text-secondary);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .temu-register-modal-close:hover {
+            background: var(--temu-red);
+            color: white;
+            transform: rotate(90deg);
+        }
+        .temu-register-modal-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--temu-orange);
+            text-align: center;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .temu-register-modal-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--temu-orange), var(--temu-orange-dark));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 8px 24px rgba(251, 119, 1, 0.4);
+        }
+        .temu-register-modal-logo i {
+            font-size: 40px;
+            color: white;
+        }
+        .temu-register-modal-desc {
+            font-size: 12px;
+            color: var(--temu-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        .temu-register-modal-benefits {
+            background: var(--temu-orange-light);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        .temu-register-modal-benefits ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .temu-register-modal-benefits li {
+            font-size: 11px;
+            color: var(--temu-text-primary);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .temu-register-modal-benefits li i {
+            color: var(--temu-orange);
+            font-size: 10px;
+        }
+        .temu-register-modal-terms {
+            background: var(--temu-bg);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 16px;
+            font-size: 10px;
+            color: var(--temu-text-secondary);
+            text-align: right;
+            border: 1px solid var(--temu-border);
+        }
+        .temu-register-modal-terms label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .temu-register-modal-terms input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            accent-color: var(--temu-orange);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .temu-register-modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .btn-temu-register-confirm {
+            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-temu-register-confirm:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(251, 119, 1, 0.4);
+        }
+        .btn-temu-register-confirm:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-temu-register-cancel {
+            background: var(--temu-bg);
+            color: var(--temu-text-secondary);
+            border: 2px solid var(--temu-border);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .btn-temu-register-cancel:hover {
+            background: var(--temu-red);
+            color: white;
+            border-color: var(--temu-red);
+        }
+        @media (max-width: 640px) {
+            .temu-register-modal-content { padding: 20px 16px !important; border-radius: 16px !important; margin: 0 4px !important; }
+            .temu-register-modal-title { font-size: 16px !important; }
+            .temu-register-modal-desc { font-size: 11px !important; }
+            .temu-register-modal-benefits li { font-size: 10px !important; }
+            .temu-register-modal-terms { font-size: 9px !important; }
+            .btn-temu-register-confirm, .btn-temu-register-cancel { font-size: 12px !important; padding: 10px 16px !important; border-radius: 10px !important; }
+        }
+        
+        .copy-btn.animated-success { animation: flashSuccess 0.3s ease-in-out; }
+        @keyframes flashSuccess { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.4); } }
+        #wasitWilayaNum { text-align: center; font-weight: bold; border: 1px solid var(--temu-border) !important; transition: border-color 0.2s !important; }
+        #wasitWilayaNum:focus { border-color: var(--temu-orange) !important; }
+        
+        @keyframes blinkOffer {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); text-shadow: 0 0 10px rgba(255, 59, 48, 0.6); }
+        }
+        .blink-offer {
+            animation: blinkOffer 1s ease-in-out infinite;
+            font-weight: 900 !important;
+            color: var(--temu-red) !important;
+        }
+        @media (max-width: 640px) {
+            .blink-offer { font-size: 11px !important; animation: blinkOffer 0.8s ease-in-out infinite; }
+        }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -710,12 +970,158 @@
     <div class="bg-animate"></div>
     <div id="toast"></div>
 
-    <!-- الصفحة الأولى: تسجيل الدخول -->
+    <!-- شريط علوي للإعلانات بنمط Temu -->
+    <div class="temu-top-banner">
+        <i class="fas fa-truck"></i>
+        <span>🚚 شحن مجاني للطلبات فوق 3000 DA • 🔥 خصم إضافي 10% بكود: TEMU10</span>
+        <i class="fas fa-gift"></i>
+    </div>
+
+    <audio id="activationSound" src="https://bigsoundbank.com/UPLOAD/mp3/1737.mp3" preload="auto"></audio>
+    <audio id="orderSound" src="https://bigsoundbank.com/UPLOAD/ogg/1742.ogg" preload="auto"></audio>
+
+    <div id="youtubeModal" class="youtube-modal" onclick="window.closeYoutubeModal(event)">
+        <div class="youtube-modal-content" onclick="event.stopPropagation()">
+            <button type="button" class="youtube-modal-close" onclick="window.closeYoutubeModal()" title="إغلاق">×</button>
+            <div class="youtube-iframe-container">
+                <iframe id="youtubeIframe" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="orderModal" class="order-modal" onclick="window.closeOrderModal(event)">
+        <div class="order-modal-content" onclick="event.stopPropagation()">
+            <button type="button" class="order-modal-close" onclick="window.closeOrderModal()" title="إغلاق">×</button>
+            <div class="order-modal-title"><span>🛒</span> تأكيد طلب المنتج</div>
+            <div class="order-product-name" id="modalProductName"><span>🎁</span> <span id="modalPrizeName">اسم المنتج</span></div>
+            <div class="order-modal-instructions">
+                <strong>📋 خطوات إتمام الطلب:</strong>
+                <ol><li>اقرأ تعليمات الشحن والتوصيل بعناية</li><li>تأكد من صحة بيانات الاتصال الخاصة بك</li><li>وافق على الشروط والأحكام</li><li>اضغط على "موافق" لإرسال طلبك</li></ol>
+            </div>
+            <div class="order-modal-terms">
+                <label><input type="checkbox" id="termsCheckbox"><span>أوافق على <strong>الشروط والأحكام</strong>:<br>• البيانات المقدمة صحيحة ومسؤولة عنها<br>• سأقوم باستلام المنتج عند التوصيل ودفع القيمة المتفق عليها<br>• أفهم أن التأكيد لا يعني ضمان الفوز بالجائزة</span></label>
+            </div>
+            <div class="order-modal-buttons">
+                <button type="button" class="btn-modal-cancel" onclick="window.closeOrderModal()">إلغاء</button>
+                <button type="button" class="btn-modal-confirm" id="confirmOrderBtn" disabled onclick="window.confirmAndSendOrder()"><span>✅</span> <span>موافق وإرسال</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="wasitModal" class="order-modal" onclick="window.closeWasitModal(event)">
+        <div class="order-modal-content" onclick="event.stopPropagation()">
+            <button type="button" class="order-modal-close" onclick="window.closeWasitModal()" title="إغلاق">×</button>
+            <div class="order-modal-title"><span>🤝</span> الشراء بوسيط</div>
+            <div class="order-modal-instructions">
+                <strong>📋 خطوات الشراء الآمن عبر الوسيط:</strong>
+                <ol><li>املأ بياناتك الشخصية بدقة لضمان التوصيل الصحيح</li><li>سيقوم الوسيط بالتواصل معك لتأكيد الطلب</li><li>الدفع يتم عند استلام المنتج (الدفع عند الاستلام)</li><li>الوسيط يضمن حقك ويحمي عملية الشراء</li></ol>
+            </div>
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-xl p-3 mb-3">
+                <div class="flex items-center gap-2 mb-2"><span class="text-lg">🏦</span><strong class="text-amber-800 text-sm">💳 الدفع عبر بريدي موب</strong></div>
+                <p class="text-[10px] text-slate-600 mb-2 text-right">أرسل المبلغ المطلوب إلى حساب بريدي موب التالي:</p>
+                <div class="flex items-center gap-2 bg-white rounded-lg p-2 border border-amber-200">
+                    <code id="baridiMobNumber" class="flex-1 text-right font-mono font-bold text-amber-700 text-sm dir-ltr">0079999900000000</code>
+                    <button type="button" onclick="window.copyBaridiMobNumber()" class="copy-btn flex items-center justify-center w-8 h-8 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-all active:scale-95" title="نسخ الرقم"><i class="fas fa-copy text-xs"></i></button>
+                </div>
+                <p class="text-[9px] text-slate-400 mt-1 text-right">⚠️ بعد التحويل، أرسل إثبات الدفع للوسيط عبر الواتساب</p>
+            </div>
+            <div class="order-modal-terms">
+                <label><input type="checkbox" id="wasitTermsCheckbox" onchange="document.getElementById('wasitContinueBtn').disabled = !this.checked;"><span>أوافق على <strong>شروط الشراء بالوسيط</strong>:<br>• البيانات المقدمة صحيحة ومسؤولة عنها بالكامل<br>• أتعهد باستلام المنتج ودفع قيمته عند التوصيل<br>• أفهم أن الوسيط وسيط أمين ولا يتحمل مسؤولية عيوب المصنع</span></label>
+            </div>
+            <div class="order-modal-buttons">
+                <button type="button" class="btn-modal-cancel" onclick="window.closeWasitModal()">إلغاء</button>
+                <button type="button" class="btn-modal-confirm" id="wasitContinueBtn" disabled onclick="window.openWasitForm()"><span>✅</span> <span>موافق ومتابعة</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="wasitFormModal" class="order-modal" onclick="window.closeWasitFormModal(event)">
+        <div class="order-modal-content" onclick="event.stopPropagation()">
+            <button type="button" class="order-modal-close" onclick="window.closeWasitFormModal()" title="إغلاق">×</button>
+            <div class="order-modal-title"><span>📝</span> بيانات الطلب</div>
+            <div class="order-product-name" id="wasitProductName"><span>🎁</span> <span id="wasitPrizeName">اسم المنتج</span></div>
+            <div class="space-y-2">
+                <input type="text" id="wasitFullName" placeholder="الاسم الكامل *" class="w-full text-right" autocomplete="name">
+                <input type="text" id="wasitStreet" placeholder="عنوان الشارع / الحي *" class="w-full text-right" autocomplete="street-address">
+                <input type="text" id="wasitCity" placeholder="المدينة *" class="w-full text-right" autocomplete="address-level2">
+                <input type="text" id="wasitState" placeholder="اسم الولاية *" class="w-full text-right" autocomplete="address-level1">
+                <input type="text" id="wasitWilayaNum" placeholder="الرمز البريدي (5 أرقام) *" class="w-full text-center" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="tel" id="wasitPhone" placeholder="رقم الهاتف *" class="w-full text-right" dir="ltr" autocomplete="tel" inputmode="tel">
+            </div>
+            <div class="order-modal-terms mt-3">
+                <label><input type="checkbox" id="wasitDataCheckbox" onchange="document.getElementById('wasitSubmitBtn').disabled = !this.checked;"><span>أؤكد أن جميع البيانات المدخلة صحيحة وأتحمل مسؤوليتها</span></label>
+            </div>
+            <div class="order-modal-buttons mt-3">
+                <button type="button" class="btn-modal-cancel" onclick="window.closeWasitFormModal()">إلغاء</button>
+                <button type="button" class="btn-modal-confirm" id="wasitSubmitBtn" disabled onclick="window.submitWasitOrder()"><span>🚀</span> <span>تأكيد وإرسال</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تعليمات تيمو المنبثقة -->
+    <div id="temuModal" class="temu-instructions-modal" onclick="window.closeTemuModal(event)">
+        <div class="temu-modal-content" onclick="event.stopPropagation()">
+            <button type="button" class="temu-modal-close" onclick="window.closeTemuModal()" title="إغلاق">×</button>
+            <div class="temu-modal-icon">🎁</div>
+            <div class="temu-modal-title"><span>✨</span> عرض التوفير الحصري على تيمو</div>
+            <div class="temu-modal-instructions">
+                <strong>📋 خطوات الاستفادة من العرض:</strong>
+                <ol>
+                    <li>سيتم فتح موقع تيمو في نافذة جديدة</li>
+                    <li>ابحث عن المنتجات بخصم حتى 90%</li>
+                    <li>أضف المنتجات لعربة التسوق</li>
+                    <li>استخدم كود الخصم: <strong>TEMU90</strong></li>
+                    <li>أكمل عملية الدفع واستمتع بخصوماتك</li>
+                </ol>
+            </div>
+            <div class="temu-modal-terms">
+                <label>
+                    <input type="checkbox" id="temuTermsCheckbox" onchange="document.getElementById('temuConfirmBtn').disabled = !this.checked;">
+                    <span>أوافق على <strong>شروط العرض</strong>:<br>• الخصومات سارية لفترة محدودة<br>• الأسعار قد تتغير حسب التوفر<br>• الشحن مجاني للطلبات فوق 50 دولار</span>
+                </label>
+            </div>
+            <div class="temu-modal-buttons">
+                <button type="button" class="btn-temu-cancel" onclick="window.closeTemuModal()">إلغاء</button>
+                <button type="button" class="btn-temu-confirm" id="temuConfirmBtn" disabled onclick="window.confirmAndOpenTemu()"><span>🚀</span> <span>موافق وافتح تيمو</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تسجيل تيمو الجديدة -->
+    <div id="temuRegisterModal" class="temu-register-modal" onclick="window.closeTemuRegisterModal(event)">
+        <div class="temu-register-modal-content" onclick="event.stopPropagation()">
+            <button type="button" class="temu-register-modal-close" onclick="window.closeTemuRegisterModal()" title="إغلاق">×</button>
+            <div class="temu-register-modal-logo">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <div class="temu-register-modal-title"><span>🎁</span> سجل في تطبيق تيمو الآن</div>
+            <p class="temu-register-modal-desc">
+                احصل على خصومات حصرية وهدايا مجانية عند التسجيل لأول مرة في تطبيق تيمو. استفد من عروضنا الخاصة!
+            </p>
+            <div class="temu-register-modal-benefits">
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> خصم 90% على أول طلب</li>
+                    <li><i class="fas fa-check-circle"></i> شحن مجاني عالمي</li>
+                    <li><i class="fas fa-check-circle"></i> هدايا يومية مجانية</li>
+                    <li><i class="fas fa-check-circle"></i> حماية المشتري الكاملة</li>
+                </ul>
+            </div>
+            <div class="temu-register-modal-terms">
+                <label>
+                    <input type="checkbox" id="temuRegisterTermsCheckbox" onchange="document.getElementById('temuRegisterConfirmBtn').disabled = !this.checked;">
+                    <span>أوافق على <strong>شروط التسجيل</strong>:<br>• أقر بأن البيانات المقدمة صحيحة<br>• أوافق على استلام عروض تيمو الترويجية<br>• أفهم أن الخصومات سارية لفترة محدودة</span>
+                </label>
+            </div>
+            <div class="temu-register-modal-buttons">
+                <button type="button" class="btn-temu-register-cancel" onclick="window.closeTemuRegisterModal()">لاحقاً</button>
+                <button type="button" class="btn-temu-register-confirm" id="temuRegisterConfirmBtn" disabled onclick="window.confirmAndOpenTemuRegister()"><span>✅</span> <span>موافق وتسجيل</span></button>
+            </div>
+        </div>
+    </div>
+
     <div id="loginPage" class="page active items-center justify-center p-2">
         <div class="max-w-md w-full glass p-4">
-            <div class="flex justify-center mb-3">
-                <div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-2xl shadow-inner border-2 border-amber-400">🎁</div>
-            </div>
+            <div class="flex justify-center mb-3"><div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-2xl shadow-inner border-2 border-amber-400">🎁</div></div>
             <h1 class="text-2xl font-black mb-1 text-center text-amber-600">تومبولا الحظ</h1>
             <p class="text-slate-500 text-center mb-4 text-xs">سجل الآن للحصول على فرصة للفوز</p>
             <div class="space-y-2">
@@ -724,127 +1130,304 @@
                 <input type="email" id="emailInput" placeholder="البريد الإلكتروني" class="w-full text-right" dir="ltr" autocomplete="email" inputmode="email">
                 <input type="tel" id="phoneInput" placeholder="رقم الهاتف" class="w-full text-right" dir="ltr" autocomplete="tel" inputmode="tel">
                 <input type="password" id="passwordInput" placeholder="كلمة المرور" class="w-full text-right" dir="ltr" autocomplete="new-password">
-                <button id="authBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl mt-1 shadow-lg transition-all transform active:scale-95 btn-touch">دخول / تسجيل جديد</button>
+                <button type="button" id="authBtn" class="w-full btn-temu-primary mt-1">دخول / تسجيل جديد</button>
             </div>
         </div>
     </div>
 
-    <!-- الصفحة الثانية: لوحة التحكم -->
     <div id="dashboardPage" class="page">
         <div class="max-w-6xl mx-auto w-full text-center">
-            
-            <div class="golden-ticket mb-4">
+            <div class="golden-ticket mb-3">
                 <div class="ticket-inner">
                     <div class="flex-1 space-y-2 z-10">
-                        <div class="text-right">
-                            <span class="inline-block bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[8px] font-black mb-1 uppercase tracking-tighter border border-amber-200">🎫 نشطة</span>
-                            <h2 class="text-lg font-black text-slate-800 leading-tight">الجوائز الذهبية</h2>
-                        </div>
-                        
+                        <div class="text-right"><span class="inline-block bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[8px] font-black mb-1 uppercase tracking-tighter border border-amber-200">🎫 نشطة</span><h2 class="text-lg font-black text-slate-800 leading-tight">الجوائز الذهبية</h2></div>
                         <div class="flex flex-wrap gap-1.5 justify-end items-center">
-                            <div class="profile-badge">
-                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                                <span id="userPhoneDisplay" class="text-slate-700 font-bold text-[9px]">--</span>
-                            </div>
-                            <div class="profile-badge">
-                                <span>📍</span>
-                                <span id="userStateDisplay" class="text-slate-600 font-bold text-[9px]">--</span>
-                            </div>
+                            <div class="profile-badge"><span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span><span id="userPhoneDisplay" class="text-slate-700 font-bold text-[9px]">--</span></div>
+                            <div class="profile-badge"><span>📍</span><span id="userStateDisplay" class="text-slate-600 font-bold text-[9px]">--</span></div>
                         </div>
-
                         <div id="activeTicketsContainer" class="active-tickets-list"></div>
                     </div>
                 </div>
             </div>
-
-            <div class="ticker-container shadow-sm">
-                <div class="ticker-wrapper" id="tickerWrapper"></div>
-            </div>
-
-            <div class="promo-banner">
-                <span>⭐</span> الجوائز الكبرى جاهزة <span>⭐</span>
-            </div>
-
+            <div class="ticker-container shadow-sm"><div class="ticker-wrapper" id="tickerWrapper"></div></div>
+            <div class="promo-banner"><span>⭐</span> الجوائز الكبرى جاهزة <span>⭐</span></div>
             <div id="featuredPrizes" class="featured-prizes"></div>
-
-            <div class="countdown-timer">
-                <div class="draw-info-box">🕒 السحب اليومي 18:00</div>
-                <div class="flex items-center gap-1 mb-0.5">
-                    <span class="text-[9px] font-bold uppercase text-amber-400 tracking-wider">الوقت المتبقي:</span>
-                </div>
-                <div class="timer-grid">
-                    <div class="timer-unit">
-                        <span class="timer-val" id="mn">02</span>
-                        <span class="timer-label">دقيقة</span>
+            
+            <!-- زر تسجيل تيمو الطويل تحت البطاقات الثلاث الأولى -->
+            <button type="button" class="temu-register-btn" onclick="window.openTemuRegisterModal()">
+                <i class="fas fa-gift"></i>
+                <span>🎁 سجل في تيمو الآن واحصل على خصم 90% + هدايا مجانية!</span>
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            
+            <!-- إطار الجائزة الكبرى مع أزرار Temu -->
+            <div class="grand-prize-frame">
+                <div class="grand-prize-inner">
+                    <div class="grand-prize-header">
+                        <i class="fas fa-crown"></i>
+                        <span>🏆 الجائزة الكبرى 🏆</span>
+                        <i class="fas fa-crown"></i>
                     </div>
-                    <div class="timer-unit">
-                        <span class="timer-val" id="sc">00</span>
-                        <span class="timer-label">ثانية</span>
+                    <div class="temu-buttons-grid">
+                        <button type="button" class="temu-btn" onclick="window.handleTemuClick('عرض الذهب', 'gold')">
+                            <i class="fas fa-gem"></i>
+                            <span>عرض<br>الذهب</span>
+                        </button>
+                        <button type="button" class="temu-btn" onclick="window.handleTemuClick('عرض الماس', 'diamond')">
+                            <i class="fas fa-diamond"></i>
+                            <span>عرض<br>الماس</span>
+                        </button>
+                        <button type="button" class="temu-btn" onclick="window.handleTemuClick('عرض التوفير', 'savings')">
+                            <i class="fas fa-percent"></i>
+                            <span>عرض<br>التوفير</span>
+                        </button>
                     </div>
+                    <p class="text-[9px] text-slate-500 mt-2 font-bold">🎁 خصومات حصرية عند الشراء عبر تيمو</p>
                 </div>
             </div>
-
-            <div class="coming-soon-frame">
-                <div class="promo-banner bg-slate-800 border-slate-700 text-[11px]">
-                    <span>🛍️</span> قريباً <span>🛍️</span>
+            
+            <!-- عداد وقت بنمط Temu Lightning Deal -->
+            <div class="temu-countdown">
+                <span class="temu-countdown-label">⚡ عرض خاطف ينتهي خلال:</span>
+                <div class="timer-grid">
+                    <div class="timer-unit"><span class="timer-val" id="mn">02</span><span class="timer-label">دقيقة</span></div>
+                    <div class="timer-unit"><span class="timer-val" id="sc">00</span><span class="timer-label">ثانية</span></div>
                 </div>
+            </div>
+            
+            <div class="coming-soon-frame">
+                <div class="promo-banner bg-slate-800 border-slate-700 text-[11px]"><span>🛍️</span> قريباً <span>🛍️</span></div>
                 <div class="prizes-grid" id="prizesGrid"></div>
             </div>
-
             <div class="footer-frame">
-                <div class="text-slate-600 text-[9px] font-black">
-                    © تومبولا الحظ 2024
+                <div class="text-slate-600 text-[9px] font-black">© تومبولا الحظ 2024</div>
+                <div class="flex gap-2 w-full">
+                    <a href="https://m.me/biri.vag.dz" id="whatsappLink" target="_blank" class="bg-slate-800 hover:bg-black text-white px-4 py-2 rounded-lg font-bold text-[10px] transition-all flex items-center gap-1.5 shadow-lg btn-touch flex-1 justify-center"><span>📞</span> اتصل بالوسيط</a>
+                    <button type="button" onclick="window.openYoutubeModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-[10px] transition-all flex items-center gap-1.5 shadow-lg btn-touch flex-1 justify-center"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span>يوتيوب</span></button>
                 </div>
-                <a href="https://m.me/biri.vag.dz" id="whatsappLink" target="_blank" class="bg-slate-800 hover:bg-black text-white px-5 py-2 rounded-lg font-bold text-[10px] transition-all flex items-center gap-1.5 shadow-lg btn-touch w-full justify-center">
-                    <span>📞</span> اتصل بالوسيط
-                </a>
             </div>
         </div>
     </div>
 
-    <!-- ✅ سكريبت تحسين تجربة الموبايل -->
+    <!-- زر العربة العائم بنمط Temu -->
+    <button type="button" class="temu-float-cart" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-shopping-bag text-lg"></i>
+        <span>عرض العربة (<span id="cartCount">0</span>)</span>
+        <i class="fas fa-chevron-up text-sm"></i>
+    </button>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // منع التكبير عند النقر المزدوج
+            document.addEventListener('click', function initAudio() {
+                const activationSound = document.getElementById('activationSound');
+                const orderSound = document.getElementById('orderSound');
+                if (activationSound) { activationSound.volume = 0.1; activationSound.play().then(() => { activationSound.pause(); activationSound.currentTime = 0; }).catch(() => {}); }
+                if (orderSound) { orderSound.volume = 0.1; orderSound.play().then(() => { orderSound.pause(); orderSound.currentTime = 0; }).catch(() => {}); }
+                document.removeEventListener('click', initAudio);
+            }, { once: true });
+
             let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(event) {
-                const now = Date.now();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, { passive: false });
-            
-            // منع التكبير عند اللمس المتعدد
-            document.addEventListener('touchstart', function(event) {
-                if (event.touches.length > 1) {
-                    event.preventDefault();
-                }
-            }, { passive: false });
-            
-            // تحسين التمرير السلس
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if(target) {
-                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                });
-            });
-            
-            // تحسين حقول الإدخال على الموبايل
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('focus', function() {
-                    setTimeout(() => {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 100);
-                });
-            });
+            document.addEventListener('touchend', function(event) { const now = Date.now(); if (now - lastTouchEnd <= 300) event.preventDefault(); lastTouchEnd = now; }, { passive: false });
+            document.addEventListener('touchstart', function(event) { if (event.touches.length > 1) event.preventDefault(); }, { passive: false });
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { e.preventDefault(); const target = document.querySelector(this.getAttribute('href')); if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); });
+            document.querySelectorAll('input').forEach(input => { input.addEventListener('focus', function() { setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100); }); });
         });
+
+        window.openYoutubeModal = function() {
+            document.getElementById('youtubeIframe').src = 'https://www.youtube.com/embed/loGAyJTbu88?autoplay=1&rel=0';
+            document.getElementById('youtubeModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeYoutubeModal = function(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('youtubeModal').classList.remove('active');
+            document.getElementById('youtubeIframe').src = '';
+            document.body.style.overflow = '';
+        };
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { window.closeYoutubeModal(); window.closeOrderModal(); window.closeWasitModal(); window.closeWasitFormModal(); window.closeTemuModal(); window.closeTemuRegisterModal(); }});
+
+        // دوال نافذة تيمو المنبثقة
+        window.showTemuModal = function(offerName) {
+            document.getElementById('temuTermsCheckbox').checked = false;
+            document.getElementById('temuConfirmBtn').disabled = true;
+            document.getElementById('temuModal').dataset.offerName = offerName;
+            document.getElementById('temuModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeTemuModal = function(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('temuModal').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        window.confirmAndOpenTemu = function() {
+            const offerName = document.getElementById('temuModal').dataset.offerName || 'عرض التوفير';
+            window.closeTemuModal();
+            window.open('https://www.temu.com', '_blank', 'noopener,noreferrer');
+            if (auth?.currentUser) {
+                addDoc(collection(db, 'Temu'), {
+                    clickId: `TEMU-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email || '',
+                    userPhone: localStorage.getItem('user_phone') || '',
+                    userFullName: localStorage.getItem('user_fullname') || '',
+                    userState: localStorage.getItem('user_state') || '',
+                    offerName: offerName,
+                    clickedAt: serverTimestamp(),
+                    source: 'tombola_grand_prize_temu_modal',
+                    deviceInfo: { platform: navigator.platform, userAgent: navigator.userAgent, language: navigator.language },
+                    ipAddress: 'client-side-protected'
+                }).catch(e => console.error("Temu log error:", e));
+            }
+            showMessage(`🎁 تم فتح تيمو لعرض: ${offerName} ✨`);
+        };
+
+        // دوال نافذة تسجيل تيمو الجديدة
+        window.openTemuRegisterModal = function() {
+            document.getElementById('temuRegisterTermsCheckbox').checked = false;
+            document.getElementById('temuRegisterConfirmBtn').disabled = true;
+            document.getElementById('temuRegisterModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeTemuRegisterModal = function(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('temuRegisterModal').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        window.confirmAndOpenTemuRegister = function() {
+            window.closeTemuRegisterModal();
+            window.open('https://temu.com/invite?_x_share_token=8a8e0b6b5e8a4f9d&_x_channel=invite&_x_invite_code=act7288995', '_blank', 'noopener,noreferrer');
+            
+            if (auth?.currentUser) {
+                addDoc(collection(db, 'Temu'), {
+                    clickId: `TEMU-REG-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email || '',
+                    userPhone: localStorage.getItem('user_phone') || '',
+                    userFullName: localStorage.getItem('user_fullname') || '',
+                    userState: localStorage.getItem('user_state') || '',
+                    action: 'register_click',
+                    clickedAt: serverTimestamp(),
+                    source: 'tombola_temu_register_modal',
+                    deviceInfo: { platform: navigator.platform, userAgent: navigator.userAgent, language: navigator.language },
+                    ipAddress: 'client-side-protected'
+                }).catch(e => console.error("Temu register log error:", e));
+            }
+            showMessage(`🎉 تم توجيهك لتسجيل حساب تيمو! استفد من خصم 90% 🎁`);
+            window.updateCartCount();
+        };
+
+        window.showOrderModal = function(prizeId, prizeName, productUrl) {
+            const orderSound = document.getElementById('orderSound');
+            if (orderSound) { orderSound.currentTime = 0; orderSound.play().catch(e => console.log("Order sound play prevented:", e)); }
+            document.getElementById('modalPrizeName').textContent = prizeName;
+            document.getElementById('termsCheckbox').checked = false;
+            document.getElementById('confirmOrderBtn').disabled = true;
+            document.getElementById('termsCheckbox').onchange = function() { document.getElementById('confirmOrderBtn').disabled = !this.checked; };
+            const modal = document.getElementById('orderModal');
+            modal.dataset.prizeId = prizeId; modal.dataset.prizeName = prizeName; modal.dataset.productUrl = productUrl;
+            modal.classList.add('active'); document.body.style.overflow = 'hidden';
+        };
+        window.closeOrderModal = function(event) { if (event && event.target !== event.currentTarget) return; document.getElementById('orderModal').classList.remove('active'); document.body.style.overflow = ''; };
+        
+        window.showWasitModal = function(prizeName, productUrl) {
+            const orderSound = document.getElementById('orderSound');
+            if (orderSound) { orderSound.currentTime = 0; orderSound.play().catch(e => console.log("Wasit sound play prevented:", e)); }
+            document.getElementById('wasitPrizeName').textContent = prizeName;
+            document.getElementById('wasitTermsCheckbox').checked = false;
+            document.getElementById('wasitContinueBtn').disabled = true;
+            document.getElementById('wasitTermsCheckbox').onchange = function() { document.getElementById('wasitContinueBtn').disabled = !this.checked; };
+            const modal = document.getElementById('wasitModal');
+            modal.dataset.prizeName = prizeName; modal.dataset.productUrl = productUrl;
+            modal.classList.add('active'); document.body.style.overflow = 'hidden';
+        };
+        window.closeWasitModal = function(event) { if (event && event.target !== event.currentTarget) return; document.getElementById('wasitModal').classList.remove('active'); document.body.style.overflow = ''; };
+
+        window.openWasitForm = function() {
+            window.closeWasitModal();
+            const modal = document.getElementById('wasitFormModal');
+            const prizeName = document.getElementById('wasitModal').dataset.prizeName;
+            document.getElementById('wasitPrizeName').textContent = prizeName;
+            if (typeof auth !== 'undefined' && auth.currentUser) {
+                document.getElementById('wasitFullName').value = localStorage.getItem('user_fullname') || '';
+                document.getElementById('wasitPhone').value = localStorage.getItem('user_phone') || '';
+                document.getElementById('wasitState').value = localStorage.getItem('user_state') || '';
+            }
+            document.getElementById('wasitCity').value = ''; document.getElementById('wasitStreet').value = '';
+            document.getElementById('wasitWilayaNum').value = ''; document.getElementById('wasitDataCheckbox').checked = false;
+            document.getElementById('wasitSubmitBtn').disabled = true;
+            document.getElementById('wasitDataCheckbox').onchange = function() { document.getElementById('wasitSubmitBtn').disabled = !this.checked; };
+            modal.classList.add('active'); document.body.style.overflow = 'hidden';
+        };
+        window.closeWasitFormModal = function(event) { if (event && event.target !== event.currentTarget) return; document.getElementById('wasitFormModal').classList.remove('active'); document.body.style.overflow = ''; };
+
+        window.copyBaridiMobNumber = async function() {
+            const number = document.getElementById('baridiMobNumber').textContent;
+            try {
+                await navigator.clipboard.writeText(number);
+                const btn = event.currentTarget;
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check text-xs"></i>';
+                btn.classList.add('bg-green-500', 'animate-pulse');
+                btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
+                window.showMessage("✅ تم نسخ رقم بريدي موب");
+                setTimeout(() => { btn.innerHTML = originalIcon; btn.classList.remove('bg-green-500', 'animate-pulse'); btn.classList.add('bg-amber-500', 'hover:bg-amber-600'); }, 1500);
+            } catch (err) { window.showMessage("⚠️ فشل النسخ، يرجى النسخ يدوياً"); }
+        };
+        
+        window.validatePostalCode = function(code) { 
+            if (!/^\d{5}$/.test(code)) return false;
+            const n = parseInt(code); 
+            return n >= 10000 && n <= 58999; 
+        };
+        window.validateWilayaNumber = window.validatePostalCode;
+
+        window.showOrderConfirmation = function(prizeName) {
+            const existing = document.getElementById('dynamicConfirmation');
+            if(existing) existing.remove();
+            
+            const confirmation = document.createElement('div');
+            confirmation.id = 'dynamicConfirmation';
+            confirmation.className = 'fixed inset-0 bg-black/80 z-[10001] flex items-center justify-center p-4';
+            confirmation.style.animation = 'fadeIn 0.2s ease-out';
+            confirmation.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center border-4 border-amber-400 shadow-2xl">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce"><span class="text-4xl">✅</span></div>
+                    <h3 class="text-lg font-black text-amber-700 mb-2">تم تأكيد طلبك!</h3>
+                    <p class="text-slate-600 text-sm mb-1">المنتج: <strong>${prizeName}</strong></p>
+                    <p class="text-slate-500 text-xs mb-4">سيتم التواصل معك خلال 24 ساعة لتأكيد تفاصيل الشحن والدفع</p>
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-right">
+                        <p class="text-[11px] text-amber-800 font-bold">📞 خطوات التالية:</p>
+                        <ol class="text-[10px] text-slate-600 mt-1 space-y-1"><li>1️⃣ انتظر اتصال الوسيط لتأكيد الطلب</li><li>2️⃣ أرسل إثبات دفع بريدي موب إن وجد</li><li>3️⃣ استلم منتجك عند التوصيل</li></ol>
+                    </div>
+                    <button type="button" onclick="document.getElementById('dynamicConfirmation').remove()" class="mt-4 w-full btn-temu-primary py-2.5">فهمت، شكراً! 🙏</button>
+                </div>`;
+            document.body.appendChild(confirmation);
+        };
+
+        function showMessage(msg) {
+            const t = document.getElementById('toast');
+            if(!t) return;
+            t.innerText = msg; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3500);
+        }
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+            const target = document.getElementById(id);
+            if(target) { target.style.display = (id === 'loginPage') ? 'flex' : 'block'; setTimeout(() => target.classList.add('active'), 10); }
+        }
+        
+        // تحديث عداد العربة
+        window.updateCartCount = function() {
+            const count = parseInt(localStorage.getItem('temu_cart_count') || '0') + 1;
+            localStorage.setItem('temu_cart_count', count);
+            document.getElementById('cartCount').textContent = count;
+            const btn = document.querySelector('.temu-float-cart');
+            if(btn) {
+                btn.style.animation = 'floatBounce 0.3s ease';
+                setTimeout(() => btn.style.animation = 'floatBounce 2s ease-in-out infinite', 300);
+            }
+        };
     </script>
 
-    <!-- نظام العمل والبرمجة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getFirestore, doc, onSnapshot, setDoc, getDoc, serverTimestamp, addDoc, collection, writeBatch } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
@@ -864,32 +1447,34 @@
         const auth = getAuth(app);
         const appId = "tombola-luck-v1";
 
+        // بيانات الجوائز مع الأسعار المضافة
         const prizeData = {
-            1: { name: "Samsung Galaxy A24", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://ouo.io/QUVACn", correctCode: 'RYL99XVP215Z88W' },
-            2: { name: "Smart Watch Pro", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://adfly.site/y403UJw", correctCode: 'K7B2N4MQ91RL5XP' },
-            3: { name: "Airpods Pro 2", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://shrinkme.click/TyQ3rg", correctCode: 'P9L4W2QC11NT33K' },
-            4: { name: "PlayStation 5 Slim", img: "https://assets.getmobil.com/uploads/60365/getmobil-samsung-galaxy-s23-plus-green-5webp.webp", url: "https://aviso.bz/?r=danibakou" },
-            5: { name: "Gaming Mouse RGB", img: "https://img.ltwebstatic.com/images3_spmp/2025/01/18/3b/17371828285fecb84c1bc95cc37bcafcbeef33cd2f_thumbnail_405x552.jpg", url: "https://aviso.bz/?r=danibakou" },
-            6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true", url: "https://aviso.bz/?r=danibakou" }
+            1: { name: "Samsung Galaxy A24", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://ouo.io/QUVACn", correctCode: 'RYL99XVP215Z88W', price: "DA 45000.00" },
+            2: { name: "Smart Watch Pro", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://adfly.site/y403UJw", correctCode: 'K7B2N4MQ91RL5XP', price: "DA 12500.00" },
+            3: { name: "Airpods Pro 2", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://shrinkme.click/TyQ3rg", correctCode: 'P9L4W2QC11NT33K', price: "DA 35000.00" },
+            4: { name: "PlayStation 5 Slim", img: "https://assets.getmobil.com/uploads/60365/getmobil-samsung-galaxy-s23-plus-green-5webp.webp", url: "https://ar.aliexpress.com/item/1005009261871587.html?pvid=f20c1b9c-ed21-4031-9e06-01c9dee1d962", price: "DA 89900.00" },
+            5: { name: "Gaming Mouse RGB", img: "https://img.ltwebstatic.com/images3_spmp/2025/01/18/3b/17371828285fecb84c1bc95cc37bcafcbeef33cd2f_thumbnail_405x552.jpg", url: "https://ar.aliexpress.com/item/1005009261871587.html?pvid=f20c1b9c-ed21-4031-9e06-01c9dee1d962", price: "DA 3500.00" },
+            6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true", url: "https://ar.aliexpress.com/item/1005009261871587.html?pvid=f20c1b9c-ed21-4031-9e06-01c9dee1d962", price: "DA 65000.00" }
         };
 
+        // الجوائز الإضافية مع الأسعار
         const additionalPrizes = [
-            { name: "iPhone 15 Pro", img: "https://picsum.photos/seed/iphone15/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "MacBook Air M2", img: "https://picsum.photos/seed/macbook/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "iPad Pro", img: "https://picsum.photos/seed/ipad/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Sony TV 55'", img: "https://picsum.photos/seed/sonytv/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Dyson Vacuum", img: "https://picsum.photos/seed/dyson/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Nintendo Switch", img: "https://picsum.photos/seed/nintendo/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Coffee Machine", img: "https://picsum.photos/seed/coffee/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Electric Scooter", img: "https://picsum.photos/seed/scooter/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Smart Home Hub", img: "https://picsum.photos/seed/smarthub/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Wireless Earbuds Max", img: "https://picsum.photos/seed/earbuds/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "4K Action Camera", img: "https://picsum.photos/seed/actioncam/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Portable Projector", img: "https://picsum.photos/seed/projector/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Robot Vacuum Cleaner", img: "https://picsum.photos/seed/robotvac/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Electric Toothbrush Set", img: "https://picsum.photos/seed/toothbrush/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Fitness Tracker Pro", img: "https://picsum.photos/seed/fittrack/150/150", url: "https://aviso.bz/?r=danibakou" },
-            { name: "Bluetooth Speaker Mini", img: "https://picsum.photos/seed/btspeaker/150/150", url: "https://aviso.bz/?r=danibakou" }
+            { name: "iPhone 15 Pro", img: "https://picsum.photos/seed/iphone15/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 185000.00" },
+            { name: "MacBook Air M2", img: "https://picsum.photos/seed/macbook/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 210000.00" },
+            { name: "iPad Pro", img: "https://picsum.photos/seed/ipad/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 145000.00" },
+            { name: "Sony TV 55'", img: "https://picsum.photos/seed/sonytv/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 95000.00" },
+            { name: "Dyson Vacuum", img: "https://picsum.photos/seed/dyson/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 78000.00" },
+            { name: "Nintendo Switch", img: "https://picsum.photos/seed/nintendo/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 52000.00" },
+            { name: "Coffee Machine", img: "https://picsum.photos/seed/coffee/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 28000.00" },
+            { name: "Electric Scooter", img: "https://picsum.photos/seed/scooter/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 45000.00" },
+            { name: "Smart Home Hub", img: "https://picsum.photos/seed/smarthub/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 18500.00" },
+            { name: "Wireless Earbuds Max", img: "https://picsum.photos/seed/earbuds/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 32000.00" },
+            { name: "4K Action Camera", img: "https://picsum.photos/seed/actioncam/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 42000.00" },
+            { name: "Portable Projector", img: "https://picsum.photos/seed/projector/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 38000.00" },
+            { name: "Robot Vacuum Cleaner", img: "https://picsum.photos/seed/robotvac/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 55000.00" },
+            { name: "Electric Toothbrush Set", img: "https://picsum.photos/seed/toothbrush/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 8500.00" },
+            { name: "Fitness Tracker Pro", img: "https://picsum.photos/seed/fittrack/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 15000.00" },
+            { name: "Bluetooth Speaker Mini", img: "https://picsum.photos/seed/btspeaker/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 6500.00" }
         ];
 
         const firstNames = ["محمد", "أحمد", "ياسين", "حمزة", "يوسف", "علي", "عمر", "خالد"];
@@ -897,8 +1482,7 @@
         const states = ["الجزائر", "وهران", "قسنطينة", "سطيف", "عنابة", "تلمسان"];
 
         function initTicker() {
-            const wrapper = document.getElementById('tickerWrapper');
-            if(!wrapper) return;
+            const wrapper = document.getElementById('tickerWrapper'); if(!wrapper) return;
             let tickerHTML = '';
             for(let i=0; i<20; i++) {
                 const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -914,14 +1498,9 @@
         async function resetAllCards(uid) {
             try {
                 const batch = writeBatch(db);
-                for (let i = 1; i <= 3; i++) {
-                    const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`);
-                    batch.set(cardRef, { active: false, ticketNumber: null }, { merge: true });
-                }
-                await batch.commit();
-                showMessage("بدأ سحب جديد! انتهت صلاحية التذاكر السابقة.");
-                activeTicketsMap = {};
-                updateActiveTicketsDisplay();
+                for (let i = 1; i <= 3; i++) batch.set(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), { active: false, ticketNumber: null }, { merge: true });
+                await batch.commit(); showMessage("بدأ سحب جديد! انتهت صلاحية التذاكر السابقة.");
+                activeTicketsMap = {}; updateActiveTicketsDisplay();
             } catch (e) { console.error("Error resetting cards:", e); }
         }
 
@@ -932,73 +1511,34 @@
                 const seconds = totalSeconds % 60;
                 document.getElementById('mn').innerText = minutes.toString().padStart(2, '0');
                 document.getElementById('sc').innerText = seconds.toString().padStart(2, '0');
-                if (totalSeconds <= 0) {
-                    totalSeconds = 120;
-                    resetAllCards(uid);
-                } else { totalSeconds--; }
+                if (totalSeconds <= 0) { totalSeconds = 120; resetAllCards(uid); } else { totalSeconds--; }
             };
-            setInterval(updateTimer, 1000);
-            updateTimer();
-        }
-
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => {
-                p.classList.remove('active');
-                p.style.display = 'none';
-            });
-            const target = document.getElementById(id);
-            if(target) {
-                target.style.display = (id === 'loginPage') ? 'flex' : 'block';
-                setTimeout(() => target.classList.add('active'), 10);
-            }
-        }
-
-        function showMessage(msg) {
-            const t = document.getElementById('toast');
-            if(!t) return;
-            t.innerText = msg;
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 3500);
+            setInterval(updateTimer, 1000); updateTimer();
         }
 
         let activeTicketsMap = {};
-
         function updateActiveTicketsDisplay() {
-            const container = document.getElementById('activeTicketsContainer');
-            if(!container) return;
+            const container = document.getElementById('activeTicketsContainer'); if(!container) return;
             container.innerHTML = '';
             Object.keys(activeTicketsMap).forEach(id => {
                 const ticket = activeTicketsMap[id];
                 if(ticket?.active) {
-                    const badge = document.createElement('div');
-                    badge.className = 'ticket-badge';
+                    const badge = document.createElement('div'); badge.className = 'ticket-badge';
                     badge.innerHTML = `<span class="opacity-60 text-[8px] block">تذكرة ${id}</span> ${ticket.num}`;
                     container.appendChild(badge);
                 }
             });
-            if (Object.keys(activeTicketsMap).length === 0) {
-                container.innerHTML = `<p class="text-slate-400 text-[9px] font-bold italic">لا توجد تذاكر مفعلة 🎟️</p>`;
-            }
+            if (Object.keys(activeTicketsMap).length === 0) container.innerHTML = `<p class="text-slate-400 text-[9px] font-bold italic">لا توجد تذاكر مفعلة 🎟️</p>`;
         }
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
-                let userData = {
-                    fullName: localStorage.getItem('user_fullname') || "مشارك محظوظ",
-                    phone: localStorage.getItem('user_phone') || "00000000",
-                    state: localStorage.getItem('user_state') || "غير محدد"
-                };
-                if (snap.exists()) {
-                    const d = snap.data();
-                    Object.assign(userData, d);
-                }
+                let userData = { fullName: localStorage.getItem('user_fullname') || "مشارك محظوظ", phone: localStorage.getItem('user_phone') || "00000000", state: localStorage.getItem('user_state') || "غير محدد" };
+                if (snap.exists()) Object.assign(userData, snap.data());
                 document.getElementById('userPhoneDisplay').innerText = `المشارك: ${userData.fullName}`;
                 document.getElementById('userStateDisplay').innerText = `الولاية: ${userData.state}`;
-                showPage('dashboardPage');
-                initTicker();
-                renderGrids(user.uid);
-                startDrawCountdown(user.uid);
+                showPage('dashboardPage'); initTicker(); renderGrids(user.uid); startDrawCountdown(user.uid);
             } else { showPage('loginPage'); }
         });
 
@@ -1008,152 +1548,387 @@
             const email = document.getElementById('emailInput').value.trim();
             const password = document.getElementById('passwordInput').value.trim();
             const phone = document.getElementById('phoneInput').value.trim();
-            
-            if(!email || !password || !phone || !fullName || !state) {
-                showMessage("يرجى إكمال جميع الحقول للمشاركة");
-                return;
-            }
-
+            if(!email || !password || !phone || !fullName || !state) { showMessage("يرجى إكمال جميع الحقول للمشاركة"); return; }
             try { 
                 await signInWithEmailAndPassword(auth, email, password);
-                localStorage.setItem('user_fullname', fullName);
-                localStorage.setItem('user_phone', phone);
-                localStorage.setItem('user_state', state);
+                localStorage.setItem('user_fullname', fullName); localStorage.setItem('user_phone', phone); localStorage.setItem('user_state', state);
             } catch (err) { 
                 if (['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-email'].includes(err.code)) {
                     try {
                         const res = await createUserWithEmailAndPassword(auth, email, password);
-                        await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), {
-                            fullName, state, phone, email, createdAt: serverTimestamp()
-                        });
-                        localStorage.setItem('user_fullname', fullName);
-                        localStorage.setItem('user_phone', phone);
-                        localStorage.setItem('user_state', state);
+                        await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), { fullName, state, phone, email, createdAt: serverTimestamp() });
+                        localStorage.setItem('user_fullname', fullName); localStorage.setItem('user_phone', phone); localStorage.setItem('user_state', state);
                     } catch(e) { showMessage("خطأ في إنشاء الحساب: " + e.message); }
                 } else { showMessage("خطأ في تسجيل الدخول: " + err.message); }
             }
         };
 
-        function createNormalPrizeElement(name, img, url) {
-            const div = document.createElement('div');
-            div.className = 'normal-prize-card group';
-            div.onclick = () => window.open(url || "https://aviso.bz/?r=danibakou", '_blank');
+        // ✅✅✅ دالة إنشاء بطاقة الجائزة بنمط Temu - مُعدلة (بدون سعر/تقييم/كمية)
+        function createTemuPrizeElement(name, img, url, prizeId, price = "DA 20300.00", oldPrice = "DA 58000.00", discount = "65%") {
+            const div = document.createElement('div'); 
+            div.className = 'temu-product-card';
             div.innerHTML = `
-                <div class="discount-badge">65%-</div>
-                <img src="${img}" class="prize-img group-active:scale-105 transition-transform duration-200" alt="${name}" onerror="this.src='https://via.placeholder.com/150?text=Gift'" loading="lazy">
-                <div class="normal-prize-info">
-                    <h4 class="font-bold text-[9px] truncate">${name}</h4>
-                    <p class="text-[8px] text-slate-400 mt-0.5">عرض محدود</p>
-                </div>`;
+                <div class="temu-discount-badge">
+                    <i class="fas fa-bolt"></i>
+                    <span>-${discount}</span>
+                </div>
+                <div class="relative" style="flex:1; min-height:0;">
+                    <img src="${img}" class="w-full h-full object-contain p-4 bg-white" alt="${name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Gift'">
+                </div>
+                <div class="normal-prize-info" style="display:flex; flex-direction:column; justify-content:space-between; min-height:100px;">
+                    <div>
+                        <h4 class="font-bold text-[13px] leading-tight text-slate-800 mb-2 line-clamp-2 min-h-[36px]">${name}</h4>
+                    </div>
+                    
+                    <div class="flex gap-2 mt-auto">
+                        <button type="button" onclick="window.showOrderModal('${prizeId}', '${name.replace(/'/g, "\\'")}', '${url}')" class="btn-temu-primary" style="min-height:36px; font-size:11px;">
+                            <i class="fas fa-cart-plus"></i>
+                            <span>شراء الآن</span>
+                        </button>
+                        <button type="button" onclick="window.showWasitModal('${name.replace(/'/g, "\\'")}', '${url}')" class="btn-temu-secondary" style="min-height:36px; min-width:36px;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
             return div;
         }
 
+        // ✅✅✅ دالة إنشاء بطاقة الجائزة التفاعلية
         function createInteractivePrizeElement(uid, i) {
-            const container = document.createElement('div');
+            const container = document.createElement('div'); 
             container.id = `prize-container-${i}`;
-            onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), (snap) => {
-                const data = snap.data();
-                const active = snap.exists() && data.active;
-                const prize = prizeData[i];
-                if(active) {
-                    const ticketNum = data.ticketNumber;
-                    activeTicketsMap[i] = { active: true, num: ticketNum };
-                    updateActiveTicketsDisplay();
-                    container.innerHTML = `
-                        <div class="prize-card">
-                            <img src="${prize.img}" class="prize-img" alt="${prize.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Prize'">
-                            <div class="prize-info">
-                                <h4 class="font-bold text-[10px] mb-0.5 truncate">${prize.name}</h4>
-                                <div class="bg-white/20 py-0.5 rounded-lg">
-                                    <p class="text-[8px] font-mono tracking-wider">${ticketNum}</p>
-                                </div>
-                                <p class="text-[7px] mt-0.5 font-bold uppercase">✅ مفعّل</p>
-                            </div>
-                        </div>`;
-                } else {
-                    delete activeTicketsMap[i];
-                    updateActiveTicketsDisplay();
-                    container.innerHTML = `
-                        <div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i})">
-                            <div class="bg-amber-50 w-[42px] h-[42px] rounded-full flex items-center justify-center mb-1 group-active:scale-105 transition-all duration-200 overflow-hidden">
-                                <img src="${prize.img}" class="w-[32px] h-[32px] object-contain opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/50?text=?'">
-                            </div>
-                            <span class="font-black text-[8px] text-slate-800 text-center leading-tight">تفعيل ${prize.name.split(' ')[0]}</span>
-                            <span class="text-[7px] text-amber-600 font-bold mt-0.5">اضغط للمطالبة</span>
-                            <div id="code-area-${i}" class="code-input-area" onclick="event.stopPropagation()">
-                                <div class="flex gap-1.5 mb-1.5">
-                                    <input type="text" id="input-code-${i}" placeholder="كود التفعيل" class="flex-1 text-[11px] p-1.5 rounded-lg border border-amber-200 outline-none text-center">
-                                    <button onclick="window.pasteFromClipboard(${i})" class="paste-btn-green">لصق</button>
-                                </div>
-                                <div class="flex gap-1">
-                                     <button onclick="window.verifyCode('${uid}', ${i})" class="flex-1 bg-amber-500 text-white text-[8px] py-1.5 rounded-lg font-bold">تأكيد</button>
-                                     <button onclick="window.openLink(${i})" class="flex-1 bg-slate-100 text-slate-600 text-[8px] py-1.5 rounded-lg font-bold border border-slate-200">الكود</button>
-                                </div>
-                            </div>
-                        </div>`;
+            
+            const unsubscribe = onSnapshot(
+                doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), 
+                (snap) => {
+                    try {
+                        const data = snap.data(); 
+                        const active = snap.exists() && data?.active; 
+                        const prize = prizeData[i];
+                        
+                        if(active && data?.ticketNumber) {
+                            const ticketNum = data.ticketNumber; 
+                            activeTicketsMap[i] = { active: true, num: ticketNum }; 
+                            updateActiveTicketsDisplay();
+                            container.innerHTML = `
+                                <div class="prize-card" style="background:var(--temu-card-bg);border:1px solid var(--temu-border);border-radius:16px;overflow:hidden;box-shadow:var(--temu-shadow)">
+                                    <img src="${prize.img}" class="prize-img" alt="${prize.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Prize'">
+                                    <div class="prize-info" style="background:linear-gradient(to bottom,var(--temu-orange),var(--temu-orange-dark))">
+                                        <h4 class="font-bold text-[10px] mb-0.5 truncate">${prize.name}</h4>
+                                        <div class="bg-white/20 py-0.5 rounded-lg">
+                                            <p class="text-[8px] font-mono tracking-wider">${ticketNum}</p>
+                                        </div>
+                                        <p class="text-[7px] mt-0.5 font-bold uppercase">✅ مفعّل</p>
+                                    </div>
+                                </div>`;
+                        } else {
+                            delete activeTicketsMap[i]; 
+                            updateActiveTicketsDisplay();
+                            container.innerHTML = `
+                                <div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i}, '${prize.url}')">
+                                    <div class="bg-amber-50 w-[40px] h-[40px] rounded-full flex items-center justify-center mb-1 group-active:scale-105 transition-all duration-200 overflow-hidden">
+                                        <img src="${prize.img}" class="w-[30px] h-[30px] object-contain opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/50?text=?'">
+                                    </div>
+                                    <span class="font-black text-[8px] text-slate-800 text-center leading-tight">تفعيل ${prize.name.split(' ')[0]}</span>
+                                    <span class="text-[7px] text-amber-600 font-bold mt-0.5">اضغط للمطالبة</span>
+                                    <div id="code-area-${i}" class="code-input-area" onclick="event.stopPropagation()">
+                                        <div class="flex gap-1.5 mb-1.5">
+                                            <input type="text" id="input-code-${i}" placeholder="كود التفعيل" class="flex-1 text-[11px] p-1.5 rounded-lg border border-amber-200 outline-none text-center">
+                                            <button type="button" onclick="window.pasteFromClipboard(${i})" class="paste-btn-green">لصق</button>
+                                        </div>
+                                        <div class="flex gap-1">
+                                            <button type="button" onclick="window.verifyCode('${uid}', ${i})" class="flex-1 bg-amber-500 text-white text-[8px] py-1.5 rounded-lg font-bold">تأكيد</button>
+                                            <button type="button" onclick="window.openPrizeLink(${i})" class="flex-1 bg-slate-100 text-slate-600 text-[8px] py-1.5 rounded-lg font-bold border border-slate-200">الكود</button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        }
+                    } catch(e) {
+                        console.error("Error in onSnapshot callback:", e);
+                        container.innerHTML = `<div class="btn-activate">⚠️ خطأ في التحميل</div>`;
+                    }
+                }, 
+                (error) => {
+                    console.error("Firestore listener error for card", i, ":", error);
+                    container.innerHTML = `<div class="btn-activate">🔄 جاري التحميل...</div>`;
                 }
-            }, (error) => console.error("Listener error:", error));
+            );
+            
+            container._unsubscribe = unsubscribe;
             return container;
         }
 
+        // ✅ دالة renderGrids المحدثة
         function renderGrids(uid) {
-            const featuredGrid = document.getElementById('featuredPrizes');
+            const featuredGrid = document.getElementById('featuredPrizes'); 
             const mainGrid = document.getElementById('prizesGrid');
-            if(!featuredGrid || !mainGrid) return;
-            featuredGrid.innerHTML = '';
+            if(!featuredGrid || !mainGrid) return; 
+            
+            featuredGrid.innerHTML = ''; 
             mainGrid.innerHTML = '';
             
-            for(let i=1; i<=3; i++) { featuredGrid.appendChild(createInteractivePrizeElement(uid, i)); }
-            for(let i=4; i<=6; i++) { 
-                mainGrid.appendChild(createNormalPrizeElement(prizeData[i].name, prizeData[i].img, prizeData[i].url)); 
-            }
-            additionalPrizes.forEach((prize) => {
-                mainGrid.appendChild(createNormalPrizeElement(prize.name, prize.img, prize.url));
-            });
+            for(let i=1; i<=3; i++) 
+                featuredGrid.appendChild(createInteractivePrizeElement(uid, i));
+            
+            for(let i=4; i<=6; i++) 
+                mainGrid.appendChild(createTemuPrizeElement(
+                    prizeData[i].name, 
+                    prizeData[i].img, 
+                    prizeData[i].url, 
+                    `prize_${i}`,
+                    prizeData[i].price,
+                    `DA ${Math.floor(parseInt(prizeData[i].price.replace(/[^0-9]/g, '')) * 1.8)}.00`,
+                    `${Math.floor(40 + Math.random() * 30)}%`
+                ));
+            
+            additionalPrizes.forEach((prize, idx) => 
+                mainGrid.appendChild(createTemuPrizeElement(
+                    prize.name, 
+                    prize.img, 
+                    prize.url, 
+                    `extra_${idx + 1}`,
+                    prize.price,
+                    `DA ${Math.floor(parseInt(prize.price.replace(/[^0-9]/g, '')) * 1.7)}.00`,
+                    `${Math.floor(35 + Math.random() * 40)}%`
+                ))
+            );
         }
 
-        window.openLink = (index) => window.open(prizeData[index].url, '_blank');
-        window.handlePrizeClick = (uid, index) => {
-            const area = document.getElementById(`code-area-${index}`);
-            if(area) area.style.display = 'flex';
-            window.openLink(index);
-            showMessage("تم فتح رابط الكود! أدخل الكود فور الحصول عليه.");
-        };
-        window.pasteFromClipboard = async (index) => {
-            try {
-                const text = await navigator.clipboard.readText();
-                const input = document.getElementById(`input-code-${index}`);
-                if (input && text) {
-                    input.value = text.trim();
-                    showMessage("✅ تم اللصق");
-                }
-            } catch (err) { showMessage("يرجى لصق الكود يدوياً."); }
-        };
-        window.verifyCode = async (uid, index) => {
+        // ✅✅✅ دوال البطاقات التفاعلية المُصححة
+        window.openPrizeLink = (index) => {
             const prize = prizeData[index];
-            const inputVal = document.getElementById(`input-code-${index}`).value.trim();
+            if(prize?.url) window.open(prize.url, '_blank', 'noopener,noreferrer');
+        };
+        
+        window.handlePrizeClick = (uid, index, prizeUrl) => { 
+            if(prizeUrl) window.open(prizeUrl, '_blank', 'noopener,noreferrer');
+            const area = document.getElementById(`code-area-${index}`); 
+            if(area) {
+                area.style.display = 'flex';
+                setTimeout(() => {
+                    const input = document.getElementById(`input-code-${index}`);
+                    if(input) input.focus();
+                }, 100);
+            }
+            showMessage("🔑 تم فتح رابط الكود! أدخل الكود فور الحصول عليه."); 
+        };
+        
+        window.pasteFromClipboard = async (index) => { 
+            try { 
+                const text = await navigator.clipboard.readText(); 
+                const input = document.getElementById(`input-code-${index}`); 
+                if (input && text) { 
+                    input.value = text.trim(); 
+                    showMessage("✅ تم اللصق"); 
+                } 
+            } catch (err) { 
+                showMessage("يرجى لصق الكود يدوياً."); 
+            } 
+        };
+        
+        window.verifyCode = async (uid, index) => { 
+            const prize = prizeData[index]; 
+            const inputVal = document.getElementById(`input-code-${index}`).value.trim().toUpperCase(); 
             if(inputVal === prize.correctCode) {
                 await window.finalizeActivation(uid, index);
-            } else { showMessage("❌ كود غير صحيح!"); }
+            } else {
+                showMessage("❌ كود غير صحيح! تأكد من الحروف والأرقام.");
+                const input = document.getElementById(`input-code-${index}`);
+                if(input) {
+                    input.style.animation = 'shake 0.3s ease';
+                    setTimeout(() => input.style.animation = '', 300);
+                }
+            }
         };
+        
+        const style = document.createElement('style');
+        style.textContent = `@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }`;
+        document.head.appendChild(style);
+        
         window.finalizeActivation = async (uid, index) => {
-            const prize = prizeData[index];
-            const phone = localStorage.getItem('user_phone') || "000000";
-            const fullName = localStorage.getItem('user_fullname') || "مشارك";
-            const state = localStorage.getItem('user_state') || "غير معروف";
+            const prize = prizeData[index]; 
+            const phone = localStorage.getItem('user_phone') || "000000"; 
+            const fullName = localStorage.getItem('user_fullname') || "مشارك"; 
+            const state = localStorage.getItem('user_state') || "غير معروف"; 
             const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
             try {
-                const cardRef = doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`);
-                await setDoc(cardRef, {
-                    active: true, phone, fullName, state, ticketNumber: ticketNum, timestamp: serverTimestamp()
+                await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), { 
+                    active: true, 
+                    phone, 
+                    fullName, 
+                    state, 
+                    ticketNumber: ticketNum, 
+                    timestamp: serverTimestamp() 
                 }, { merge: true });
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), {
-                    userId: uid, email: auth.currentUser?.email, phone, fullName, state,
-                    prizeName: prize.name, ticketNumber: ticketNum, activatedAt: serverTimestamp()
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), { 
+                    userId: uid, 
+                    email: auth.currentUser?.email, 
+                    phone, 
+                    fullName, 
+                    state, 
+                    prizeName: prize.name, 
+                    ticketNumber: ticketNum, 
+                    activatedAt: serverTimestamp() 
                 });
-                showMessage(`🎉 تم تفعيل ${prize.name} ✅`);
-            } catch (e) { showMessage("⚠️ حدث خطأ أثناء التفعيل."); }
+                const sound = document.getElementById('activationSound'); 
+                if (sound) { 
+                    sound.currentTime = 0; 
+                    sound.play().catch(e => console.log("Audio play prevented:", e)); 
+                }
+                showMessage(`🎉 تم تفعيل ${prize.name} ✅ رقم التذكرة: ${ticketNum}`);
+            } catch (e) { 
+                console.error("Activation error:", e);
+                showMessage("⚠️ حدث خطأ أثناء التفعيل، يرجى المحاولة لاحقاً."); 
+            }
         };
+
+        window.confirmAndSendOrder = async function() {
+            const modal = document.getElementById('orderModal');
+            if (!document.getElementById('termsCheckbox').checked) { showMessage("⚠️ يرجى الموافقة على الشروط أولاً"); return; }
+            if (!auth.currentUser) { showMessage("⚠️ يرجى تسجيل الدخول أولاً"); window.closeOrderModal(); showPage('loginPage'); return; }
+            const prizeId = modal.dataset.prizeId; const prizeName = modal.dataset.prizeName; const productUrl = modal.dataset.productUrl;
+            const btn = document.getElementById('confirmOrderBtn'); const originalText = btn.innerHTML;
+            try {
+                btn.disabled = true; btn.innerHTML = '<span>⏳</span> <span>جاري الإرسال...</span>';
+                await addDoc(collection(db, 'product_orders'), { orderId: `ORD-${Date.now()}-${Math.floor(Math.random() * 10000)}`, userId: auth.currentUser.uid, userEmail: auth.currentUser.email || "", userPhone: localStorage.getItem('user_phone') || "00000000", userFullName: localStorage.getItem('user_fullname') || "مشارك محظوظ", userState: localStorage.getItem('user_state') || "غير محدد", prizeId, prizeName, productUrl, orderedAt: serverTimestamp(), status: 'pending', source: 'tombola_golden_edition', termsAccepted: true, termsAcceptedAt: serverTimestamp() });
+                showMessage(`✅ تم استلام طلبك لـ "${prizeName}" وسنتواصل معك قريباً 🎉`);
+                if (productUrl && productUrl.trim() !== "") setTimeout(() => window.open(productUrl, '_blank', 'noopener,noreferrer'), 800);
+                window.updateCartCount();
+                window.closeOrderModal();
+            } catch (e) { console.error("❌ Order error:", e); showMessage("⚠️ حدث خطأ أثناء إرسال الطلب، يرجى المحاولة لاحقاً"); btn.disabled = false; btn.innerHTML = originalText; }
+        };
+        
+        window.submitWasitOrder = async function() {
+            console.log("🚀 submitWasitOrder called");
+            try {
+                const fullName = document.getElementById('wasitFullName')?.value.trim();
+                const street = document.getElementById('wasitStreet')?.value.trim();
+                const city = document.getElementById('wasitCity')?.value.trim();
+                const postalCode = document.getElementById('wasitWilayaNum')?.value.trim();
+                const state = document.getElementById('wasitState')?.value.trim();
+                const phone = document.getElementById('wasitPhone')?.value.trim();
+                const prizeName = document.getElementById('wasitPrizeName')?.textContent || '';
+                const productUrl = document.getElementById('wasitModal')?.dataset.productUrl || '';
+                
+                console.log("📝 Form values:", { fullName, street, city, postalCode, state, phone });
+                
+                if (!fullName || !street || !city || !postalCode || !state || !phone) { 
+                    showMessage("⚠️ يرجى ملء جميع الحقول المطلوبة *"); 
+                    return; 
+                }
+                
+                if (!window.validatePostalCode(postalCode)) { 
+                    showMessage("⚠️ الرمز البريدي يجب أن يتكون من 5 أرقام صحيحة (مثال: 16000)"); 
+                    return; 
+                }
+                
+                const dataCheckbox = document.getElementById('wasitDataCheckbox');
+                if (!dataCheckbox || !dataCheckbox.checked) { 
+                    showMessage("⚠️ يرجى تأكيد صحة البيانات المدخلة"); 
+                    return; 
+                }
+                
+                const btn = document.getElementById('wasitSubmitBtn');
+                if (!btn) { 
+                    console.error("❌ Button not found");
+                    showMessage("⚠️ خطأ تقني، يرجى إعادة تحميل الصفحة");
+                    return; 
+                }
+                
+                const originalText = btn.innerHTML;
+                btn.disabled = true; 
+                btn.innerHTML = '<span>⏳</span> <span>جاري الإرسال...</span>';
+                
+                console.log("📡 Sending to Firebase...");
+                
+                await addDoc(collection(db, 'wasit'), {
+                    orderId: `WASIT-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+                    userId: auth?.currentUser?.uid || 'guest', 
+                    userEmail: auth?.currentUser?.email || '',
+                    customerName: fullName, 
+                    customerStreet: street, 
+                    customerCity: city, 
+                    customerPostalCode: postalCode,
+                    customerWilayaName: state, 
+                    customerPhone: phone,
+                    prizeName, 
+                    productUrl, 
+                    orderedAt: serverTimestamp(), 
+                    status: 'new', 
+                    source: 'tombola_wasit_system', 
+                    termsAccepted: true, 
+                    dataConfirmed: true, 
+                    ipAddress: 'client-side', 
+                    userAgent: navigator.userAgent
+                });
+                
+                console.log("✅ Order sent successfully");
+                showMessage(`✅ تم استلام طلبك لـ "${prizeName}" بنجاح! 🎉\nسيتم التواصل معك على الرقم ${phone} لتأكيد التفاصيل.`);
+                window.showOrderConfirmation(prizeName);
+                window.closeWasitFormModal();
+                window.updateCartCount();
+                
+            } catch (e) {
+                console.error("❌ Wasit order error:", e);
+                showMessage("⚠️ حدث خطأ: " + (e.message || "يرجى المحاولة لاحقاً"));
+                const btn = document.getElementById('wasitSubmitBtn');
+                if (btn) { 
+                    btn.disabled = false; 
+                    btn.innerHTML = '<span>🚀</span> <span>تأكيد وإرسال</span>'; 
+                }
+            }
+        };
+
+        // ✅✅✅ دالة التعامل مع نقرات أزرار Temu
+        window.handleTemuClick = async function(offerName, offerType) {
+            if(offerType === 'savings') {
+                window.showTemuModal(offerName);
+                return;
+            }
+            
+            window.open('https://www.temu.com', '_blank', 'noopener,noreferrer');
+            
+            if (auth?.currentUser) {
+                try {
+                    await addDoc(collection(db, 'Temu'), {
+                        clickId: `TEMU-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+                        userId: auth.currentUser.uid,
+                        userEmail: auth.currentUser.email || '',
+                        userPhone: localStorage.getItem('user_phone') || '',
+                        userFullName: localStorage.getItem('user_fullname') || '',
+                        userState: localStorage.getItem('user_state') || '',
+                        offerName: offerName,
+                        offerType: offerType,
+                        clickedAt: serverTimestamp(),
+                        source: 'tombola_grand_prize_temu',
+                        deviceInfo: {
+                            platform: navigator.platform,
+                            userAgent: navigator.userAgent,
+                            language: navigator.language
+                        },
+                        ipAddress: 'client-side-protected'
+                    });
+                    showMessage(`🎁 تم توجيهك إلى Temu لعرض: ${offerName} ✨`);
+                } catch (e) {
+                    console.error("❌ Temu click logging error:", e);
+                }
+            } else {
+                showMessage('🎁 جاري التوجيه إلى عروض تيمو الحصرية... سجل للدخول لتتبع مكافآتكَ!');
+            }
+        };
+
+        // ✅ تصدير الدوال للنطاق العام
+        window.db = db; window.auth = auth; window.serverTimestamp = serverTimestamp; window.addDoc = addDoc; window.collection = collection;
+        window.showOrderModal = window.showOrderModal; window.closeOrderModal = window.closeOrderModal; window.confirmAndSendOrder = window.confirmAndSendOrder;
+        window.showWasitModal = window.showWasitModal; window.closeWasitModal = window.closeWasitModal; window.openWasitForm = window.openWasitForm; window.closeWasitFormModal = window.closeWasitFormModal;
+        window.submitWasitOrder = window.submitWasitOrder; window.copyBaridiMobNumber = window.copyBaridiMobNumber; window.validatePostalCode = window.validatePostalCode; window.validateWilayaNumber = window.validatePostalCode;
+        window.showOrderConfirmation = window.showOrderConfirmation;
+        window.showMessage = showMessage; window.showPage = showPage;
+        window.handleTemuClick = window.handleTemuClick;
+        window.showTemuModal = window.showTemuModal; window.closeTemuModal = window.closeTemuModal; window.confirmAndOpenTemu = window.confirmAndOpenTemu;
+        window.openTemuRegisterModal = window.openTemuRegisterModal; window.closeTemuRegisterModal = window.closeTemuRegisterModal; window.confirmAndOpenTemuRegister = window.confirmAndOpenTemuRegister;
+        window.updateCartCount = window.updateCartCount;
     </script>
 </body>
 </html>
