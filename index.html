@@ -139,7 +139,7 @@
             content: "🔴 مباشر"; position: absolute; right: 0; top: 0; bottom: 0; background: var(--temu-orange);
             color: white; font-weight: 900; font-size: 8px; padding: 0 8px; display: flex; align-items: center; z-index: 10;
         }
-        .ticker-wrapper { display: inline-block; animation: ticker 300s linear infinite; padding-right: 100px; }
+        .ticker-wrapper { display: inline-block; animation: ticker 90s linear infinite; padding-right: 100px; }
         .ticker-item { display: inline-block; padding: 0 20px; font-size: 10px; color: var(--temu-text-secondary); font-weight: 600; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
         
@@ -177,6 +177,28 @@
             transform: translateY(-4px);
             box-shadow: var(--temu-shadow-hover);
             border-color: var(--temu-orange);
+        }
+        
+        .temu-card-overlay {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
+        }
+        .temu-card-overlay:hover {
+            box-shadow: 0 12px 32px rgba(251, 119, 1, 0.4) !important;
+            border-color: var(--temu-orange) !important;
+        }
+        .temu-card-overlay .btn-temu-secondary:hover {
+            background: var(--temu-orange) !important;
+            border-color: var(--temu-orange) !important;
+        }
+        .temu-card-overlay .btn-temu-secondary:hover i {
+            color: white !important;
+        }
+
+        @media (max-width: 640px) {
+            .temu-card-overlay h4 { font-size: 10px !important; }
+            .temu-card-overlay span[style*="font-size:14px"] { font-size: 12px !important; }
+            .temu-card-overlay .btn-temu-primary { font-size: 9px !important; min-height: 30px !important; }
+            .temu-card-overlay .btn-temu-secondary { min-height: 30px !important; min-width: 30px !important; }
         }
         
         .temu-discount-badge {
@@ -293,49 +315,82 @@
             flex-shrink: 0;
         }
         
-        .temu-float-cart {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--temu-orange) 0%, var(--temu-orange-dark) 100%);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 28px;
-            font-weight: 800;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 8px 32px rgba(251, 119, 1, 0.45);
-            z-index: 999;
-            animation: floatBounce 2s ease-in-out infinite;
-            cursor: pointer;
-            border: none;
-            min-width: 160px;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        @keyframes floatBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-5px); }
-        }
-        .temu-float-cart:hover {
-            animation-play-state: paused;
-            transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 12px 40px rgba(251, 119, 1, 0.6);
-        }
-        
         #toast {
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); padding: 10px 16px;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px 16px;
             border-radius: 12px; background: var(--primary); color: white; font-size: 12px; z-index: 1000;
             display: none; box-shadow: 0 8px 20px -4px rgba(0,0,0,0.25); text-align: center; width: 90%; max-width: 300px; min-width: auto; pointer-events: none;
         }
         
+        /* ✅ إطار الكود الصغير داخل البطاقة */
         .code-input-area {
-            position: absolute; bottom: 0; left: 0; right: 0; background: white; padding: 6px 8px;
-            border-radius: 0 0 14px 14px; display: none; flex-direction: column; gap: 5px;
-            border-top: 1px solid var(--temu-border); z-index: 20; box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+            position: absolute; bottom: 8px; left: 8px; right: 8px; 
+            background: rgba(255,255,255,0.98); 
+            padding: 4px 6px;
+            border-radius: 8px; 
+            display: none; 
+            flex-direction: column; 
+            gap: 4px;
+            border: 1px solid var(--temu-orange); 
+            z-index: 30; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(4px);
+        }
+        
+        .code-input-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .code-input-area input {
+            flex: 1;
+            font-size: 10px !important;
+            padding: 4px 6px !important;
+            border-radius: 6px !important;
+            border: 1px solid var(--temu-border) !important;
+            outline: none !important;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .paste-btn-green {
+            background-color: var(--success-green); 
+            color: white; 
+            padding: 4px 8px; 
+            border-radius: 6px;
+            font-size: 9px; 
+            font-weight: bold; 
+            border: none; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            min-height: 24px; 
+            min-width: auto;
+            white-space: nowrap;
+        }
+        .paste-btn-green:hover { background-color: #059669; }
+        
+        .code-input-area .btn-confirm {
+            background: var(--temu-orange);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 9px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .code-input-area .btn-code {
+            background: var(--temu-bg);
+            color: var(--temu-text-primary);
+            border: 1px solid var(--temu-border);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 9px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
         }
         
         .active-tickets-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 5px; margin-top: 10px; width: 100%; }
@@ -345,11 +400,6 @@
             text-align: center; animation: pulse 2s infinite;
         }
         @keyframes pulse { 0% { opacity: 0.9; } 50% { opacity: 1; transform: scale(1.01); } 100% { opacity: 0.9; } }
-        
-        .paste-btn-green {
-            background-color: var(--success-green); color: white; padding: 3px 8px; border-radius: 5px;
-            font-size: 9px; font-weight: bold; border: none; cursor: pointer; transition: all 0.2s; min-height: 28px; min-width: 28px;
-        }
         
         .promo-banner {
             background: linear-gradient(90deg, var(--temu-orange), var(--temu-orange-dark), var(--temu-orange)); color: white; padding: 8px 6px;
@@ -519,10 +569,10 @@
             .timer-grid { gap: 4px !important; } .timer-val { font-size: 18px !important; } .timer-label { font-size: 7px !important; }
             .temu-countdown { padding: 8px 10px !important; border-radius: 10px !important; margin: 10px 0 !important; }
             .draw-info-box { padding: 5px 10px !important; border-radius: 8px !important; font-size: 10px !important; }
-            .code-input-area { padding: 5px 6px !important; border-radius: 0 0 12px 12px !important; }
-            .code-input-area input { font-size: 12px !important; padding: 6px !important; border-radius: 8px !important; }
-            .code-input-area button { font-size: 8px !important; padding: 4px 6px !important; border-radius: 6px !important; min-height: 26px !important; }
-            #toast { width: 92% !important; font-size: 11px !important; padding: 8px 14px !important; bottom: 75px !important; border-radius: 10px !important; }
+            .code-input-area { padding: 4px 5px !important; border-radius: 6px !important; bottom: 6px !important; left: 6px !important; right: 6px !important; }
+            .code-input-area input { font-size: 9px !important; padding: 4px !important; border-radius: 5px !important; }
+            .code-input-area button { font-size: 8px !important; padding: 3px 5px !important; border-radius: 5px !important; min-height: 22px !important; }
+            #toast { width: 92% !important; font-size: 11px !important; padding: 8px 14px !important; bottom: 15px !important; border-radius: 10px !important; }
             .promo-banner { font-size: 10px !important; padding: 6px 4px !important; margin: 4px 0 10px !important; }
             .footer-frame { margin-top: 12px !important; padding: 10px !important; border-radius: 14px !important; }
             .footer-frame a { font-size: 10px !important; padding: 8px 12px !important; border-radius: 10px !important; min-height: 40px !important; }
@@ -538,7 +588,6 @@
             .temu-buttons-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; }
             .temu-btn { padding: 8px 4px !important; border-radius: 12px !important; font-size: 9px !important; min-height: 40px !important; }
             .temu-btn i { font-size: 14px !important; }
-            .temu-float-cart { width: 85% !important; padding: 10px !important; font-size: 12px !important; border-radius: 24px !important; bottom: 12px !important; }
             .temu-top-banner { font-size: 9px !important; padding: 5px 8px !important; }
             .temu-register-btn { padding: 12px 16px !important; font-size: 13px !important; border-radius: 14px !important; margin: 6px 0 12px !important; }
         }
@@ -1209,12 +1258,7 @@
         </div>
     </div>
 
-    <!-- زر العربة العائم بنمط Temu -->
-    <button type="button" class="temu-float-cart" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        <i class="fas fa-shopping-bag text-lg"></i>
-        <span>عرض العربة (<span id="cartCount">0</span>)</span>
-        <i class="fas fa-chevron-up text-sm"></i>
-    </button>
+    <!-- ✅ تم حذف زر العربة العائم هنا -->
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1415,16 +1459,9 @@
             if(target) { target.style.display = (id === 'loginPage') ? 'flex' : 'block'; setTimeout(() => target.classList.add('active'), 10); }
         }
         
-        // تحديث عداد العربة
+        // ✅ تم حذف دالة updateCartCount المتعلقة بالعربة
         window.updateCartCount = function() {
-            const count = parseInt(localStorage.getItem('temu_cart_count') || '0') + 1;
-            localStorage.setItem('temu_cart_count', count);
-            document.getElementById('cartCount').textContent = count;
-            const btn = document.querySelector('.temu-float-cart');
-            if(btn) {
-                btn.style.animation = 'floatBounce 0.3s ease';
-                setTimeout(() => btn.style.animation = 'floatBounce 2s ease-in-out infinite', 300);
-            }
+            // لا تفعل شيئاً - تم حذف زر العربة
         };
     </script>
 
@@ -1457,24 +1494,9 @@
             6: { name: "Condor Refrigerator", img: "https://github.com/danibakou-prog/PAYRIXW/blob/main/60441268-4fe8-4751-b6eb-66bea972ea97.jpg?raw=true", url: "https://ar.aliexpress.com/item/1005009261871587.html?pvid=f20c1b9c-ed21-4031-9e06-01c9dee1d962", price: "DA 65000.00" }
         };
 
-        // الجوائز الإضافية مع الأسعار
+        // ✅ الجوائز الإضافية: تم حذف كل شيء من البطاقة 8 فما بعد، والاحتفاظ بالبطاقة 7 فقط
         const additionalPrizes = [
-            { name: "iPhone 15 Pro", img: "https://picsum.photos/seed/iphone15/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 185000.00" },
-            { name: "MacBook Air M2", img: "https://picsum.photos/seed/macbook/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 210000.00" },
-            { name: "iPad Pro", img: "https://picsum.photos/seed/ipad/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 145000.00" },
-            { name: "Sony TV 55'", img: "https://picsum.photos/seed/sonytv/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 95000.00" },
-            { name: "Dyson Vacuum", img: "https://picsum.photos/seed/dyson/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 78000.00" },
-            { name: "Nintendo Switch", img: "https://picsum.photos/seed/nintendo/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 52000.00" },
-            { name: "Coffee Machine", img: "https://picsum.photos/seed/coffee/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 28000.00" },
-            { name: "Electric Scooter", img: "https://picsum.photos/seed/scooter/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 45000.00" },
-            { name: "Smart Home Hub", img: "https://picsum.photos/seed/smarthub/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 18500.00" },
-            { name: "Wireless Earbuds Max", img: "https://picsum.photos/seed/earbuds/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 32000.00" },
-            { name: "4K Action Camera", img: "https://picsum.photos/seed/actioncam/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 42000.00" },
-            { name: "Portable Projector", img: "https://picsum.photos/seed/projector/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 38000.00" },
-            { name: "Robot Vacuum Cleaner", img: "https://picsum.photos/seed/robotvac/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 55000.00" },
-            { name: "Electric Toothbrush Set", img: "https://picsum.photos/seed/toothbrush/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 8500.00" },
-            { name: "Fitness Tracker Pro", img: "https://picsum.photos/seed/fittrack/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 15000.00" },
-            { name: "Bluetooth Speaker Mini", img: "https://picsum.photos/seed/btspeaker/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 6500.00" }
+            { name: "iPhone 15 Pro", img: "https://picsum.photos/seed/iphone15/150/150", url: "https://ar.aliexpress.com/item/1005009261871587.html", price: "DA 185000.00" }
         ];
 
         const firstNames = ["محمد", "أحمد", "ياسين", "حمزة", "يوسف", "علي", "عمر", "خالد"];
@@ -1484,7 +1506,8 @@
         function initTicker() {
             const wrapper = document.getElementById('tickerWrapper'); if(!wrapper) return;
             let tickerHTML = '';
-            for(let i=0; i<20; i++) {
+            // ✅ تم تقليل عدد الفائزين من 20 إلى 3 فقط
+            for(let i=0; i<3; i++) {
                 const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
                 const lName = familyNames[Math.floor(Math.random() * familyNames.length)];
                 const state = states[Math.floor(Math.random() * states.length)];
@@ -1492,7 +1515,8 @@
                 const ticket = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
                 tickerHTML += `<div class="ticker-item">🎊 فاز <span>${fName} ${lName}</span> من <span>${state}</span> بـ <span>${prize}</span> | التذكرة: <span>${ticket}</span></div>`;
             }
-            wrapper.innerHTML = tickerHTML + tickerHTML;
+            // نكرر المحتوى 3 مرات لضمان استمرارية الشريط
+            wrapper.innerHTML = tickerHTML.repeat(3);
         }
 
         async function resetAllCards(uid) {
@@ -1563,38 +1587,71 @@
             }
         };
 
-        // ✅✅✅ دالة إنشاء بطاقة الجائزة بنمط Temu - مُعدلة (بدون سعر/تقييم/كمية)
+        // ✅✅✅ دالة إنشاء بطاقة الجائزة بنمط Temu - مُعدلة (صورة خلفية + أزرار فوقها + السعر في المنتصف + زر تفاصيل يفتح الوسيط)
         function createTemuPrizeElement(name, img, url, prizeId, price = "DA 20300.00", oldPrice = "DA 58000.00", discount = "65%") {
             const div = document.createElement('div'); 
-            div.className = 'temu-product-card';
+            div.className = 'temu-product-card temu-card-overlay';
+            div.style.position = 'relative';
+            div.style.overflow = 'hidden';
+            
             div.innerHTML = `
-                <div class="temu-discount-badge">
+                <!-- صورة الخلفية الكاملة -->
+                <div style="position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%), url('${img}'); background-size: cover; background-position: center; background-repeat: no-repeat; z-index: 1;"></div>
+                
+                <!-- تدرج شفافي لتحسين قراءة الأزرار -->
+                <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%); z-index: 2; pointer-events: none;"></div>
+                
+                <!-- شارة الخصم في الزاوية -->
+                <div class="temu-discount-badge" style="position:absolute; top:10px; left:10px; z-index:3; animation: temuPulse 1.5s ease-in-out infinite;">
                     <i class="fas fa-bolt"></i>
-                    <span>-${discount}</span>
+                    <span>${discount}</span>
                 </div>
-                <div class="relative" style="flex:1; min-height:0;">
-                    <img src="${img}" class="w-full h-full object-contain p-4 bg-white" alt="${name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Gift'">
+                
+                <!-- السعر القديم والمشطوب -->
+                <div style="position:absolute; top:10px; right:10px; z-index:3; text-align:left;">
+                    <span style="font-size:9px; color:#999; text-decoration:line-through;">${oldPrice}</span>
                 </div>
-                <div class="normal-prize-info" style="display:flex; flex-direction:column; justify-content:space-between; min-height:100px;">
-                    <div>
-                        <h4 class="font-bold text-[13px] leading-tight text-slate-800 mb-2 line-clamp-2 min-h-[36px]">${name}</h4>
-                    </div>
-                    
-                    <div class="flex gap-2 mt-auto">
-                        <button type="button" onclick="window.showOrderModal('${prizeId}', '${name.replace(/'/g, "\\'")}', '${url}')" class="btn-temu-primary" style="min-height:36px; font-size:11px;">
-                            <i class="fas fa-cart-plus"></i>
-                            <span>شراء الآن</span>
-                        </button>
-                        <button type="button" onclick="window.showWasitModal('${name.replace(/'/g, "\\'")}', '${url}')" class="btn-temu-secondary" style="min-height:36px; min-width:36px;">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
+                
+                <!-- ✅ السعر يظهر في منتصف الصورة -->
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:3; text-align:center; width:100%;">
+                    <span style="background:rgba(251,119,1,0.95); color:white; font-size:16px; font-weight:900; padding:6px 14px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.4); display:inline-block; text-shadow:0 2px 4px rgba(0,0,0,0.3);">${price}</span>
                 </div>
+                
+                <!-- اسم المنتج في الأسفل -->
+                <div style="position:absolute; bottom:55px; left:0; right:0; z-index:3; padding:0 10px; text-align:center;">
+                    <h4 style="color:white; font-size:11px; font-weight:800; text-shadow:0 2px 4px rgba(0,0,0,0.8); margin:0; line-height:1.3;">${name}</h4>
+                </div>
+                
+                <!-- الأزرار فوق الصورة - زر تفاصيل كنص عادي مع وظيفة الوسيط -->
+                <div style="position:absolute; bottom:8px; left:0; right:0; z-index:4; padding:0 8px; display:flex; gap:6px;">
+                    <button type="button" onclick="window.showOrderModal('${prizeId}', '${name.replace(/'/g, "\\'")}', '${url}')" class="btn-temu-primary" style="flex:1; min-height:32px; font-size:10px; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>شراء الآن</span>
+                    </button>
+                    <!-- ✅ زر تفاصيل كنص عادي مع فتح نافذة الوسيط -->
+                    <button type="button" onclick="window.showWasitModal('${name.replace(/'/g, "\\'")}', '${url}')" class="btn-temu-secondary" style="min-height:32px; border-radius:16px; background:rgba(255,255,255,0.95); border:2px solid var(--temu-orange); padding:0 10px; font-size:10px;">
+                        <span style="color:var(--temu-orange); font-weight:700;">تفاصيل</span>
+                    </button>
+                </div>
+                
+                <!-- تأثير لمعان عند التحويم -->
+                <div style="position:absolute; inset:0; z-index:2; pointer-events:none; opacity:0; transition:opacity 0.2s; background: radial-gradient(ellipse at center, rgba(251,119,1,0.15) 0%, transparent 70%);"></div>
             `;
+            
+            // إضافة تأثير التحويم
+            div.addEventListener('mouseenter', function() {
+                this.querySelector('div[style*="radial-gradient"]').style.opacity = '1';
+                this.style.transform = 'translateY(-4px)';
+            });
+            div.addEventListener('mouseleave', function() {
+                this.querySelector('div[style*="radial-gradient"]').style.opacity = '0';
+                this.style.transform = 'translateY(0)';
+            });
+            
             return div;
         }
 
-        // ✅✅✅ دالة إنشاء بطاقة الجائزة التفاعلية
+        // ✅✅✅ دالة إنشاء بطاقة الجائزة التفاعلية - إطار كود صغير داخل البطاقة
         function createInteractivePrizeElement(uid, i) {
             const container = document.createElement('div'); 
             container.id = `prize-container-${i}`;
@@ -1625,21 +1682,24 @@
                         } else {
                             delete activeTicketsMap[i]; 
                             updateActiveTicketsDisplay();
+                            // ✅✅✅ تصميم البطاقة مع إطار كود صغير داخلها
                             container.innerHTML = `
-                                <div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i}, '${prize.url}')">
+                                <div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i}, '${prize.url}')" style="position:relative; overflow:visible;">
                                     <div class="bg-amber-50 w-[40px] h-[40px] rounded-full flex items-center justify-center mb-1 group-active:scale-105 transition-all duration-200 overflow-hidden">
                                         <img src="${prize.img}" class="w-[30px] h-[30px] object-contain opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/50?text=?'">
                                     </div>
                                     <span class="font-black text-[8px] text-slate-800 text-center leading-tight">تفعيل ${prize.name.split(' ')[0]}</span>
                                     <span class="text-[7px] text-amber-600 font-bold mt-0.5">اضغط للمطالبة</span>
+                                    
+                                    <!-- ✅✅✅ إطار الكود الصغير داخل البطاقة -->
                                     <div id="code-area-${i}" class="code-input-area" onclick="event.stopPropagation()">
-                                        <div class="flex gap-1.5 mb-1.5">
-                                            <input type="text" id="input-code-${i}" placeholder="كود التفعيل" class="flex-1 text-[11px] p-1.5 rounded-lg border border-amber-200 outline-none text-center">
+                                        <div class="code-input-row">
+                                            <input type="text" id="input-code-${i}" placeholder="كود" class="flex-1" maxlength="20">
                                             <button type="button" onclick="window.pasteFromClipboard(${i})" class="paste-btn-green">لصق</button>
                                         </div>
                                         <div class="flex gap-1">
-                                            <button type="button" onclick="window.verifyCode('${uid}', ${i})" class="flex-1 bg-amber-500 text-white text-[8px] py-1.5 rounded-lg font-bold">تأكيد</button>
-                                            <button type="button" onclick="window.openPrizeLink(${i})" class="flex-1 bg-slate-100 text-slate-600 text-[8px] py-1.5 rounded-lg font-bold border border-slate-200">الكود</button>
+                                            <button type="button" onclick="window.verifyCode('${uid}', ${i})" class="btn-confirm">تأكيد</button>
+                                            <button type="button" onclick="window.openPrizeLink(${i})" class="btn-code">الكود</button>
                                         </div>
                                     </div>
                                 </div>`;
@@ -1659,7 +1719,7 @@
             return container;
         }
 
-        // ✅ دالة renderGrids المحدثة
+        // ✅✅✅ دالة renderGrids المحدثة
         function renderGrids(uid) {
             const featuredGrid = document.getElementById('featuredPrizes'); 
             const mainGrid = document.getElementById('prizesGrid');
@@ -1668,9 +1728,11 @@
             featuredGrid.innerHTML = ''; 
             mainGrid.innerHTML = '';
             
+            // البطاقات التفاعلية 1-3 (تبقى كما هي مع إطار كود صغير)
             for(let i=1; i<=3; i++) 
                 featuredGrid.appendChild(createInteractivePrizeElement(uid, i));
             
+            // بطاقات تيمو 4-6 (مع السعر في المنتصف وزر تفاصيل كنص يفتح الوسيط)
             for(let i=4; i<=6; i++) 
                 mainGrid.appendChild(createTemuPrizeElement(
                     prizeData[i].name, 
@@ -1682,17 +1744,18 @@
                     `${Math.floor(40 + Math.random() * 30)}%`
                 ));
             
-            additionalPrizes.forEach((prize, idx) => 
+            // ✅ البطاقة 7 فقط: أول جائزة إضافية
+            if (additionalPrizes[0]) {
                 mainGrid.appendChild(createTemuPrizeElement(
-                    prize.name, 
-                    prize.img, 
-                    prize.url, 
-                    `extra_${idx + 1}`,
-                    prize.price,
-                    `DA ${Math.floor(parseInt(prize.price.replace(/[^0-9]/g, '')) * 1.7)}.00`,
+                    additionalPrizes[0].name, 
+                    additionalPrizes[0].img, 
+                    additionalPrizes[0].url, 
+                    `extra_1`,
+                    additionalPrizes[0].price,
+                    `DA ${Math.floor(parseInt(additionalPrizes[0].price.replace(/[^0-9]/g, '')) * 1.7)}.00`,
                     `${Math.floor(35 + Math.random() * 40)}%`
-                ))
-            );
+                ));
+            }
         }
 
         // ✅✅✅ دوال البطاقات التفاعلية المُصححة
@@ -1711,7 +1774,7 @@
                     if(input) input.focus();
                 }, 100);
             }
-            showMessage("🔑 تم فتح رابط الكود! أدخل الكود فور الحصول عليه."); 
+            showMessage("🔑 أدخل كود التفعيل"); 
         };
         
         window.pasteFromClipboard = async (index) => { 
@@ -1733,7 +1796,7 @@
             if(inputVal === prize.correctCode) {
                 await window.finalizeActivation(uid, index);
             } else {
-                showMessage("❌ كود غير صحيح! تأكد من الحروف والأرقام.");
+                showMessage("❌ كود غير صحيح!");
                 const input = document.getElementById(`input-code-${index}`);
                 if(input) {
                     input.style.animation = 'shake 0.3s ease';
