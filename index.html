@@ -626,6 +626,21 @@
             50% { box-shadow: 0 8px 28px rgba(251, 119, 1, 0.7), 0 0 20px rgba(251, 119, 1, 0.3); }
         }
         
+        /* ✅ حالة الزر المعطل (قيد المراجعة) */
+        .temu-register-btn:disabled {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important;
+            cursor: not-allowed !important;
+            animation: none !important;
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3) !important;
+        }
+        .temu-register-btn:disabled:hover {
+            transform: none !important;
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3) !important;
+        }
+        .temu-register-btn:disabled span {
+            color: #e2e8f0 !important;
+        }
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes blinker { 50% { opacity: 0.4; transform: scale(0.99); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -1380,11 +1395,23 @@
             </div>
             <div class="ticker-container shadow-sm"><div class="ticker-wrapper" id="tickerWrapper"></div></div>
             <div class="promo-banner"><span>⭐</span> هل تشعر أن الحظ بجانبك اليوم؟جرب حظك <span>⭐</span></div>
+            
+            <!-- ✅ عداد الوقت نُقل ليكون فوق البطاقات الأولى -->
+            <div class="temu-countdown mb-3 mt-2">
+                <span class="temu-countdown-label">⏰ الوقت الحالي - إعادة تعيين السحب يومياً الساعة 19:00:</span>
+                <div class="timer-grid">
+                    <div class="timer-unit"><span class="timer-val" id="hr">00</span><span class="timer-label">ساعة</span></div>
+                    <div class="timer-unit"><span class="timer-val" id="mn">00</span><span class="timer-label">دقيقة</span></div>
+                    <div class="timer-unit"><span class="timer-val" id="sc">00</span><span class="timer-label">ثانية</span></div>
+                </div>
+            </div>
+            
             <div id="featuredPrizes" class="featured-prizes"></div>
             
-            <button type="button" class="temu-register-btn" onclick="window.openTemuRegisterModal()">
+            <!-- ✅ زر تيمو مع معرف جديد للتحكم في حالته -->
+            <button type="button" id="temuRegisterBtn" class="temu-register-btn" onclick="window.openTemuRegisterModal()">
                 <i class="fas fa-gift"></i>
-                <span>🎁 حمل و سجل في تيمو الآن واحصل علىى الجائزة الكبرى!</span>
+                <span>🎁 حمل و سجل في تيمو الآن واحصل على الجائزة الكبرى!</span>
                 <i class="fas fa-arrow-left"></i>
             </button>
             
@@ -1410,15 +1437,6 @@
                         </button>
                     </div>
                     <p class="text-[9px] text-slate-500 mt-2 font-bold">🎁 خصومات حصرية عند الشراء عبر تيمو</p>
-                </div>
-            </div>
-            
-            <div class="temu-countdown">
-                <span class="temu-countdown-label">⏰ الوقت الحالي (توقيت غرينتش):</span>
-                <div class="timer-grid">
-                    <div class="timer-unit"><span class="timer-val" id="hr">00</span><span class="timer-label">ساعة</span></div>
-                    <div class="timer-unit"><span class="timer-val" id="mn">00</span><span class="timer-label">دقيقة</span></div>
-                    <div class="timer-unit"><span class="timer-val" id="sc">00</span><span class="timer-label">ثانية</span></div>
                 </div>
             </div>
             
@@ -1528,8 +1546,13 @@
             showMessage(`🎁 تم فتح تيمو لعرض: ${offerName} ✨`);
         };
 
-        // ✅✅✅ دوال نافذة تسجيل تيمو الجديدة - مع الرابط المحدث
+        // ✅ دوال نافذة تسجيل تيمو مع تحديث حالة الزر
         window.openTemuRegisterModal = function() {
+            // التحقق من حالة الزر قبل فتح المودال
+            if (!updateTemuRegisterButtonState()) {
+                showMessage("⏳ طلبك قيد المراجعة، يرجى الانتظار قليلاً...");
+                return;
+            }
             document.getElementById('temuRegisterTermsCheckbox').checked = false;
             document.getElementById('temuRegisterConfirmBtn').disabled = true;
             document.getElementById('temuRegisterModal').classList.add('active');
@@ -1541,8 +1564,10 @@
             document.body.style.overflow = '';
         };
         window.confirmAndOpenTemuRegister = function() {
+            // تعيين فترة الانتظار 15 دقيقة
+            setTemuRegisterCooldown();
+            
             window.closeTemuRegisterModal();
-            // ✅ الرابط المطلوب لتسجيل تيمو
             window.open('https://temu.to/k/ej16lrfh87d', '_blank', 'noopener,noreferrer');
             
             if (auth?.currentUser) {
@@ -1560,7 +1585,7 @@
                     ipAddress: 'client-side-protected'
                 }).catch(e => console.error("Temu register log error:", e));
             }
-            showMessage(`🎉 تم توجيهك لتسجيل حساب تيمو! استفد من خصم 90% 🎁`);
+            showMessage(`🎉 تم توجيهك لتسجيل حساب تيمو! طلبك قيد المراجعة لمدة 15 دقيقة 🎁`);
             window.updateCartCount();
         };
 
@@ -1762,6 +1787,97 @@
             if (Object.keys(activeTicketsMap).length === 0) container.innerHTML = `<p class="text-slate-400 text-[9px] font-bold italic">لا توجد تذاكر مفعلة 🎟️</p>`;
         }
 
+        // ============================================
+        // 🔁 دالة إعادة تعيين البطاقات يومياً الساعة 19:00
+        // ============================================
+        function checkDailyReset(uid) {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const lastResetKey = `lastReset_19_${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+            
+            // التحقق إذا كانت الساعة 19:00 أو 19:01 (لضمان التنفيذ)
+            if ((currentHour === 19 && currentMinute <= 1) && !localStorage.getItem(lastResetKey)) {
+                resetCardsAt19(uid);
+                localStorage.setItem(lastResetKey, 'true');
+            }
+            
+            // إعادة تعيين مفتاح اليوم التالي بعد منتصف الليل
+            if (currentHour === 0 && currentMinute === 0) {
+                localStorage.removeItem(lastResetKey);
+            }
+        }
+
+        async function resetCardsAt19(uid) {
+            try {
+                const batch = writeBatch(db);
+                for (let i = 1; i <= 3; i++) {
+                    batch.set(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), { 
+                        active: false, 
+                        ticketNumber: null,
+                        resetAt: serverTimestamp()
+                    }, { merge: true });
+                }
+                await batch.commit();
+                
+                // تحديث الواجهة محلياً
+                activeTicketsMap = {};
+                updateActiveTicketsDisplay();
+                
+                // إظهار رسالة فقط إذا كان المستخدم نشطاً على الصفحة
+                if (document.getElementById('dashboardPage')?.classList.contains('active')) {
+                    showMessage("🔄 بدأت جولة جديدة! تم إعادة تعيين التذاكر للسحب اليومي 🎁");
+                }
+            } catch (e) {
+                console.error("❌ خطأ في إعادة تعيين البطاقات:", e);
+            }
+        }
+
+        // ============================================
+        // ⏱️ دالة إدارة زر تيمو مع مؤقت 15 دقيقة
+        // ============================================
+        const TEMU_REGISTER_BTN_ID = 'temuRegisterBtn';
+        const TEMU_COOLDOWN_KEY = 'temuRegisterCooldown';
+        const TEMU_COOLDOWN_DURATION = 15 * 60 * 1000; // 15 دقيقة بالميلي ثانية
+
+        function updateTemuRegisterButtonState() {
+            const btn = document.getElementById(TEMU_REGISTER_BTN_ID);
+            if (!btn) return;
+            
+            const cooldownData = JSON.parse(localStorage.getItem(TEMU_COOLDOWN_KEY) || 'null');
+            const now = Date.now();
+            
+            if (cooldownData && (now - cooldownData.timestamp < TEMU_COOLDOWN_DURATION)) {
+                // لا يزال في فترة الانتظار
+                const remaining = Math.ceil((TEMU_COOLDOWN_DURATION - (now - cooldownData.timestamp)) / 1000 / 60);
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-hourglass-half animate-pulse"></i><span>⏳ قيد المراجعة (${remaining}د)</span><i class="fas fa-lock"></i>`;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+                btn.classList.remove('hover:translate-y-[-3px]');
+                btn.style.animation = 'none';
+                return false;
+            } else {
+                // العودة للحالة الطبيعية
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-gift"></i><span>🎁 حمل و سجل في تيمو الآن واحصل على الجائزة الكبرى!</span><i class="fas fa-arrow-left"></i>`;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                btn.classList.add('hover:translate-y-[-3px]');
+                btn.style.animation = 'registerBtnPulse 2s ease-in-out infinite';
+                return true;
+            }
+        }
+
+        function setTemuRegisterCooldown() {
+            localStorage.setItem(TEMU_COOLDOWN_KEY, JSON.stringify({
+                timestamp: Date.now(),
+                expiresAt: Date.now() + TEMU_COOLDOWN_DURATION
+            }));
+            updateTemuRegisterButtonState();
+        }
+
+        // تحديث حالة الزر كل دقيقة
+        setInterval(updateTemuRegisterButtonState, 60000);
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const snap = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info'));
@@ -1769,8 +1885,23 @@
                 if (snap.exists()) Object.assign(userData, snap.data());
                 document.getElementById('userPhoneDisplay').innerText = `المشارك: ${userData.fullName}`;
                 document.getElementById('userStateDisplay').innerText = `الولاية: ${userData.state}`;
-                showPage('dashboardPage'); initTicker(); renderGrids(user.uid); startDrawCountdown(user.uid);
-            } else { showPage('loginPage'); }
+                
+                // ✅ تشغيل فحص إعادة التعيين اليومي
+                checkDailyReset(user.uid);
+                
+                // ✅ تحديث حالة زر تيمو عند تحميل الصفحة
+                updateTemuRegisterButtonState();
+                
+                showPage('dashboardPage'); 
+                initTicker(); 
+                renderGrids(user.uid); 
+                startDrawCountdown(user.uid);
+                
+                // ✅ فحص دوري كل دقيقة لإعادة التعيين
+                setInterval(() => checkDailyReset(user.uid), 60000);
+            } else { 
+                showPage('loginPage'); 
+            }
         });
 
         document.getElementById('authBtn').onclick = async () => {
@@ -2134,21 +2265,18 @@
             }
         };
 
-        // ✅✅✅ دالة التعامل مع نقرات أزرار Temu - روابط محدثة
+        // ✅ دالة التعامل مع نقرات أزرار Temu
         window.handleTemuClick = async function(offerName, offerType) {
-            // ✅ خريطة الروابط المطلوبة
             const temuLinks = {
-                'gold': 'https://temu.to/k/e31pu12iznn',      // عرض 30%
-                'diamond': 'https://temu.to/k/eukvjp14mw5',    // عرض 65%
-                'savings': 'https://temu.to/k/ehci3ma1ow1'     // عرض التوفير
+                'gold': 'https://temu.to/k/e31pu12iznn',
+                'diamond': 'https://temu.to/k/eukvjp14mw5',
+                'savings': 'https://temu.to/k/ehci3ma1ow1'
             };
             
             const targetUrl = temuLinks[offerType] || 'https://www.temu.com';
             
-            // فتح الرابط المطلوب
             window.open(targetUrl, '_blank', 'noopener,noreferrer');
             
-            // تسجيل النقرة في قاعدة البيانات
             if (auth?.currentUser) {
                 try {
                     await addDoc(collection(db, 'Temu'), {
@@ -2192,6 +2320,12 @@
         window.openTemuYoutubeModal = window.openTemuYoutubeModal;
         window.copyTemuRegisterCode = window.copyTemuRegisterCode;
         window.updateCartCount = window.updateCartCount;
+        
+        // ✅ دوال جديدة مُصدّرة
+        window.checkDailyReset = checkDailyReset;
+        window.resetCardsAt19 = resetCardsAt19;
+        window.updateTemuRegisterButtonState = updateTemuRegisterButtonState;
+        window.setTemuRegisterCooldown = setTemuRegisterCooldown;
     </script>
 </body>
 </html>
