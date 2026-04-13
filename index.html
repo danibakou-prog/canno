@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#fb7701">
 <meta name="format-detection" content="telephone=no">
-<title>تومبولا الجوائز | الإصدار الذهبي</title>
+<title> جوائز مجانية | الإصدار الذهبي</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -140,8 +140,9 @@ h1 { font-size: 1.2rem !important; line-height: 1.3; } h2 { font-size: 1rem !imp
 .btn-activate { aspect-ratio: 4/5 !important; padding: 3px !important; border-radius: 14px !important; border-width: 1px !important; }
 .btn-activate .bg-amber-50 { width: 40px !important; height: 40px !important; border-radius: 50% !important; margin-bottom: 4px !important; }
 .btn-activate .bg-amber-50 img { width: 30px !important; height: 30px !important; object-fit: contain !important; }
-.btn-activate span.font-black { font-size: 8px !important; line-height: 1.2 !important; font-weight: 800 !important; }
-.btn-activate span.text-\[9px\] { font-size: 7px !important; margin-top: 2px !important; }
+/* ✅ تم تعديل أحجام الخطوط للبطاقات 1-4 */
+.btn-activate span.font-black { font-size: 12px !important; line-height: 1.3 !important; font-weight: 900 !important; }
+.btn-activate span.text-\[9px\] { font-size: 9px !important; margin-top: 2px !important; }
 .prizes-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; padding: 0 !important; }
 .temu-product-card { border-radius: 12px !important; aspect-ratio: 4/5 !important; border-width: 1px !important; }
 .normal-prize-info { padding: 8px 6px !important; }
@@ -378,7 +379,7 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
 <div class="flex items-center gap-2 mb-2"><span class="text-lg">🏦</span><strong class="text-amber-800 text-sm">💳 الدفع عبر بريدي موب</strong></div>
 <p class="text-[10px] text-slate-600 mb-2 text-right">أرسل المبلغ المطلوب إلى حساب بريدي موب التالي:</p>
 <div class="flex items-center gap-2 bg-white rounded-lg p-2 border border-amber-200">
-<code id="baridiMobNumber" class="flex-1 text-right font-mono font-bold text-amber-700 text-sm dir-ltr">0079999900000000</code>
+<code id="baridiMobNumber" class="flex-1 text-right font-mono font-bold text-amber-700 text-sm dir-ltr">00799999000872624331</code>
 <button type="button" onclick="window.copyBaridiMobNumber()" class="copy-btn flex items-center justify-center w-8 h-8 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-all active:scale-95" title="نسخ الرقم"><i class="fas fa-copy text-xs"></i></button>
 </div>
 <p class="text-[9px] text-slate-400 mt-1 text-right">⚠️ بعد التحويل، أرسل إثبات الدفع للوسيط </p>
@@ -499,7 +500,7 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
 <div class="ticker-container shadow-sm"><div class="ticker-wrapper" id="tickerWrapper"></div></div>
 <div class="promo-banner"><span>⭐</span> هل تشعر أن الحظ بجانبك اليوم؟جرب حظك <span>⭐</span></div>
 <div class="temu-countdown mb-3 mt-2">
-<span class="temu-countdown-label">⏰ انقر على البطاقات الآن واحصل على الجائزة القيمة الت تنتظرك! 💎💰 -السحب يومياً الساعة 18:56:</span>
+<span class="temu-countdown-label">⏰ انقر على البطاقات الآن واحصل على الجائزة القيمة التي تنتظرك! 💎💰 -السحب يومياً الساعة 18:56:</span>
 <div class="timer-grid">
 <div class="timer-unit"><span class="timer-val" id="hr">00</span><span class="timer-label">ساعة</span></div>
 <div class="timer-unit"><span class="timer-val" id="mn">00</span><span class="timer-label">دقيقة</span></div>
@@ -524,7 +525,7 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
 </div>
 </div>
 <div class="coming-soon-frame">
-<div class="promo-banner bg-slate-800 border-slate-700 text-[11px]"><span>🛍️</span> قريباً <span>🛍️</span></div>
+<div class="promo-banner bg-slate-800 border-slate-700 text-[11px]"><span>🛍️</span> عروض حصرية <span>🛍️</span></div>
 <div class="prizes-grid" id="prizesGrid"></div>
 </div>
 <div class="footer-frame">
@@ -600,7 +601,7 @@ const prizeData = {
 1: { name: " Realmi", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://ouo.io/QUVACn", correctCode: 'RYL99XVP215Z88W', price: "DA 45000.00" },
 2: { name: "Smart Watch Pro", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://adfly.site/y403UJw", correctCode: 'K7B2N4MQ91RL5XP', price: "DA 12500.00" },
 3: { name: "Airpods Pro 2", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://shrinkme.click/TyQ3rg", correctCode: 'P9L4W2QC11NT33K', price: "DA 35000.00" },
-4: { name: "Galaxy Buds2 Pro", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://ouo.io/XYZ456ABC", correctCode: 'P9L4W2QC11NT33K', price: "DA 28000.00" },
+4: { name: "Galaxy Buds2 Pro", img: "https://www.pngarts.com/files/1/Gifts-PNG-Pic.png", url: "https://uii.io/Jjw494p7j0BD", correctCode: 'XPM44ZWS319H77R', price: "DA 28000.00" },
 5: { name: "C25 Ultra", img: "https://img.kwcdn.com/product/open/c9c4cce77de346dba83b9c64b0b10ca5-goods.jpeg?imageView2/2/w/800/q/70/format/webp", url: "https://temu.to/k/ee064f3bwev", price: "DA 14600.00" },
 6: { name: "Redmi Note12", img: "https://i.ebayimg.com/images/g/l5kAAOSwhbJjoYDN/s-l500.jpg", url: "https://temu.to/k/e2qni93l5r7", price: "DA 30500.00" },
 7: { name: "مقلاة هوئية", img: "https://ir.ozone.ru/s3/multimedia-1-2/8633508086.jpg", url: "https://temu.to/k/e6rvw71wvyo", price: "DA 24300.00" },
@@ -771,24 +772,81 @@ div.addEventListener('mouseenter', function() { this.querySelector('div[style*="
 div.addEventListener('mouseleave', function() { this.querySelector('div[style*="radial-gradient"]').style.opacity = '0'; this.style.transform = 'translateY(0)'; });
 return div;
 }
+
+// ✅ الدالة المعدلة: نصوص "التذكرة الأولى/الثانية/..." بحجم أكبر
 function createInteractivePrizeElement(uid, i) {
-const container = document.createElement('div'); container.id = `prize-container-${i}`;
-const unsubscribe = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), (snap) => {
-try {
-const data = snap.data(); const active = snap.exists() && data?.active; const prize = prizeData[i];
-if(active && data?.ticketNumber) {
-const ticketNum = data.ticketNumber;
-window.activeTicketsMap[i] = { active: true, num: ticketNum };
-window.updateActiveTicketsDisplay();
-container.innerHTML = `<div class="prize-card" style="background:var(--temu-card-bg);border:1px solid var(--temu-border);border-radius:16px;overflow:hidden;box-shadow:var(--temu-shadow)"><img src="${prize.img}" class="prize-img" alt="${prize.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Prize'"><div class="prize-info" style="background:linear-gradient(to bottom,var(--temu-orange),var(--temu-orange-dark))"><h4 class="font-bold text-[10px] mb-0.5 truncate">${prize.name}</h4><div class="bg-white/20 py-0.5 rounded-lg"><p class="text-[8px] font-mono tracking-wider">${ticketNum}</p></div><p class="text-[7px] mt-0.5 font-bold uppercase">✅ مفعّل</p></div></div>`;
-} else {
-delete window.activeTicketsMap[i]; window.updateActiveTicketsDisplay();
-container.innerHTML = `<div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i}, '${prize.url}')" style="position:relative; overflow:visible;"><div class="bg-amber-50 w-[40px] h-[40px] rounded-full flex items-center justify-center mb-1 group-active:scale-105 transition-all duration-200 overflow-hidden"><img src="${prize.img}" class="w-[30px] h-[30px] object-contain opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/50?text=?'"></div><span class="font-black text-[8px] text-slate-800 text-center leading-tight">تفعيل ${prize.name.split(' ')[0]}</span><span class="text-[7px] text-amber-600 font-bold mt-0.5">اضغط للمطالبة</span><div id="code-area-${i}" class="code-input-area compact" onclick="event.stopPropagation()"><div class="code-input-row"><input type="text" id="input-code-${i}" placeholder="كود" class="flex-1" maxlength="20" inputmode="text" autocomplete="off"><button type="button" onclick="window.pasteFromClipboard(${i})" class="paste-btn-green" title="لصق الكود المنسوخ"><i class="fas fa-paste"></i> لصق</button></div><div class="flex gap-1"><button type="button" onclick="window.verifyCode('${uid}', ${i})" class="btn-confirm">✅ تأكيد</button><button type="button" onclick="window.openPrizeLink(${i})" class="btn-code">🔗 كود</button></div></div></div>`;
+    const container = document.createElement('div'); 
+    container.id = `prize-container-${i}`;
+    
+    const unsubscribe = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), (snap) => {
+        try {
+            const data = snap.data(); 
+            const active = snap.exists() && data?.active; 
+            const prize = prizeData[i];
+            
+            if(active && data?.ticketNumber) {
+                const ticketNum = data.ticketNumber;
+                window.activeTicketsMap[i] = { active: true, num: ticketNum };
+                window.updateActiveTicketsDisplay();
+                
+                container.innerHTML = `<div class="prize-card" style="background:var(--temu-card-bg);border:1px solid var(--temu-border);border-radius:16px;overflow:hidden;box-shadow:var(--temu-shadow)">
+                    <img src="${prize.img}" class="prize-img" alt="${prize.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Prize'">
+                    <div class="prize-info" style="background:linear-gradient(to bottom,var(--temu-orange),var(--temu-orange-dark))">
+                        <h4 class="font-bold text-[10px] mb-0.5 truncate">${prize.name}</h4>
+                        <div class="bg-white/20 py-0.5 rounded-lg">
+                            <p class="text-[8px] font-mono tracking-wider">${ticketNum}</p>
+                        </div>
+                        <p class="text-[7px] mt-0.5 font-bold uppercase">✅ مفعّل</p>
+                    </div>
+                </div>`;
+                
+            } else {
+                delete window.activeTicketsMap[i]; 
+                window.updateActiveTicketsDisplay();
+                
+                // ✅ النصوص المعدلة بحجم أكبر
+                const ticketText = i === 1 ? 'التذكرة الأولى' : 
+                                  i === 2 ? 'التذكرة الثانية' : 
+                                  i === 3 ? 'التذكرة الثالثة' : 'التذكرة الرابعة';
+                
+                container.innerHTML = `<div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i}, '${prize.url}')" style="position:relative; overflow:visible;">
+                    <div class="bg-amber-50 w-[40px] h-[40px] rounded-full flex items-center justify-center mb-1 group-active:scale-105 transition-all duration-200 overflow-hidden">
+                        <img src="${prize.img}" class="w-[30px] h-[30px] object-contain opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/50?text=?'">
+                    </div>
+                    
+                    <!-- ✅ النص الرئيسي: التذكرة الأولى/الثانية/... بحجم 12px -->
+                    <span class="font-black text-[12px] text-slate-800 text-center leading-tight">${ticketText}</span>
+                    
+                    <!-- ✅ النص الثانوي بحجم 9px -->
+                    <span class="text-[9px] text-amber-600 font-bold mt-0.5">اضغط للفتح</span>
+                    
+                    <div id="code-area-${i}" class="code-input-area compact" onclick="event.stopPropagation()">
+                        <div class="code-input-row">
+                            <input type="text" id="input-code-${i}" placeholder="كود التفعيل" class="flex-1" maxlength="20" inputmode="text" autocomplete="off">
+                            <button type="button" onclick="window.pasteFromClipboard(${i})" class="paste-btn-green" title="لصق الكود المنسوخ">
+                                <i class="fas fa-paste"></i> لصق
+                            </button>
+                        </div>
+                        <div class="flex gap-1">
+                            <button type="button" onclick="window.verifyCode('${uid}', ${i})" class="btn-confirm">✅ تأكيد</button>
+                            <button type="button" onclick="window.openPrizeLink(${i})" class="btn-code">🔗 كود</button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        } catch(e) { 
+            console.error("Error in onSnapshot callback:", e); 
+            container.innerHTML = `<div class="btn-activate">⚠️ خطأ</div>`; 
+        }
+    }, (error) => { 
+        console.error("Firestore listener error for card", i, ":", error); 
+        container.innerHTML = `<div class="btn-activate">🔄...</div>`; 
+    });
+    
+    container._unsubscribe = unsubscribe; 
+    return container;
 }
-} catch(e) { console.error("Error in onSnapshot callback:", e); container.innerHTML = `<div class="btn-activate">⚠️ خطأ</div>`; }
-}, (error) => { console.error("Firestore listener error for card", i, ":", error); container.innerHTML = `<div class="btn-activate">🔄...</div>`; });
-container._unsubscribe = unsubscribe; return container;
-}
+
 function renderGrids(uid) {
 const featuredGrid = document.getElementById('featuredPrizes'); const mainGrid = document.getElementById('prizesGrid'); if(!featuredGrid || !mainGrid) return;
 featuredGrid.innerHTML = ''; mainGrid.innerHTML = '';
