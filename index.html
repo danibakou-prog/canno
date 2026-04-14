@@ -13,33 +13,16 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
---temu-orange: #fb7701;
---temu-orange-dark: #e65c00;
---temu-orange-light: #fff4e6;
---temu-red: #ff3b30;
---temu-red-dark: #d32f2f;
---temu-bg: #f5f5f5;
---temu-card-bg: #ffffff;
---temu-text-primary: #1a1a1a;
---temu-text-secondary: #666666;
---temu-border: #e8e8e8;
---temu-shadow: 0 2px 12px rgba(0,0,0,0.08);
---temu-shadow-hover: 0 8px 24px rgba(251, 119, 1, 0.25);
---gold-light: #fde68a;
---gold: #fbbf24;
---gold-dark: #b45309;
---primary: #1e293b;
---success-green: #10b981;
---danger-red: #ef4444;
+--temu-orange: #fb7701; --temu-orange-dark: #e65c00; --temu-orange-light: #fff4e6;
+--temu-red: #ff3b30; --temu-red-dark: #d32f2f;
+--temu-bg: #f5f5f5; --temu-card-bg: #ffffff;
+--temu-text-primary: #1a1a1a; --temu-text-secondary: #666666; --temu-border: #e8e8e8;
+--temu-shadow: 0 2px 12px rgba(0,0,0,0.08); --temu-shadow-hover: 0 8px 24px rgba(251, 119, 1, 0.25);
+--gold-light: #fde68a; --gold: #fbbf24; --gold-dark: #b45309;
+--primary: #1e293b; --success-green: #10b981; --danger-red: #ef4444;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
-body {
-font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-background: var(--temu-bg); color: var(--temu-text-primary); overflow-x: hidden; margin: 0; padding: 0;
--webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4;
-background-image: radial-gradient(circle at 25px 25px, rgba(251,119,1,0.03) 2px, transparent 0), radial-gradient(circle at 75px 75px, rgba(255,59,48,0.02) 2px, transparent 0);
-background-size: 100px 100px;
-}
+body { font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--temu-bg); color: var(--temu-text-primary); overflow-x: hidden; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; background-image: radial-gradient(circle at 25px 25px, rgba(251,119,1,0.03) 2px, transparent 0), radial-gradient(circle at 75px 75px, rgba(255,59,48,0.02) 2px, transparent 0); background-size: 100px 100px; }
 @media screen and (-webkit-min-device-pixel-ratio: 0) { input, select, textarea { font-size: 16px !important; } }
 .bg-animate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%); z-index: -1; pointer-events: none; }
 .glass { background: var(--temu-card-bg); backdrop-filter: blur(10px); border: 1px solid var(--temu-border); border-radius: 16px; box-shadow: var(--temu-shadow); margin: 0 auto; max-width: 640px; width: 100%; }
@@ -190,14 +173,16 @@ input:focus { border-color: var(--temu-orange) !important; box-shadow: 0 0 0 3px
 .btn-activate, .temu-product-card { will-change: transform; backface-visibility: hidden; }
 * { -webkit-tap-highlight-color: transparent; }
 img[loading="lazy"] { background: var(--temu-bg); min-height: 50px; }
-.youtube-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+
+/* ✅ مشغل يوتيوب عمودي مثل الريلز/الشورتس */
+.youtube-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 9999; justify-content: center; align-items: center; padding: 10px; }
 .youtube-modal.active { display: flex; }
-.youtube-modal-content { background: white; border-radius: 16px; overflow: hidden; max-width: 900px; width: 100%; max-height: 90vh; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-.youtube-modal-close { position: absolute; top: 10px; right: 10px; background: var(--temu-red); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.youtube-modal-content { background: #000; border-radius: 16px; overflow: hidden; width: 100%; max-width: 400px; max-height: 95vh; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.8); aspect-ratio: 9/16; }
+.youtube-modal-close { position: absolute; top: 12px; right: 12px; background: rgba(255,59,48,0.9); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 .youtube-modal-close:hover { background: var(--temu-red-dark); transform: scale(1.1); }
-.youtube-iframe-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+.youtube-iframe-container { position: absolute; inset: 0; }
 .youtube-iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-@media (max-width: 640px) { .youtube-modal-content { max-width: 100%; max-height: 85vh; } .youtube-modal-close { width: 36px; height: 36px; font-size: 18px; top: 8px; right: 8px; } }
+
 .order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); z-index: 10000; justify-content: center; align-items: center; padding: 16px; animation: fadeIn 0.2s ease-out; }
 .order-modal.active { display: flex; }
 .order-modal-content { background: white; border-radius: 20px; padding: 20px 16px; max-width: 400px; width: 100%; position: relative; box-shadow: 0 25px 80px rgba(0,0,0,0.4); border: 3px solid var(--temu-orange); animation: slideUp 0.3s ease-out; }
@@ -278,50 +263,12 @@ a[href*="m.me"]:hover { background: rgba(59, 89, 152, 0.1); }
 button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); } 50% { box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5); } }
 
-/* ✅ تصغير عناصر البطاقات 1-4 - النسخة المُعدّلة والمُحسّنة */
-#code-area-1, #code-area-2, #code-area-3, #code-area-4 {
-    padding: 6px !important;
-    border-radius: 10px !important;
-    gap: 4px !important;
-    bottom: 6px !important;
-    left: 6px !important;
-    right: 6px !important;
-}
-#code-area-1 .code-input-row, #code-area-2 .code-input-row,
-#code-area-3 .code-input-row, #code-area-4 .code-input-row {
-    gap: 4px !important;
-    flex-wrap: wrap !important;
-}
-#code-area-1 input, #code-area-2 input, #code-area-3 input, #code-area-4 input {
-    font-size: 11px !important;
-    padding: 5px 6px !important;
-    border-radius: 6px !important;
-    min-height: 28px !important;
-    font-weight: 700 !important;
-    width: 100% !important;
-}
-#code-area-1 .paste-btn-green, #code-area-2 .paste-btn-green,
-#code-area-3 .paste-btn-green, #code-area-4 .paste-btn-green {
-    font-size: 9px !important;
-    padding: 5px 6px !important;
-    border-radius: 6px !important;
-    min-height: 28px !important;
-    min-width: 45px !important;
-    gap: 2px !important;
-    font-weight: 700 !important;
-    flex-shrink: 0 !important;
-}
-#code-area-1 .btn-confirm, #code-area-1 .btn-code,
-#code-area-2 .btn-confirm, #code-area-2 .btn-code,
-#code-area-3 .btn-confirm, #code-area-3 .btn-code,
-#code-area-4 .btn-confirm, #code-area-4 .btn-code {
-    font-size: 9px !important;
-    padding: 5px 6px !important;
-    border-radius: 6px !important;
-    min-height: 28px !important;
-    font-weight: 700 !important;
-    flex: 1 !important;
-}
+/* ✅ تصغير عناصر البطاقات 1-4 */
+#code-area-1, #code-area-2, #code-area-3, #code-area-4 { padding: 6px !important; border-radius: 10px !important; gap: 4px !important; bottom: 6px !important; left: 6px !important; right: 6px !important; }
+#code-area-1 .code-input-row, #code-area-2 .code-input-row, #code-area-3 .code-input-row, #code-area-4 .code-input-row { gap: 4px !important; flex-wrap: wrap !important; }
+#code-area-1 input, #code-area-2 input, #code-area-3 input, #code-area-4 input { font-size: 11px !important; padding: 5px 6px !important; border-radius: 6px !important; min-height: 28px !important; font-weight: 700 !important; width: 100% !important; }
+#code-area-1 .paste-btn-green, #code-area-2 .paste-btn-green, #code-area-3 .paste-btn-green, #code-area-4 .paste-btn-green { font-size: 9px !important; padding: 5px 6px !important; border-radius: 6px !important; min-height: 28px !important; min-width: 45px !important; gap: 2px !important; font-weight: 700 !important; flex-shrink: 0 !important; }
+#code-area-1 .btn-confirm, #code-area-1 .btn-code, #code-area-2 .btn-confirm, #code-area-2 .btn-code, #code-area-3 .btn-confirm, #code-area-3 .btn-code, #code-area-4 .btn-confirm, #code-area-4 .btn-code { font-size: 9px !important; padding: 5px 6px !important; border-radius: 6px !important; min-height: 28px !important; font-weight: 700 !important; flex: 1 !important; }
 @media (max-width: 480px) {
     #code-area-1, #code-area-2, #code-area-3, #code-area-4 { padding: 4px !important; gap: 3px !important; }
     #code-area-1 input, #code-area-2 input, #code-area-3 input, #code-area-4 input { font-size: 10px !important; padding: 4px 5px !important; min-height: 26px !important; }
@@ -341,7 +288,7 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
 <audio id="activationSound" src="https://bigsoundbank.com/UPLOAD/mp3/1737.mp3" preload="auto"></audio>
 <audio id="orderSound" src="https://bigsoundbank.com/UPLOAD/ogg/1742.ogg" preload="auto"></audio>
 
-<!-- ✅ نافذة تعليمات الحصول على الكود -->
+<!-- ✅ نافذة تعليمات الحصول على الكود (تظهر أولاً) -->
 <div id="codeInstructionsModal" class="temu-instructions-modal" onclick="window.closeCodeInstructionsModal(event)">
   <div class="temu-modal-content" onclick="event.stopPropagation()">
     <button type="button" class="temu-modal-close" onclick="window.closeCodeInstructionsModal()" title="إغلاق">×</button>
@@ -350,17 +297,16 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
     <div class="temu-modal-instructions">
       <strong>📋 خطوات الحصول على الكود:</strong>
       <ol>
-        <li>اضغط على البطاقة التي تريد تفعيلها (1, 2, 3, أو 4)</li>
-        <li>اضغط على زر <strong>🔗 كود</strong> الظاهر أسفل البطاقة</li>
-        <li>سيتم نسخ الكود تلقائياً أو فتحه في صفحة جديدة</li>
-        <li>أعد الضغط على نفس البطاقة لإظهار حقل إدخال الكود</li>
-        <li>الصق الكود في الحقل واضغط على <strong>✅ تأكيد</strong></li>
+        <li>سيتم فتح الموقع الخارجي في نافذة جديدة</li>
+        <li>ابحث عن زر "كود التفعيل" أو "Copy Code" داخل الموقع</li>
+        <li>انسخ الكود بالكامل</li>
+        <li>عد إلى هذه الصفحة والصق الكود في الحقل المخصص</li>
       </ol>
     </div>
     <div class="temu-modal-terms">
       <label>
         <input type="checkbox" id="codeInstructionsCheckbox" onchange="document.getElementById('codeInstructionsConfirmBtn').disabled = !this.checked;">
-        <span>أفهم الخطوات وأوافق على المتابعة للحصول على كود التفعيل</span>
+        <span>أفهم الخطوات وأوافق على فتح الرابط للحصول على الكود</span>
       </label>
     </div>
     <div class="temu-modal-buttons">
@@ -384,7 +330,7 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
         🎫 رقم التذكرة: <strong id="successTicketNum" style="color:var(--temu-orange); font-size:14px;"></strong><br>
         🎁 الجائزة: <strong id="successPrizeName" style="color:var(--temu-orange-dark);"></strong><br><br>
         <span style="background:var(--temu-orange-light); padding:4px 8px; border-radius:6px; display:inline-block;">
-          🕐 السحب اليومي الساعة <strong>18:56</strong> - احتفظ برقم التذكرة!
+          🕐 السحب اليومي الساعة <strong>20:00</strong> - احتفظ برقم التذكرة!
         </span>
       </p>
     </div>
@@ -555,7 +501,7 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
 <div class="ticker-container shadow-sm"><div class="ticker-wrapper" id="tickerWrapper"></div></div>
 <div class="promo-banner"><span>⭐</span> هل تشعر أن الحظ بجانبك اليوم؟جرب حظك <span>⭐</span></div>
 <div class="temu-countdown mb-3 mt-2">
-<span class="temu-countdown-label">⏰ انقر على البطاقات الآن واحصل على الجائزة القيمة التي تنتظرك! 💎💰 -السحب يومياً الساعة 18:56:</span>
+<span class="temu-countdown-label">⏰ انقر على البطاقات الآن واحصل على الجائزة القيمة التي تنتظرك! 💎💰 -السحب يومياً الساعة 20:00:</span>
 <div class="timer-grid">
 <div class="timer-unit"><span class="timer-val" id="hr">00</span><span class="timer-label">ساعة</span></div>
 <div class="timer-unit"><span class="timer-val" id="mn">00</span><span class="timer-label">دقيقة</span></div>
@@ -619,14 +565,16 @@ if(window.codeInputTimeouts && window.codeInputTimeouts[i]) { clearTimeout(windo
 });
 window.codeInputTimeouts = {};
 window.currentCardIndex = null;
-window.openYoutubeModal = function() { document.getElementById('youtubeIframe').src = 'https://m.youtube.com/shorts/IQSWzuOkeM4'; document.getElementById('youtubeModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
+window.pendingPrizeUrl = null;
+
+window.openYoutubeModal = function() { document.getElementById('youtubeIframe').src = 'https://www.youtube.com/embed/IQSWzuOkeM4?autoplay=1&rel=0'; document.getElementById('youtubeModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
 window.closeYoutubeModal = function(event) { if (event && event.target !== event.currentTarget) return; document.getElementById('youtubeModal').classList.remove('active'); document.getElementById('youtubeIframe').src = ''; document.body.style.overflow = ''; };
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { window.closeYoutubeModal(); window.closeOrderModal(); window.closeWasitModal(); window.closeWasitFormModal(); window.closeTemuModal(); window.closeTemuRegisterModal(); window.closeCodeInstructionsModal(); window.closeActivationSuccessModal(); }});
 
-// ✅ فتح فيديو اليوتيوب في النافذة المنبثقة بدلاً من تبويب جديد
+// ✅ فتح فيديو اليوتيوب في النافذة المنبثقة العمودية
 window.openTemuYoutubeModal = function() {
     window.closeTemuRegisterModal();
-    document.getElementById('youtubeIframe').src = 'https://m.youtube.com/shorts/YuZBIutjjaM?autoplay=1';
+    document.getElementById('youtubeIframe').src = 'https://www.youtube.com/embed/YuZBIutjjaM?autoplay=1&rel=0&modestbranding=1';
     document.getElementById('youtubeModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 };
@@ -656,61 +604,33 @@ window.showPage = function(id) { document.querySelectorAll('.page').forEach(p =>
 window.updateCartCount = function() {};
 
 // ✅ دوال جديدة للتحكم في النوافذ المنبثقة
-
-// فتح نافذة تعليمات الكود
-window.openCodeInstructionsModal = function(cardIndex) {
-    window.currentCardIndex = cardIndex;
+window.openCodeInstructionsModal = function() {
     document.getElementById('codeInstructionsCheckbox').checked = false;
     document.getElementById('codeInstructionsConfirmBtn').disabled = true;
     document.getElementById('codeInstructionsModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 };
-
-// إغلاق نافذة تعليمات الكود
 window.closeCodeInstructionsModal = function(event) {
     if (event && event.target !== event.currentTarget) return;
     document.getElementById('codeInstructionsModal').classList.remove('active');
     document.body.style.overflow = '';
-    window.currentCardIndex = null;
 };
-
-// تأكيد التعليمات وإظهار حقل الكود
 window.confirmCodeInstructions = function() {
     window.closeCodeInstructionsModal();
-    if (window.currentCardIndex) {
-        const area = document.getElementById(`code-area-${window.currentCardIndex}`);
-        if (area) {
-            area.style.display = 'flex';
-            // إعادة تعيين المؤقت
-            if (window.codeInputTimeouts && window.codeInputTimeouts[window.currentCardIndex]) {
-                clearTimeout(window.codeInputTimeouts[window.currentCardIndex]);
-            }
-            window.codeInputTimeouts[window.currentCardIndex] = setTimeout(() => {
-                const areaToHide = document.getElementById(`code-area-${window.currentCardIndex}`);
-                if (areaToHide) {
-                    areaToHide.style.display = 'none';
-                    window.showMessage("⏰ انتهى وقت إدخال الكود للبطاقة " + window.currentCardIndex);
-                }
-                delete window.codeInputTimeouts[window.currentCardIndex];
-            }, 120000);
-            setTimeout(() => {
-                const input = document.getElementById(`input-code-${window.currentCardIndex}`);
-                if (input) input.focus();
-            }, 100);
-            window.showMessage("🔑 أدخل كود التفعيل (سيغلق الإطار بعد دقيقتين)");
+    if (window.pendingPrizeUrl) window.open(window.pendingPrizeUrl, '_blank', 'noopener,noreferrer');
+    setTimeout(() => {
+        if (window.currentCardIndex) {
+            const area = document.getElementById(`code-area-${window.currentCardIndex}`);
+            if (area) { area.style.display = 'flex'; const input = document.getElementById(`input-code-${window.currentCardIndex}`); if (input) input.focus(); window.showMessage("📋 الحقل جاهز! الصق الكود هنا بعد العودة..."); }
         }
-    }
+    }, 800);
 };
-
-// فتح نافذة نجاح التفعيل
 window.showActivationSuccessModal = function(ticketNum, prizeName) {
     document.getElementById('successTicketNum').textContent = ticketNum;
     document.getElementById('successPrizeName').textContent = prizeName;
     document.getElementById('activationSuccessModal').classList.add('active');
     document.body.style.overflow = 'hidden';
 };
-
-// إغلاق نافذة نجاح التفعيل
 window.closeActivationSuccessModal = function(event) {
     if (event && event.target !== event.currentTarget) return;
     document.getElementById('activationSuccessModal').classList.remove('active');
@@ -745,20 +665,8 @@ const states = ["الجزائر", "وهران", "قسنطينة", "سطيف", "�
 function initTicker() { const wrapper = document.getElementById('tickerWrapper'); if(!wrapper) return; let tickerHTML = ''; for(let i=0; i<3; i++) { const fName = firstNames[Math.floor(Math.random() * firstNames.length)]; const lName = familyNames[Math.floor(Math.random() * familyNames.length)]; const state = states[Math.floor(Math.random() * states.length)]; const prize = prizeData[Math.floor(Math.random() * 12) + 1]?.name || "جائزة قيمة"; const ticket = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`; tickerHTML += `<div class="ticker-item">🎊 فاز <span>${fName} ${lName}</span> من <span>${state}</span> بـ <span>${prize}</span> | التذكرة: <span>${ticket}</span></div>`; } wrapper.innerHTML = tickerHTML.repeat(3); }
 async function resetAllCards(uid) { try { const batch = writeBatch(db); for (let i = 1; i <= 4; i++) batch.set(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), { active: false, ticketNumber: null }, { merge: true }); await batch.commit(); window.showMessage("بدأ سحب جديد! انتهت صلاحية التذاكر السابقة."); window.activeTicketsMap = {}; window.updateActiveTicketsDisplay(); } catch (e) { console.error("Error resetting cards:", e); } }
 function startDrawCountdown(uid) {
-const updateTimer = () => {
-const now = new Date();
-const hours = now.getHours();
-const minutes = now.getMinutes();
-const seconds = now.getSeconds();
-const hrEl = document.getElementById('hr');
-const mnEl = document.getElementById('mn');
-const scEl = document.getElementById('sc');
-if (hrEl) hrEl.innerText = hours.toString().padStart(2, '0');
-if (mnEl) mnEl.innerText = minutes.toString().padStart(2, '0');
-if (scEl) scEl.innerText = seconds.toString().padStart(2, '0');
-};
-setInterval(updateTimer, 1000);
-updateTimer();
+const updateTimer = () => { const now = new Date(); const hrEl = document.getElementById('hr'); const mnEl = document.getElementById('mn'); const scEl = document.getElementById('sc'); if(hrEl) hrEl.innerText = now.getHours().toString().padStart(2,'0'); if(mnEl) mnEl.innerText = now.getMinutes().toString().padStart(2,'0'); if(scEl) scEl.innerText = now.getSeconds().toString().padStart(2,'0'); };
+setInterval(updateTimer, 1000); updateTimer();
 }
 window.activeTicketsMap = {};
 window.updateActiveTicketsDisplay = function() {
@@ -774,30 +682,26 @@ container.appendChild(badge);
 });
 if (Object.keys(window.activeTicketsMap).length === 0) container.innerHTML = `<p class="text-slate-400 text-[9px] font-bold italic">لا توجد تذاكر مفعلة 🎟️</p>`;
 }
+
+// ✅ تم تعديل وقت السحب إلى 20:00
 function checkDailyReset(uid) {
-const now = new Date();
-const currentHour = now.getHours();
-const currentMinute = now.getMinutes();
-const lastResetKey = `lastReset_1856_${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-if ((currentHour === 18 && currentMinute >= 56 && currentMinute <= 57) && !localStorage.getItem(lastResetKey)) {
-resetCardsAt1856(uid);
-localStorage.setItem(lastResetKey, 'true');
+const now = new Date(); const currentHour = now.getHours(); const currentMinute = now.getMinutes();
+const lastResetKey = `lastReset_2000_${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+if ((currentHour === 20 && currentMinute >= 0 && currentMinute <= 1) && !localStorage.getItem(lastResetKey)) {
+resetCardsAt2000(uid); localStorage.setItem(lastResetKey, 'true');
 }
 if (currentHour === 0 && currentMinute === 0) { localStorage.removeItem(lastResetKey); }
 }
-async function resetCardsAt1856(uid) {
+async function resetCardsAt2000(uid) {
 try {
-window.activeTicketsMap = {};
-window.updateActiveTicketsDisplay();
-renderGrids(uid);
+window.activeTicketsMap = {}; window.updateActiveTicketsDisplay(); renderGrids(uid);
 const batch = writeBatch(db);
-for (let i = 1; i <= 4; i++) {
-batch.set(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), { active: false, ticketNumber: null, resetAt: serverTimestamp() }, { merge: true });
-}
+for (let i = 1; i <= 4; i++) batch.set(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), { active: false, ticketNumber: null, resetAt: serverTimestamp() }, { merge: true });
 await batch.commit();
-if (document.getElementById('dashboardPage')?.classList.contains('active')) { window.showMessage("🔄 بدأت جولة جديدة! تم إعادة تعيين التذاكر للسحب اليومي (18:56) 🎁"); }
+if (document.getElementById('dashboardPage')?.classList.contains('active')) window.showMessage("🔄 بدأت جولة جديدة! تم إعادة تعيين التذاكر للسحب اليومي (20:00) 🎁");
 } catch (e) { console.error("❌ خطأ في إعادة تعيين البطاقات:", e); }
 }
+
 const TEMU_REGISTER_BTN_ID = 'temuRegisterBtn';
 const TEMU_COOLDOWN_KEY = 'temuRegisterCooldown';
 const TEMU_COOLDOWN_DURATION = 15 * 60 * 1000;
@@ -806,9 +710,9 @@ const btn = document.getElementById(TEMU_REGISTER_BTN_ID); if (!btn) return;
 const cooldownData = JSON.parse(localStorage.getItem(TEMU_COOLDOWN_KEY) || 'null');
 const now = Date.now();
 if (cooldownData && (now - cooldownData.timestamp < TEMU_COOLDOWN_DURATION)) {
-const remaining = Math.ceil((TEMU_COOLDOWN_DURATION - (now - cooldownData.timestamp)) / 1000 / 60);
-btn.disabled = true; btn.innerHTML = `<i class="fas fa-hourglass-half animate-pulse"></i><span>⏳ قيد المراجعة (${remaining}د)</span><i class="fas fa-lock"></i>`;
-btn.classList.add('opacity-75', 'cursor-not-allowed'); btn.classList.remove('hover:translate-y-[-3px]'); btn.style.animation = 'none'; return false;
+// ✅ إزالة العداد وإظهار "قيد المراجعة" فقط
+btn.innerHTML = `<i class="fas fa-hourglass-half animate-pulse"></i><span>⏳ قيد المراجعة</span><i class="fas fa-lock"></i>`;
+btn.disabled = true; btn.classList.add('opacity-75', 'cursor-not-allowed'); btn.classList.remove('hover:translate-y-[-3px]'); btn.style.animation = 'none'; return false;
 } else { btn.disabled = false; btn.innerHTML = `<i class="fas fa-gift"></i><span>🎁 حمل و سجل في تيمو الآن واحصل على الجائزة الكبرى!</span><i class="fas fa-arrow-left"></i>`;
 btn.classList.remove('opacity-75', 'cursor-not-allowed'); btn.classList.add('hover:translate-y-[-3px]'); btn.style.animation = 'registerBtnPulse 2s ease-in-out infinite'; return true; }
 }
@@ -821,69 +725,37 @@ let userData = { fullName: localStorage.getItem('user_fullname') || "مشارك 
 if (snap.exists()) Object.assign(userData, snap.data());
 document.getElementById('userPhoneDisplay').innerText = `المشارك: ${userData.fullName}`;
 document.getElementById('userStateDisplay').innerText = `الولاية: ${userData.state}`;
-checkDailyReset(user.uid);
-window.updateTemuRegisterButtonState();
-window.showPage('dashboardPage');
-initTicker();
-renderGrids(user.uid);
-startDrawCountdown(user.uid);
+checkDailyReset(user.uid); window.updateTemuRegisterButtonState(); window.showPage('dashboardPage');
+initTicker(); renderGrids(user.uid); startDrawCountdown(user.uid);
 setInterval(() => checkDailyReset(user.uid), 60000);
 } else { window.showPage('loginPage'); }
 });
 
-// ✅ تم تعديل دالة المصادقة لتحديث فايربيس برقم الهاتف عند تسجيل الدخول
 document.getElementById('authBtn').onclick = async () => {
     const fullName = document.getElementById('fullNameInput').value.trim();
     const state = document.getElementById('stateInput').value.trim();
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value.trim();
     const phone = document.getElementById('phoneInput').value.trim();
-    
-    if(!email || !password || !phone || !fullName || !state) { 
-        window.showMessage("يرجى إكمال جميع الحقول للمشاركة"); 
-        return; 
-    }
-    
+    if(!email || !password || !phone || !fullName || !state) { window.showMessage("يرجى إكمال جميع الحقول للمشاركة"); return; }
     try { 
         await signInWithEmailAndPassword(auth, email, password); 
-        
-        // حفظ في localStorage
-        localStorage.setItem('user_fullname', fullName); 
-        localStorage.setItem('user_phone', phone); 
-        localStorage.setItem('user_state', state);
-        
-        // ✅ تحديث فايربيس أيضاً (الإضافة الجديدة)
-        await setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'profile', 'info'), { 
-            fullName, 
-            state, 
-            phone, 
-            email,
-            updatedAt: serverTimestamp() 
-        }, { merge: true });
-        
+        localStorage.setItem('user_fullname', fullName); localStorage.setItem('user_phone', phone); localStorage.setItem('user_state', state);
+        await setDoc(doc(db, 'artifacts', appId, 'users', auth.currentUser.uid, 'profile', 'info'), { fullName, state, phone, email, updatedAt: serverTimestamp() }, { merge: true });
     } catch (err) {
         if (['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-email'].includes(err.code)) {
             try { 
                 const res = await createUserWithEmailAndPassword(auth, email, password); 
-                await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), { 
-                    fullName, state, phone, email, createdAt: serverTimestamp() 
-                }); 
-                localStorage.setItem('user_fullname', fullName); 
-                localStorage.setItem('user_phone', phone); 
-                localStorage.setItem('user_state', state);
-            } catch(e) { 
-                window.showMessage("خطأ في إنشاء الحساب: " + e.message); 
-            }
-        } else { 
-            window.showMessage("خطأ في تسجيل الدخول: " + err.message); 
-        }
+                await setDoc(doc(db, 'artifacts', appId, 'users', res.user.uid, 'profile', 'info'), { fullName, state, phone, email, createdAt: serverTimestamp() }); 
+                localStorage.setItem('user_fullname', fullName); localStorage.setItem('user_phone', phone); localStorage.setItem('user_state', state);
+            } catch(e) { window.showMessage("خطأ في إنشاء الحساب: " + e.message); }
+        } else { window.showMessage("خطأ في تسجيل الدخول: " + err.message); }
     }
 };
 
 function createTemuPrizeElement(name, img, url, prizeId, price = "DA 20300.00", oldPrice = "DA 58000.00", discount = "65%") {
 const div = document.createElement('div'); div.className = 'temu-product-card temu-card-overlay'; div.style.position = 'relative'; div.style.overflow = 'hidden';
-div.innerHTML = `
-<div style="position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%), url('${img}'); background-size: cover; background-position: center; background-repeat: no-repeat; z-index: 1;"></div>
+div.innerHTML = `<div style="position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%), url('${img}'); background-size: cover; background-position: center; background-repeat: no-repeat; z-index: 1;"></div>
 <div style="position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%); z-index: 2; pointer-events: none;"></div>
 <div class="temu-discount-badge" style="position:absolute; top:10px; left:10px; z-index:3; animation: temuPulse 1.5s ease-in-out infinite;"><i class="fas fa-bolt"></i><span>${discount}</span></div>
 <div style="position:absolute; top:10px; right:10px; z-index:3; text-align:left;"><span style="font-size:9px; color:#999; text-decoration:line-through;">${oldPrice}</span></div>
@@ -899,59 +771,34 @@ div.addEventListener('mouseleave', function() { this.querySelector('div[style*="
 return div;
 }
 
-// ✅ الدالة المعدلة: نصوص "التذكرة الأولى/الثانية/..." بحجم أكبر
 function createInteractivePrizeElement(uid, i) {
-    const container = document.createElement('div'); 
-    container.id = `prize-container-${i}`;
-    
+    const container = document.createElement('div'); container.id = `prize-container-${i}`;
     const unsubscribe = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${i}`), (snap) => {
         try {
-            const data = snap.data(); 
-            const active = snap.exists() && data?.active; 
-            const prize = prizeData[i];
-            
+            const data = snap.data(); const active = snap.exists() && data?.active; const prize = prizeData[i];
             if(active && data?.ticketNumber) {
-                const ticketNum = data.ticketNumber;
-                window.activeTicketsMap[i] = { active: true, num: ticketNum };
-                window.updateActiveTicketsDisplay();
-                
+                const ticketNum = data.ticketNumber; window.activeTicketsMap[i] = { active: true, num: ticketNum }; window.updateActiveTicketsDisplay();
                 container.innerHTML = `<div class="prize-card" style="background:var(--temu-card-bg);border:1px solid var(--temu-border);border-radius:16px;overflow:hidden;box-shadow:var(--temu-shadow)">
                     <img src="${prize.img}" class="prize-img" alt="${prize.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/150?text=Prize'">
                     <div class="prize-info" style="background:linear-gradient(to bottom,var(--temu-orange),var(--temu-orange-dark))">
                         <h4 class="font-bold text-[10px] mb-0.5 truncate">${prize.name}</h4>
-                        <div class="bg-white/20 py-0.5 rounded-lg">
-                            <p class="text-[8px] font-mono tracking-wider">${ticketNum}</p>
-                        </div>
+                        <div class="bg-white/20 py-0.5 rounded-lg"><p class="text-[8px] font-mono tracking-wider">${ticketNum}</p></div>
                         <p class="text-[7px] mt-0.5 font-bold uppercase">✅ مفعّل</p>
                     </div>
                 </div>`;
-                
             } else {
-                delete window.activeTicketsMap[i]; 
-                window.updateActiveTicketsDisplay();
-                
-                // ✅ النصوص المعدلة بحجم أكبر
-                const ticketText = i === 1 ? 'التذكرة الأولى' : 
-                                  i === 2 ? 'التذكرة الثانية' : 
-                                  i === 3 ? 'التذكرة الثالثة' : 'التذكرة الرابعة';
-                
+                delete window.activeTicketsMap[i]; window.updateActiveTicketsDisplay();
+                const ticketText = i === 1 ? 'التذكرة الأولى' : i === 2 ? 'التذكرة الثانية' : i === 3 ? 'التذكرة الثالثة' : 'التذكرة الرابعة';
                 container.innerHTML = `<div class="btn-activate group" id="btn-${i}" onclick="window.handlePrizeClick('${uid}', ${i}, '${prize.url}')" style="position:relative; overflow:visible;">
                     <div class="bg-amber-50 w-[40px] h-[40px] rounded-full flex items-center justify-center mb-1 group-active:scale-105 transition-all duration-200 overflow-hidden">
                         <img src="${prize.img}" class="w-[30px] h-[30px] object-contain opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/50?text=?'">
                     </div>
-                    
-                    <!-- ✅ النص الرئيسي: التذكرة الأولى/الثانية/... بحجم 12px -->
                     <span class="font-black text-[12px] text-slate-800 text-center leading-tight">${ticketText}</span>
-                    
-                    <!-- ✅ النص الثانوي بحجم 9px -->
                     <span class="text-[9px] text-amber-600 font-bold mt-0.5">اضغط للفتح</span>
-                    
                     <div id="code-area-${i}" class="code-input-area compact" onclick="event.stopPropagation()">
                         <div class="code-input-row">
                             <input type="text" id="input-code-${i}" placeholder="كود التفعيل" class="flex-1" maxlength="20" inputmode="text" autocomplete="off">
-                            <button type="button" onclick="window.pasteFromClipboard(${i})" class="paste-btn-green" title="لصق الكود المنسوخ">
-                                <i class="fas fa-paste"></i> لصق
-                            </button>
+                            <button type="button" onclick="window.pasteFromClipboard(${i})" class="paste-btn-green" title="لصق الكود المنسوخ"><i class="fas fa-paste"></i> لصق</button>
                         </div>
                         <div class="flex gap-1">
                             <button type="button" onclick="window.verifyCode('${uid}', ${i})" class="btn-confirm">✅ تأكيد</button>
@@ -960,17 +807,9 @@ function createInteractivePrizeElement(uid, i) {
                     </div>
                 </div>`;
             }
-        } catch(e) { 
-            console.error("Error in onSnapshot callback:", e); 
-            container.innerHTML = `<div class="btn-activate">⚠️ خطأ</div>`; 
-        }
-    }, (error) => { 
-        console.error("Firestore listener error for card", i, ":", error); 
-        container.innerHTML = `<div class="btn-activate">🔄...</div>`; 
-    });
-    
-    container._unsubscribe = unsubscribe; 
-    return container;
+        } catch(e) { console.error("Error in onSnapshot callback:", e); container.innerHTML = `<div class="btn-activate">⚠️ خطأ</div>`; }
+    }, (error) => { console.error("Firestore listener error for card", i, ":", error); container.innerHTML = `<div class="btn-activate">🔄...</div>`; });
+    container._unsubscribe = unsubscribe; return container;
 }
 
 function renderGrids(uid) {
@@ -980,59 +819,39 @@ for(let i=1; i<=4; i++) featuredGrid.appendChild(createInteractivePrizeElement(u
 for(let i=5; i<=13; i++) { if(prizeData[i]) { mainGrid.appendChild(createTemuPrizeElement(prizeData[i].name, prizeData[i].img, prizeData[i].url, `prize_${i}`, prizeData[i].price, `DA ${Math.floor(parseInt(prizeData[i].price.replace(/[^0-9]/g, '')) * 1.8)}.00`, `${Math.floor(40 + Math.random() * 30)}%`)); } }
 if (additionalPrizes[0]) { mainGrid.appendChild(createTemuPrizeElement(additionalPrizes[0].name, additionalPrizes[0].img, additionalPrizes[0].url, `extra_1`, additionalPrizes[0].price, `DA ${Math.floor(parseInt(additionalPrizes[0].price.replace(/[^0-9]/g, '')) * 1.7)}.00`, `${Math.floor(35 + Math.random() * 40)}%`)); }
 }
+
 window.openPrizeLink = (index) => { const prize = prizeData[index]; if(prize?.url) window.open(prize.url, '_blank', 'noopener,noreferrer'); };
 
-// ✅ تعديل دالة handlePrizeClick لفتح تعليمات الكود أولاً
+// ✅ التسلسل الجديد: نافذة التعليمات أولاً
 window.handlePrizeClick = (uid, index, prizeUrl) => {
-    // فتح رابط الجائزة في تبويب جديد (كما كان)
-    if (prizeUrl) window.open(prizeUrl, '_blank', 'noopener,noreferrer');
-    
-    // ✅ فتح نافذة تعليمات الكود بدلاً من إظهار الحقل مباشرة
-    window.openCodeInstructionsModal(index);
+    window.currentCardIndex = index;
+    window.pendingPrizeUrl = prizeUrl;
+    window.openCodeInstructionsModal();
 };
 
 window.pasteFromClipboard = async (index) => { try { const text = await navigator.clipboard.readText(); const input = document.getElementById(`input-code-${index}`); if (input && text) { input.value = text.trim().toUpperCase(); input.style.borderColor = 'var(--success-green)'; input.style.boxShadow = '0 0 0 2px rgba(16, 185, 129, 0.3)'; setTimeout(() => { input.style.borderColor = ''; input.style.boxShadow = ''; }, 500); window.showMessage("✅ تم لصق الكود"); } else { window.showMessage("📋 الحافظة فارغة، يرجى نسخ الكود أولاً"); } } catch (err) { window.showMessage("⚠️ تعذر الوصول للحافظة، يرجى لصق الكود يدوياً"); } };
-window.verifyCode = async (uid, index) => { if(window.codeInputTimeouts && window.codeInputTimeouts[index]) { clearTimeout(window.codeInputTimeouts[index]); delete window.codeInputTimeouts[index]; } const prize = prizeData[index]; const inputVal = document.getElementById(`input-code-${index}`).value.trim().toUpperCase(); if(inputVal === prize.correctCode) { await window.finalizeActivation(uid, index); } else { window.showMessage("❌ كود غير صحيح!"); const input = document.getElementById(`input-code-${index}`); if(input) { input.style.animation = 'shake 0.3s ease'; setTimeout(() => input.style.animation = '', 300); } } };
 
-// ✅ تعديل دالة finalizeActivation لإظهار نافذة النجاح
+window.verifyCode = async (uid, index) => { 
+    if(window.codeInputTimeouts && window.codeInputTimeouts[index]) { clearTimeout(window.codeInputTimeouts[index]); delete window.codeInputTimeouts[index]; } 
+    const prize = prizeData[index]; const inputVal = document.getElementById(`input-code-${index}`).value.trim().toUpperCase(); 
+    if(inputVal === prize.correctCode) { await window.finalizeActivation(uid, index); } 
+    else { window.showMessage("❌ كود غير صحيح!"); const input = document.getElementById(`input-code-${index}`); if(input) { input.style.animation = 'shake 0.3s ease'; setTimeout(() => input.style.animation = '', 300); } } 
+};
+
+// ✅ إظهار نافذة النجاح بعد التفعيل
 window.finalizeActivation = async (uid, index) => {
     const area = document.getElementById(`code-area-${index}`); if(area) area.style.display = 'none';
     if(window.codeInputTimeouts && window.codeInputTimeouts[index]) { clearTimeout(window.codeInputTimeouts[index]); delete window.codeInputTimeouts[index]; }
-    const prize = prizeData[index]; 
-    const phone = localStorage.getItem('user_phone') || "000000"; 
-    const fullName = localStorage.getItem('user_fullname') || "مشارك"; 
-    const state = localStorage.getItem('user_state') || "غير معروف";
+    const prize = prizeData[index]; const phone = localStorage.getItem('user_phone') || "000000"; const fullName = localStorage.getItem('user_fullname') || "مشارك"; const state = localStorage.getItem('user_state') || "غير معروف";
     const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
     try {
-        await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), { 
-            active: true, 
-            phone, 
-            fullName, 
-            state, 
-            ticketNumber: ticketNum, 
-            timestamp: serverTimestamp(),
-            userEmail: auth.currentUser?.email || ''
-        }, { merge: true });
-
-        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), { 
-            userId: uid, 
-            email: auth.currentUser?.email, 
-            phone, 
-            fullName, 
-            state, 
-            prizeName: prize.name, 
-            ticketNumber: ticketNum, 
-            activatedAt: serverTimestamp(),
-            source: 'tombola_activation'
-        });
-
+        await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), { active: true, phone, fullName, state, ticketNumber: ticketNum, timestamp: serverTimestamp(), userEmail: auth.currentUser?.email || '' }, { merge: true });
+        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), { userId: uid, email: auth.currentUser?.email, phone, fullName, state, prizeName: prize.name, ticketNumber: ticketNum, activatedAt: serverTimestamp(), source: 'tombola_activation' });
         const sound = document.getElementById('activationSound'); if (sound) { sound.currentTime = 0; sound.play().catch(e => console.log("Audio play prevented:", e)); }
-        
-        // ✅ إظهار نافذة النجاح بدلاً من رسالة الـ toast فقط
         window.showActivationSuccessModal(ticketNum, prize.name);
-        
     } catch (e) { console.error("Activation error:", e); window.showMessage("⚠️ حدث خطأ أثناء التفعيل، يرجى المحاولة لاحقاً."); }
 };
+
 window.confirmAndSendOrder = async function() {
 const modal = document.getElementById('orderModal'); if (!document.getElementById('termsCheckbox').checked) { window.showMessage("⚠️ يرجى الموافقة على الشروط أولاً"); return; }
 if (!auth.currentUser) { window.showMessage("⚠️ يرجى تسجيل الدخول أولاً"); window.closeOrderModal(); window.showPage('loginPage'); return; }
@@ -1040,23 +859,7 @@ const prizeId = modal.dataset.prizeId; const prizeName = modal.dataset.prizeName
 const btn = document.getElementById('confirmOrderBtn'); const originalText = btn.innerHTML;
 try {
 btn.disabled = true; btn.innerHTML = '<span>⏳</span> <span>جاري الإرسال...</span>';
-// ✅ إرسال رقم الهاتف مع جميع المعلومات إلى فايربيس
-await addDoc(collection(db, 'product_orders'), { 
-    orderId: `ORD-${Date.now()}-${Math.floor(Math.random() * 10000)}`, 
-    userId: auth.currentUser.uid, 
-    userEmail: auth.currentUser.email || "", 
-    userPhone: localStorage.getItem('user_phone') || "00000000", 
-    userFullName: localStorage.getItem('user_fullname') || "مشارك محظوظ", 
-    userState: localStorage.getItem('user_state') || "غير محدد", 
-    prizeId, 
-    prizeName, 
-    productUrl, 
-    orderedAt: serverTimestamp(), 
-    status: 'pending', 
-    source: 'tombola_golden_edition', 
-    termsAccepted: true, 
-    termsAcceptedAt: serverTimestamp() 
-});
+await addDoc(collection(db, 'product_orders'), { orderId: `ORD-${Date.now()}-${Math.floor(Math.random() * 10000)}`, userId: auth.currentUser.uid, userEmail: auth.currentUser.email || "", userPhone: localStorage.getItem('user_phone') || "00000000", userFullName: localStorage.getItem('user_fullname') || "مشارك محظوظ", userState: localStorage.getItem('user_state') || "غير محدد", prizeId, prizeName, productUrl, orderedAt: serverTimestamp(), status: 'pending', source: 'tombola_golden_edition', termsAccepted: true, termsAcceptedAt: serverTimestamp() });
 window.showMessage(`✅ تم استلام طلبك لـ "${prizeName}" وسنتواصل معك قريباً 🎉`);
 if (productUrl && productUrl.trim() !== "") setTimeout(() => window.open(productUrl, '_blank', 'noopener,noreferrer'), 800);
 window.updateCartCount(); window.closeOrderModal();
@@ -1070,27 +873,7 @@ if (!window.validatePostalCode(postalCode)) { window.showMessage("⚠️ الر�
 const dataCheckbox = document.getElementById('wasitDataCheckbox'); if (!dataCheckbox || !dataCheckbox.checked) { window.showMessage("⚠️ يرجى تأكيد صحة البيانات المدخلة"); return; }
 const btn = document.getElementById('wasitSubmitBtn'); if (!btn) { console.error("❌ Button not found"); window.showMessage("⚠️ خطأ تقني، يرجى إعادة تحميل الصفحة"); return; }
 const originalText = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span>⏳</span> <span>جاري الإرسال...</span>';
-// ✅ إرسال رقم الهاتف مع جميع المعلومات إلى فايربيس
-await addDoc(collection(db, 'wasit'), { 
-    orderId: `WASIT-${Date.now()}-${Math.floor(Math.random() * 10000)}`, 
-    userId: auth?.currentUser?.uid || 'guest', 
-    userEmail: auth?.currentUser?.email || '', 
-    customerName: fullName, 
-    customerStreet: street, 
-    customerCity: city, 
-    customerPostalCode: postalCode, 
-    customerWilayaName: state, 
-    customerPhone: phone, 
-    prizeName, 
-    productUrl, 
-    orderedAt: serverTimestamp(), 
-    status: 'new', 
-    source: 'tombola_wasit_system', 
-    termsAccepted: true, 
-    dataConfirmed: true, 
-    ipAddress: 'client-side', 
-    userAgent: navigator.userAgent 
-});
+await addDoc(collection(db, 'wasit'), { orderId: `WASIT-${Date.now()}-${Math.floor(Math.random() * 10000)}`, userId: auth?.currentUser?.uid || 'guest', userEmail: auth?.currentUser?.email || '', customerName: fullName, customerStreet: street, customerCity: city, customerPostalCode: postalCode, customerWilayaName: state, customerPhone: phone, prizeName, productUrl, orderedAt: serverTimestamp(), status: 'new', source: 'tombola_wasit_system', termsAccepted: true, dataConfirmed: true, ipAddress: 'client-side', userAgent: navigator.userAgent });
 window.showMessage(`✅ تم استلام طلبك لـ "${prizeName}" بنجاح! 🎉 سيتم التواصل معك على الرقم ${phone} لتأكيد التفاصيل.`);
 window.showOrderConfirmation(prizeName); window.closeWasitFormModal(); window.updateCartCount();
 } catch (e) { console.error("❌ Wasit order error:", e); window.showMessage("⚠️ حدث خطأ: " + (e.message || "يرجى المحاولة لاحقاً")); const btn = document.getElementById('wasitSubmitBtn'); if (btn) { btn.disabled = false; btn.innerHTML = '<span>🚀</span> <span>تأكيد وإرسال</span>'; } }
@@ -1098,27 +881,7 @@ window.showOrderConfirmation(prizeName); window.closeWasitFormModal(); window.up
 window.handleTemuClick = async function(offerName, offerType) {
 const temuLinks = { 'gold': 'https://temu.to/k/e31pu12iznn', 'diamond': 'https://temu.to/k/eukvjp14mw5', 'savings': 'https://temu.to/k/ehci3ma1ow1' };
 const targetUrl = temuLinks[offerType] || 'https://www.temu.com'; window.open(targetUrl, '_blank', 'noopener,noreferrer');
-if (auth?.currentUser) { 
-    try { 
-        // ✅ إرسال رقم الهاتف مع جميع المعلومات إلى فايربيس
-        await addDoc(collection(db, 'Temu'), { 
-            clickId: `TEMU-${Date.now()}-${Math.floor(Math.random() * 10000)}`, 
-            userId: auth.currentUser.uid, 
-            userEmail: auth.currentUser.email || '', 
-            userPhone: localStorage.getItem('user_phone') || '', 
-            userFullName: localStorage.getItem('user_fullname') || '', 
-            userState: localStorage.getItem('user_state') || '', 
-            offerName: offerName, 
-            offerType: offerType, 
-            clickedAt: serverTimestamp(), 
-            targetUrl: targetUrl, 
-            source: 'tombola_grand_prize_temu', 
-            deviceInfo: { platform: navigator.platform, userAgent: navigator.userAgent, language: navigator.language }, 
-            ipAddress: 'client-side-protected' 
-        }); 
-        window.showMessage(`🎁 تم توجيهك إلى تميو لعرض: ${offerName} ✨`); 
-    } catch (e) { console.error("❌ Temu click logging error:", e); } 
-} else { window.showMessage('🎁 جاري التوجيه إلى عروض تيمو الحصرية... سجل للدخول لتتبع مكافآتكَ!'); }
+if (auth?.currentUser) { try { await addDoc(collection(db, 'Temu'), { clickId: `TEMU-${Date.now()}-${Math.floor(Math.random() * 10000)}`, userId: auth.currentUser.uid, userEmail: auth.currentUser.email || '', userPhone: localStorage.getItem('user_phone') || '', userFullName: localStorage.getItem('user_fullname') || '', userState: localStorage.getItem('user_state') || '', offerName: offerName, offerType: offerType, clickedAt: serverTimestamp(), targetUrl: targetUrl, source: 'tombola_grand_prize_temu', deviceInfo: { platform: navigator.platform, userAgent: navigator.userAgent, language: navigator.language }, ipAddress: 'client-side-protected' }); window.showMessage(`🎁 تم توجيهك إلى تميو لعرض: ${offerName} ✨`); } catch (e) { console.error("❌ Temu click logging error:", e); } } else { window.showMessage('🎁 جاري التوجيه إلى عروض تيمو الحصرية... سجل للدخول لتتبع مكافآتكَ!'); }
 };
 window.db = db; window.auth = auth; window.serverTimestamp = serverTimestamp; window.addDoc = addDoc; window.collection = collection;
 window.showOrderModal = window.showOrderModal; window.closeOrderModal = window.closeOrderModal; window.confirmAndSendOrder = window.confirmAndSendOrder;
@@ -1128,13 +891,8 @@ window.showOrderConfirmation = window.showOrderConfirmation; window.showMessage 
 window.showTemuModal = window.showTemuModal; window.closeTemuModal = window.closeTemuModal; window.confirmAndOpenTemu = window.confirmAndOpenTemu;
 window.openTemuRegisterModal = window.openTemuRegisterModal; window.closeTemuRegisterModal = window.closeTemuRegisterModal; window.confirmAndOpenTemuRegister = window.confirmAndOpenTemuRegister;
 window.openTemuYoutubeModal = window.openTemuYoutubeModal; window.copyTemuRegisterCode = window.copyTemuRegisterCode; window.updateCartCount = window.updateCartCount;
-window.checkDailyReset = checkDailyReset; window.resetCardsAt1856 = resetCardsAt1856; window.updateTemuRegisterButtonState = window.updateTemuRegisterButtonState; window.setTemuRegisterCooldown = window.setTemuRegisterCooldown;
+window.checkDailyReset = checkDailyReset; window.resetCardsAt2000 = resetCardsAt2000; window.updateTemuRegisterButtonState = window.updateTemuRegisterButtonState; window.setTemuRegisterCooldown = window.setTemuRegisterCooldown;
 window.renderGrids = renderGrids;
-window.openCodeInstructionsModal = window.openCodeInstructionsModal;
-window.closeCodeInstructionsModal = window.closeCodeInstructionsModal;
-window.confirmCodeInstructions = window.confirmCodeInstructions;
-window.showActivationSuccessModal = window.showActivationSuccessModal;
-window.closeActivationSuccessModal = window.closeActivationSuccessModal;
 </script>
 </body>
 </html>
