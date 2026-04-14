@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#fb7701">
 <meta name="format-detection" content="telephone=no">
-<title> جوائز مجانية | الإصدار الذهبي</title>
+<title>جوائز مجانية | الإصدار الذهبي</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -140,7 +140,6 @@ h1 { font-size: 1.2rem !important; line-height: 1.3; } h2 { font-size: 1rem !imp
 .btn-activate { aspect-ratio: 4/5 !important; padding: 3px !important; border-radius: 14px !important; border-width: 1px !important; }
 .btn-activate .bg-amber-50 { width: 40px !important; height: 40px !important; border-radius: 50% !important; margin-bottom: 4px !important; }
 .btn-activate .bg-amber-50 img { width: 30px !important; height: 30px !important; object-fit: contain !important; }
-/* ✅ تم تعديل أحجام الخطوط للبطاقات 1-4 */
 .btn-activate span.font-black { font-size: 12px !important; line-height: 1.3 !important; font-weight: 900 !important; }
 .btn-activate span.text-\[9px\] { font-size: 9px !important; margin-top: 2px !important; }
 .prizes-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; padding: 0 !important; }
@@ -341,6 +340,62 @@ button[onclick*="openTemuYoutubeModal"] { animation: pulse 2s infinite; }
 </div>
 <audio id="activationSound" src="https://bigsoundbank.com/UPLOAD/mp3/1737.mp3" preload="auto"></audio>
 <audio id="orderSound" src="https://bigsoundbank.com/UPLOAD/ogg/1742.ogg" preload="auto"></audio>
+
+<!-- ✅ نافذة تعليمات الحصول على الكود -->
+<div id="codeInstructionsModal" class="temu-instructions-modal" onclick="window.closeCodeInstructionsModal(event)">
+  <div class="temu-modal-content" onclick="event.stopPropagation()">
+    <button type="button" class="temu-modal-close" onclick="window.closeCodeInstructionsModal()" title="إغلاق">×</button>
+    <div class="temu-modal-icon">🔑</div>
+    <div class="temu-modal-title"><span>✨</span> كيفية الحصول على كود التفعيل</div>
+    <div class="temu-modal-instructions">
+      <strong>📋 خطوات الحصول على الكود:</strong>
+      <ol>
+        <li>اضغط على البطاقة التي تريد تفعيلها (1, 2, 3, أو 4)</li>
+        <li>اضغط على زر <strong>🔗 كود</strong> الظاهر أسفل البطاقة</li>
+        <li>سيتم نسخ الكود تلقائياً أو فتحه في صفحة جديدة</li>
+        <li>أعد الضغط على نفس البطاقة لإظهار حقل إدخال الكود</li>
+        <li>الصق الكود في الحقل واضغط على <strong>✅ تأكيد</strong></li>
+      </ol>
+    </div>
+    <div class="temu-modal-terms">
+      <label>
+        <input type="checkbox" id="codeInstructionsCheckbox" onchange="document.getElementById('codeInstructionsConfirmBtn').disabled = !this.checked;">
+        <span>أفهم الخطوات وأوافق على المتابعة للحصول على كود التفعيل</span>
+      </label>
+    </div>
+    <div class="temu-modal-buttons">
+      <button type="button" class="btn-temu-cancel" onclick="window.closeCodeInstructionsModal()">إلغاء</button>
+      <button type="button" class="btn-temu-confirm" id="codeInstructionsConfirmBtn" disabled onclick="window.confirmCodeInstructions()">
+        <span>✅</span> <span>فهمت، متابعة</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ نافذة نجاح تفعيل البطاقة -->
+<div id="activationSuccessModal" class="temu-instructions-modal" onclick="window.closeActivationSuccessModal(event)">
+  <div class="temu-modal-content" onclick="event.stopPropagation()">
+    <button type="button" class="temu-modal-close" onclick="window.closeActivationSuccessModal()" title="إغلاق">×</button>
+    <div class="temu-modal-icon" style="animation: bounce 1s ease infinite;">🎉</div>
+    <div class="temu-modal-title"><span>✨</span> مبروك! تم التفعيل بنجاح</div>
+    <div class="temu-modal-instructions" style="text-align:center;">
+      <p style="font-size:12px; color:var(--temu-text-primary); line-height:1.8; margin:0;">
+        ✅ لقد قمت بتفعيل البطاقة بنجاح!<br><br>
+        🎫 رقم التذكرة: <strong id="successTicketNum" style="color:var(--temu-orange); font-size:14px;"></strong><br>
+        🎁 الجائزة: <strong id="successPrizeName" style="color:var(--temu-orange-dark);"></strong><br><br>
+        <span style="background:var(--temu-orange-light); padding:4px 8px; border-radius:6px; display:inline-block;">
+          🕐 السحب اليومي الساعة <strong>18:56</strong> - احتفظ برقم التذكرة!
+        </span>
+      </p>
+    </div>
+    <div class="temu-modal-buttons">
+      <button type="button" class="btn-temu-confirm" onclick="window.closeActivationSuccessModal()" style="width:100%; background:linear-gradient(135deg, var(--success-green) 0%, #059669 100%);">
+        <span>🎊</span> <span>شكراً، فهمت</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div id="youtubeModal" class="youtube-modal" onclick="window.closeYoutubeModal(event)">
 <div class="youtube-modal-content" onclick="event.stopPropagation()">
 <button type="button" class="youtube-modal-close" onclick="window.closeYoutubeModal()" title="إغلاق">×</button>
@@ -563,12 +618,21 @@ if(window.codeInputTimeouts && window.codeInputTimeouts[i]) { clearTimeout(windo
 });
 });
 window.codeInputTimeouts = {};
-window.openYoutubeModal = function() { document.getElementById('youtubeIframe').src = 'https://www.youtube.com/embed/loGAyJTbu88?autoplay=1&rel=0'; document.getElementById('youtubeModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
+window.currentCardIndex = null;
+window.openYoutubeModal = function() { document.getElementById('youtubeIframe').src = 'https://m.youtube.com/shorts/IQSWzuOkeM4'; document.getElementById('youtubeModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
 window.closeYoutubeModal = function(event) { if (event && event.target !== event.currentTarget) return; document.getElementById('youtubeModal').classList.remove('active'); document.getElementById('youtubeIframe').src = ''; document.body.style.overflow = ''; };
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { window.closeYoutubeModal(); window.closeOrderModal(); window.closeWasitModal(); window.closeWasitFormModal(); window.closeTemuModal(); window.closeTemuRegisterModal(); }});
-window.openTemuYoutubeModal = function() { window.closeTemuRegisterModal(); window.open('https://m.youtube.com/watch?v=64Nfn5w9Ltw&pp=0gcJCcQBo7VqN5tD', '_blank', 'noopener,noreferrer'); };
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { window.closeYoutubeModal(); window.closeOrderModal(); window.closeWasitModal(); window.closeWasitFormModal(); window.closeTemuModal(); window.closeTemuRegisterModal(); window.closeCodeInstructionsModal(); window.closeActivationSuccessModal(); }});
+
+// ✅ فتح فيديو اليوتيوب في النافذة المنبثقة بدلاً من تبويب جديد
+window.openTemuYoutubeModal = function() {
+    window.closeTemuRegisterModal();
+    document.getElementById('youtubeIframe').src = 'https://m.youtube.com/shorts/YuZBIutjjaM?autoplay=1';
+    document.getElementById('youtubeModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+};
+
 window.copyTemuRegisterCode = async function() {
-const code = '23456';
+const code = 'alj217911';
 try { await navigator.clipboard.writeText(code); const btn = event.currentTarget; const originalIcon = btn.innerHTML; btn.innerHTML = '<i class="fas fa-check"></i>'; btn.classList.add('bg-green-500', 'animate-pulse'); btn.classList.remove('bg-amber-500', 'hover:bg-amber-600'); window.showMessage("✅ تم نسخ الرمز: " + code); setTimeout(() => { btn.innerHTML = originalIcon; btn.classList.remove('bg-green-500', 'animate-pulse'); btn.classList.add('bg-amber-500', 'hover:bg-amber-600'); }, 1500); } catch (err) { window.showMessage("⚠️ فشل النسخ، يرجى نسخ الرمز يدوياً: " + code); }
 };
 window.showTemuModal = function(offerName) { document.getElementById('temuTermsCheckbox').checked = false; document.getElementById('temuConfirmBtn').disabled = true; document.getElementById('temuModal').dataset.offerName = offerName; document.getElementById('temuModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
@@ -590,6 +654,68 @@ window.showOrderConfirmation = function(prizeName) { const existing = document.g
 window.showMessage = function(msg) { const t = document.getElementById('toast'); if(!t) return; t.innerText = msg; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3500); }
 window.showPage = function(id) { document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; }); const target = document.getElementById(id); if(target) { target.style.display = (id === 'loginPage') ? 'flex' : 'block'; setTimeout(() => target.classList.add('active'), 10); } }
 window.updateCartCount = function() {};
+
+// ✅ دوال جديدة للتحكم في النوافذ المنبثقة
+
+// فتح نافذة تعليمات الكود
+window.openCodeInstructionsModal = function(cardIndex) {
+    window.currentCardIndex = cardIndex;
+    document.getElementById('codeInstructionsCheckbox').checked = false;
+    document.getElementById('codeInstructionsConfirmBtn').disabled = true;
+    document.getElementById('codeInstructionsModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+};
+
+// إغلاق نافذة تعليمات الكود
+window.closeCodeInstructionsModal = function(event) {
+    if (event && event.target !== event.currentTarget) return;
+    document.getElementById('codeInstructionsModal').classList.remove('active');
+    document.body.style.overflow = '';
+    window.currentCardIndex = null;
+};
+
+// تأكيد التعليمات وإظهار حقل الكود
+window.confirmCodeInstructions = function() {
+    window.closeCodeInstructionsModal();
+    if (window.currentCardIndex) {
+        const area = document.getElementById(`code-area-${window.currentCardIndex}`);
+        if (area) {
+            area.style.display = 'flex';
+            // إعادة تعيين المؤقت
+            if (window.codeInputTimeouts && window.codeInputTimeouts[window.currentCardIndex]) {
+                clearTimeout(window.codeInputTimeouts[window.currentCardIndex]);
+            }
+            window.codeInputTimeouts[window.currentCardIndex] = setTimeout(() => {
+                const areaToHide = document.getElementById(`code-area-${window.currentCardIndex}`);
+                if (areaToHide) {
+                    areaToHide.style.display = 'none';
+                    window.showMessage("⏰ انتهى وقت إدخال الكود للبطاقة " + window.currentCardIndex);
+                }
+                delete window.codeInputTimeouts[window.currentCardIndex];
+            }, 120000);
+            setTimeout(() => {
+                const input = document.getElementById(`input-code-${window.currentCardIndex}`);
+                if (input) input.focus();
+            }, 100);
+            window.showMessage("🔑 أدخل كود التفعيل (سيغلق الإطار بعد دقيقتين)");
+        }
+    }
+};
+
+// فتح نافذة نجاح التفعيل
+window.showActivationSuccessModal = function(ticketNum, prizeName) {
+    document.getElementById('successTicketNum').textContent = ticketNum;
+    document.getElementById('successPrizeName').textContent = prizeName;
+    document.getElementById('activationSuccessModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+};
+
+// إغلاق نافذة نجاح التفعيل
+window.closeActivationSuccessModal = function(event) {
+    if (event && event.target !== event.currentTarget) return;
+    document.getElementById('activationSuccessModal').classList.remove('active');
+    document.body.style.overflow = '';
+};
 </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
@@ -855,54 +981,57 @@ for(let i=5; i<=13; i++) { if(prizeData[i]) { mainGrid.appendChild(createTemuPri
 if (additionalPrizes[0]) { mainGrid.appendChild(createTemuPrizeElement(additionalPrizes[0].name, additionalPrizes[0].img, additionalPrizes[0].url, `extra_1`, additionalPrizes[0].price, `DA ${Math.floor(parseInt(additionalPrizes[0].price.replace(/[^0-9]/g, '')) * 1.7)}.00`, `${Math.floor(35 + Math.random() * 40)}%`)); }
 }
 window.openPrizeLink = (index) => { const prize = prizeData[index]; if(prize?.url) window.open(prize.url, '_blank', 'noopener,noreferrer'); };
+
+// ✅ تعديل دالة handlePrizeClick لفتح تعليمات الكود أولاً
 window.handlePrizeClick = (uid, index, prizeUrl) => {
-if(prizeUrl) window.open(prizeUrl, '_blank', 'noopener,noreferrer');
-const area = document.getElementById(`code-area-${index}`);
-if(area) {
-area.style.display = 'flex';
-if(window.codeInputTimeouts && window.codeInputTimeouts[index]) { clearTimeout(window.codeInputTimeouts[index]); }
-window.codeInputTimeouts[index] = setTimeout(() => { const areaToHide = document.getElementById(`code-area-${index}`); if(areaToHide) { areaToHide.style.display = 'none'; window.showMessage("⏰ انتهى وقت إدخال الكود للبطاقة " + index); } delete window.codeInputTimeouts[index]; }, 120000);
-setTimeout(() => { const input = document.getElementById(`input-code-${index}`); if(input) input.focus(); }, 100);
-}
-window.showMessage("🔑 أدخل كود التفعيل (سيغلق الإطار بعد دقيقتين)");
+    // فتح رابط الجائزة في تبويب جديد (كما كان)
+    if (prizeUrl) window.open(prizeUrl, '_blank', 'noopener,noreferrer');
+    
+    // ✅ فتح نافذة تعليمات الكود بدلاً من إظهار الحقل مباشرة
+    window.openCodeInstructionsModal(index);
 };
+
 window.pasteFromClipboard = async (index) => { try { const text = await navigator.clipboard.readText(); const input = document.getElementById(`input-code-${index}`); if (input && text) { input.value = text.trim().toUpperCase(); input.style.borderColor = 'var(--success-green)'; input.style.boxShadow = '0 0 0 2px rgba(16, 185, 129, 0.3)'; setTimeout(() => { input.style.borderColor = ''; input.style.boxShadow = ''; }, 500); window.showMessage("✅ تم لصق الكود"); } else { window.showMessage("📋 الحافظة فارغة، يرجى نسخ الكود أولاً"); } } catch (err) { window.showMessage("⚠️ تعذر الوصول للحافظة، يرجى لصق الكود يدوياً"); } };
 window.verifyCode = async (uid, index) => { if(window.codeInputTimeouts && window.codeInputTimeouts[index]) { clearTimeout(window.codeInputTimeouts[index]); delete window.codeInputTimeouts[index]; } const prize = prizeData[index]; const inputVal = document.getElementById(`input-code-${index}`).value.trim().toUpperCase(); if(inputVal === prize.correctCode) { await window.finalizeActivation(uid, index); } else { window.showMessage("❌ كود غير صحيح!"); const input = document.getElementById(`input-code-${index}`); if(input) { input.style.animation = 'shake 0.3s ease'; setTimeout(() => input.style.animation = '', 300); } } };
+
+// ✅ تعديل دالة finalizeActivation لإظهار نافذة النجاح
 window.finalizeActivation = async (uid, index) => {
-const area = document.getElementById(`code-area-${index}`); if(area) area.style.display = 'none';
-if(window.codeInputTimeouts && window.codeInputTimeouts[index]) { clearTimeout(window.codeInputTimeouts[index]); delete window.codeInputTimeouts[index]; }
-const prize = prizeData[index]; 
-const phone = localStorage.getItem('user_phone') || "000000"; 
-const fullName = localStorage.getItem('user_fullname') || "مشارك"; 
-const state = localStorage.getItem('user_state') || "غير معروف";
-const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
-try {
-// ✅ إرسال رقم الهاتف مع جميع المعلومات إلى فايربيس
-await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), { 
-    active: true, 
-    phone, 
-    fullName, 
-    state, 
-    ticketNumber: ticketNum, 
-    timestamp: serverTimestamp(),
-    userEmail: auth.currentUser?.email || ''
-}, { merge: true });
+    const area = document.getElementById(`code-area-${index}`); if(area) area.style.display = 'none';
+    if(window.codeInputTimeouts && window.codeInputTimeouts[index]) { clearTimeout(window.codeInputTimeouts[index]); delete window.codeInputTimeouts[index]; }
+    const prize = prizeData[index]; 
+    const phone = localStorage.getItem('user_phone') || "000000"; 
+    const fullName = localStorage.getItem('user_fullname') || "مشارك"; 
+    const state = localStorage.getItem('user_state') || "غير معروف";
+    const ticketNum = `GOLD-${Math.floor(10000 + Math.random() * 90000)}`;
+    try {
+        await setDoc(doc(db, 'artifacts', appId, 'users', uid, 'activatedCards', `card_${index}`), { 
+            active: true, 
+            phone, 
+            fullName, 
+            state, 
+            ticketNumber: ticketNum, 
+            timestamp: serverTimestamp(),
+            userEmail: auth.currentUser?.email || ''
+        }, { merge: true });
 
-await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), { 
-    userId: uid, 
-    email: auth.currentUser?.email, 
-    phone, 
-    fullName, 
-    state, 
-    prizeName: prize.name, 
-    ticketNumber: ticketNum, 
-    activatedAt: serverTimestamp(),
-    source: 'tombola_activation'
-});
+        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'all_activations'), { 
+            userId: uid, 
+            email: auth.currentUser?.email, 
+            phone, 
+            fullName, 
+            state, 
+            prizeName: prize.name, 
+            ticketNumber: ticketNum, 
+            activatedAt: serverTimestamp(),
+            source: 'tombola_activation'
+        });
 
-const sound = document.getElementById('activationSound'); if (sound) { sound.currentTime = 0; sound.play().catch(e => console.log("Audio play prevented:", e)); }
-window.showMessage(`🎉 تم تفعيل ${prize.name} ✅ رقم التذكرة: ${ticketNum}`);
-} catch (e) { console.error("Activation error:", e); window.showMessage("⚠️ حدث خطأ أثناء التفعيل، يرجى المحاولة لاحقاً."); }
+        const sound = document.getElementById('activationSound'); if (sound) { sound.currentTime = 0; sound.play().catch(e => console.log("Audio play prevented:", e)); }
+        
+        // ✅ إظهار نافذة النجاح بدلاً من رسالة الـ toast فقط
+        window.showActivationSuccessModal(ticketNum, prize.name);
+        
+    } catch (e) { console.error("Activation error:", e); window.showMessage("⚠️ حدث خطأ أثناء التفعيل، يرجى المحاولة لاحقاً."); }
 };
 window.confirmAndSendOrder = async function() {
 const modal = document.getElementById('orderModal'); if (!document.getElementById('termsCheckbox').checked) { window.showMessage("⚠️ يرجى الموافقة على الشروط أولاً"); return; }
@@ -1001,6 +1130,11 @@ window.openTemuRegisterModal = window.openTemuRegisterModal; window.closeTemuReg
 window.openTemuYoutubeModal = window.openTemuYoutubeModal; window.copyTemuRegisterCode = window.copyTemuRegisterCode; window.updateCartCount = window.updateCartCount;
 window.checkDailyReset = checkDailyReset; window.resetCardsAt1856 = resetCardsAt1856; window.updateTemuRegisterButtonState = window.updateTemuRegisterButtonState; window.setTemuRegisterCooldown = window.setTemuRegisterCooldown;
 window.renderGrids = renderGrids;
+window.openCodeInstructionsModal = window.openCodeInstructionsModal;
+window.closeCodeInstructionsModal = window.closeCodeInstructionsModal;
+window.confirmCodeInstructions = window.confirmCodeInstructions;
+window.showActivationSuccessModal = window.showActivationSuccessModal;
+window.closeActivationSuccessModal = window.closeActivationSuccessModal;
 </script>
 </body>
 </html>
